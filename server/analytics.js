@@ -1,5 +1,6 @@
 // Бизнес-аналитика: профиль оператора, тревоги о грубых ошибках, сводка для руководителя.
 // Чистые функции: на вход данные из store, на выход агрегаты. Ничего не знают о конкретных критериях.
+import { economy, coaching } from './business.js';
 import { computeScore, criterionFraction, replaceAnswer } from './scoring.js';
 
 export const UNKNOWN_OPERATOR = 'Не определён';
@@ -105,17 +106,19 @@ function groupAvg(items, keyFn) {
 }
 
 /** Сводка для руководителя (функция 4). */
-export function summary(d, f = {}) {
+export function summary(d, f = {}, assumptions = {}) {
   const items = effectiveEvaluations(d, f);
   const totals = items.map((x) => x.score.total).filter((t) => t !== null);
   const criteria = criteriaStats(items);
   const appeals = items.flatMap((x) => x.appeals);
   const resolved = appeals.filter((a) => a.status === 'resolved');
   const changed = resolved.filter((a) => a.decision?.action === 'change');
-  const cost = items.map((x) => Number(x.ev.cost_usd) || 0);
+  const cost = items.map(x => x.ev.cost_usd).filter(x => typeof x === 'number' && Number.isFinite(x) && x >= 0);
+  const unknownCosts = items.length - cost.length;
 
   return {
     count: items.length,
+    economy: economy(items, d.evaluations || [], assumptions),
     avg_total: avg(totals),
     not_scored: items.length - totals.length,
     gross_count: items.filter((x) => x.score.gross_error).length,
@@ -138,8 +141,9 @@ export function summary(d, f = {}) {
       change_rate: resolved.length ? round2((changed.length / resolved.length) * 100) : null,
     },
     cost: {
-      total_usd: Math.round(cost.reduce((a, b) => a + b, 0) * 1e4) / 1e4,
-      avg_usd: cost.length ? Math.round((cost.reduce((a, b) => a + b, 0) / cost.length) * 1e5) / 1e5 : null,
+      unknown_count: unknownCosts,
+      total_usd: unknownCosts ? null : Math.round(cost.reduce((a, b) => a + b, 0) * 1e4) / 1e4,
+      avg_usd: !unknownCosts && cost.length ? Math.round((cost.reduce((a, b) => a + b, 0) / cost.length) * 1e5) / 1e5 : null,
     },
   };
 }
@@ -176,6 +180,7 @@ export function operatorProfile(d, name, f = {}) {
   const teamCriteria = new Map(criteriaStats(all).map((c) => [c.id, c.avg_percent]));
   return {
     name,
+    coaching: coaching(items),
     count: items.length,
     avg_total: avg(items.map((x) => x.score.total).filter((t) => t !== null)),
     team_avg_total: teamAvg,
