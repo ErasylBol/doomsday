@@ -43,6 +43,7 @@ export async function render(container) {
         changed: s.changed,
         gross: !!s.final?.gross_error,
         manual: (s.final?.pending_manual || []).length,
+        unsure: s.unsure.length,
         openAppeals: s.appeals.filter((a) => a.status === 'open').length,
       });
     }),
@@ -52,6 +53,7 @@ export async function render(container) {
 
   const draw = () => {
     const visible = applyFilters(rows);
+    const base = applyFilters(rows, true); // для счётчиков на чипах статуса
     container.innerHTML = `
       <div class="cqa-page-head">
         <h1>Диалоги</h1>
@@ -64,10 +66,6 @@ export async function render(container) {
       ${dsRes.error ? `<p class="cqa-error">Набор ${esc(group)} не загрузился: ${esc(dsRes.error)}. Показаны только уже оценённые диалоги.</p>` : ''}
       <div class="cqa-card cqa-toolbar">
         <div id="cqa-filterbar"></div>
-        <label class="cqa-filters">Статус <select id="cqa-status">
-          <option value="">все</option><option value="new">не оценён</option><option value="done">оценён</option>
-          <option value="gross">грубая ошибка</option><option value="manual">ручная проверка</option><option value="appeal">есть апелляция</option>
-        </select></label>
         <input class="cqa-input" id="cqa-q" placeholder="Поиск по ID или оператору" value="${esc(state.q)}">
         <span class="cqa-spacer"></span>
         <label class="cqa-filters">Чек-лист <select id="cqa-checklist">${checklists
@@ -78,14 +76,17 @@ export async function render(container) {
       </div>
       <div id="cqa-job"></div>
       <div class="cqa-card">
-        <p class="cqa-muted">Показано ${visible.length} из ${rows.length} · оценено ${rows.filter((r) => r.ev).length} · грубых ошибок ${rows.filter((r) => r.gross).length}</p>
+        <div class="cqa-chips" role="group" aria-label="Статус">${STATUSES.map(([key, label]) => {
+          const n = base.filter((r) => matchStatus(r, key)).length;
+          return `<button class="cqa-chip ${state.status === key ? 'cqa-chip-on' : ''} ${key === 'gross' && n ? 'cqa-chip-bad' : ''} ${key === 'unsure' && n ? 'cqa-chip-warn' : ''}"
+            data-status="${key}">${label}<span class="cqa-chip-n">${n}</span></button>`;
+        }).join('')}</div>
+        <p class="cqa-muted">Показано ${visible.length} из ${rows.length}</p>
         ${visible.length ? table(visible) : '<p class="cqa-muted">Нет диалогов под фильтр.</p>'}
       </div>`;
 
     container.querySelector('#cqa-filterbar').replaceWith(filterBar(state.filters, (f) => { state.filters = f; draw(); }));
-    const status = container.querySelector('#cqa-status');
-    status.value = state.status;
-    status.addEventListener('change', () => { state.status = status.value; draw(); });
+    container.querySelectorAll('[data-status]').forEach((b) => b.addEventListener('click', () => { state.status = b.dataset.status; draw(); }));
     const q = container.querySelector('#cqa-q');
     q.addEventListener('input', () => {
       state.q = q.value;
@@ -142,21 +143,31 @@ export async function render(container) {
   draw();
 }
 
-function applyFilters(rows) {
+const STATUSES = [
+  ['', 'Все'], ['new', 'Не оценены'], ['gross', 'Грубые ошибки'], ['unsure', 'Проверить'],
+  ['manual', 'Ручная проверка'], ['appeal', 'Апелляции'],
+];
+
+function matchStatus(r, key) {
+  switch (key) {
+    case 'new': return !r.ev;
+    case 'done': return !!r.ev;
+    case 'gross': return r.gross;
+    case 'unsure': return r.unsure > 0;
+    case 'manual': return r.manual > 0;
+    case 'appeal': return r.openAppeals > 0 || r.changed;
+    default: return true;
+  }
+}
+
+function applyFilters(rows, ignoreStatus = false) {
   const q = state.q.trim().toLowerCase();
   const f = state.filters;
   const out = rows.filter((r) => {
     if (f.language && r.language !== f.language) return false;
     if (f.channel && r.channel !== f.channel) return false;
     if (q && !r.id.toLowerCase().includes(q) && !(r.operator || '').toLowerCase().includes(q)) return false;
-    switch (state.status) {
-      case 'new': return !r.ev;
-      case 'done': return !!r.ev;
-      case 'gross': return r.gross;
-      case 'manual': return r.manual > 0;
-      case 'appeal': return r.openAppeals > 0 || r.changed;
-      default: return true;
-    }
+    return ignoreStatus || matchStatus(r, state.status);
   });
   const key = state.sort;
   const val = (r) => (key === 'total' ? (r.total ?? -1) : key === 'date' ? (r.ev?.created_at || '') : key === 'turns' ? (r.turns ?? -1) : String(r[key] ?? ''));
@@ -177,6 +188,7 @@ function table(rows) {
         const href = `#/conv/${encodeURIComponent(r.id)}`;
         const flags = [
           r.gross ? '<span class="cqa-tag cqa-tag-gross">грубая ошибка</span>' : '',
+          r.unsure ? `<span class="cqa-tag cqa-tag-unsure" title="Критериев, где прогоны модели разошлись">проверить: ${r.unsure}</span>` : '',
           r.manual ? `<span class="cqa-tag cqa-tag-manual" title="Критериев без валидного ответа модели">ручная: ${r.manual}</span>` : '',
           r.openAppeals ? `<span class="cqa-tag cqa-tag-appeal">апелляция: ${r.openAppeals}</span>` : '',
           r.changed ? `<span class="cqa-tag cqa-tag-changed" title="Исходный итог ${r.original ?? '—'}">изменён</span>` : '',
