@@ -5,7 +5,9 @@
   "main": "server/index.js",
   "scripts": {
     "start": "node server/index.js",
-    "test": "node --test server/test/*.test.js"
+    "test": "node --test server/test/*.test.js",
+    "eval": "node scripts/evaluate.js",
+    "accuracy": "node scripts/accuracy.js"
   },
   "repository": {
     "type": "git",
@@ -19,7 +21,8 @@
   "homepage": "https://github.com/ErasylBol/doomsday#readme",
   "dependencies": {
     "dotenv": "^18.0.9",
-    "express": "^4.22.3"
+    "express": "^4.22.3",
+    "openai": "^7.53.0"
   },
   "type": "module",
   "engines": {
