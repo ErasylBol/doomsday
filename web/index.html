@@ -1,0 +1,24 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>CQA — качество диалогов</title>
+  <link rel="stylesheet" href="css/app.css">
+</head>
+<body class="cqa">
+  <header class="cqa-header">
+    <a class="cqa-logo" href="#/dashboard">CQA</a>
+    <nav class="cqa-nav" id="cqa-nav">
+      <a href="#/dashboard">Сводка</a>
+      <a href="#/list">Диалоги</a>
+      <a href="#/operators">Операторы</a>
+      <a href="#/alerts">Тревоги <span class="cqa-badge" id="cqa-alert-count" hidden></span></a>
+      <a href="#/appeals">Апелляции</a>
+      <a href="#/checklists">Чек-листы</a>
+    </nav>
+  </header>
+  <main class="cqa-main" id="cqa-app"></main>
+  <script type="module" src="js/app.js"></script>
+</body>
+</html>

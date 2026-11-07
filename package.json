@@ -1,0 +1,28 @@
+{
+  "name": "cqa-doomsday",
+  "version": "1.0.0",
+  "description": "Conversation Quality Analytics prototype",
+  "main": "server/index.js",
+  "scripts": {
+    "start": "node server/index.js",
+    "test": "node --test server/test/*.test.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ErasylBol/doomsday.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/ErasylBol/doomsday/issues"
+  },
+  "homepage": "https://github.com/ErasylBol/doomsday#readme",
+  "dependencies": {
+    "dotenv": "^18.0.9",
+    "express": "^4.22.3"
+  },
+  "type": "module",
+  "engines": {
+    "node": ">=20"
+  }
+}

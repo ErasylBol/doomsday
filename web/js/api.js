@@ -1,0 +1,38 @@
+// Единственное место с fetch к бэкенду (адаптер; для D365 заменим реализацию).
+const BASE = '/api';
+
+async function req(method, url, body) {
+  const r = await fetch(BASE + url, {
+    method,
+    headers: body ? { 'Content-Type': 'application/json' } : undefined,
+    body: body ? JSON.stringify(body) : undefined,
+  });
+  const data = await r.json().catch(() => ({}));
+  if (!r.ok) throw new Error(data.error || `HTTP ${r.status}`);
+  return data;
+}
+
+const qs = (params = {}) => {
+  const p = Object.entries(params).filter(([, v]) => v !== undefined && v !== null && v !== '');
+  return p.length ? '?' + new URLSearchParams(p).toString() : '';
+};
+
+export const api = {
+  // чек-листы
+  checklists: () => req('GET', '/checklists'),
+  checklist: (id, version) => req('GET', `/checklists/${encodeURIComponent(id)}${qs({ version })}`),
+  saveChecklist: (c) => req('POST', '/checklists', c),
+  // оценки и апелляции
+  evaluations: (conversation_id) => req('GET', `/evaluations${qs({ conversation_id })}`),
+  evaluation: (id) => req('GET', `/evaluations/${encodeURIComponent(id)}`),
+  appeals: (params) => req('GET', `/appeals${qs(params)}`),
+  createAppeal: (a) => req('POST', '/appeals', a),
+  decideAppeal: (id, d) => req('POST', `/appeals/${encodeURIComponent(id)}/decision`, d),
+  // бизнес-аналитика
+  summary: (f) => req('GET', `/analytics/summary${qs(f)}`),
+  operators: (f) => req('GET', `/analytics/operators${qs(f)}`),
+  operator: (name, f) => req('GET', `/analytics/operators/${encodeURIComponent(name)}${qs(f)}`),
+  setOperator: (conversationId, name) => req('PUT', `/conversations/${encodeURIComponent(conversationId)}/operator`, { name }),
+  alerts: (f) => req('GET', `/alerts${qs(f)}`),
+  ackAlert: (evaluationId, note) => req('POST', `/alerts/${encodeURIComponent(evaluationId)}/ack`, { note }),
+};
