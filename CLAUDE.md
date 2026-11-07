@@ -88,6 +88,9 @@ group_id передаём параметром. Из браузера CORS, по
   index.html       hash-роутинг: #/dashboard, #/list, #/conv/:id?msg=N, #/operators[/:name], #/alerts, #/checklists, #/appeals
   js/api.js        единственное место с fetch
   js/ui.js         общие помощники (esc, scorePill, bar, filterBar, trendChart)
+  js/evalutil.js   помощники оценки: текущий group_id (localStorage), последняя оценка диалога, финальный итог
+                   с учётом всех решений апелляций, кеш версий чек-листа, смещения реплик для плеера.
+                   Формулу берёт с бэка: GET /shared/scoring.js отдаёт server/scoring.js (одна формула на фронт и бэк).
   js/views/*.js    экран = export async function render(container, params). Нет модуля → «Экран в разработке»
   css/app.css      CSS-переменные, префикс .cqa-
 Запуск: `npm install && npm start` → http://localhost:3000. Тесты: `npm test`.
@@ -118,6 +121,9 @@ group_id передаём параметром. Из браузера CORS, по
 GET  /api/datasets/:groupId (?refresh=1)
 GET  /api/conversations/:id/audio → { src }
 POST /api/evaluate { conversation_ids:[...]|"all", group_id, checklist_id } (concurrency 5, прогресс)
+     → { job_id }; GET /api/jobs/:id → { id, status:"running"|"done"|"error", total, done, failed, errors:[{conversation_id,error}], cost_usd }
+     (фронт терпим и к синхронному ответу без job_id)
+GET  /api/conversations/:id?group_id= → запись диалога (как в датасете); фронт при 404 ищет её в /api/datasets/:groupId
 GET  /api/checklists (?all=1 — все версии)   GET /api/checklists/:id(?version=)   POST /api/checklists
 GET  /api/evaluations?conversation_id=…   GET /api/evaluations/:id
 POST /api/appeals   GET /api/appeals?status=&evaluation_id=   POST /api/appeals/:id/decision
@@ -148,6 +154,10 @@ GET  /api/alerts   POST /api/alerts/:evaluationId/ack { note }
 - Каждый в своей папке/модуле, контракт из раздела 4 не ломаем молча (поменял — поправь этот файл).
 - Секреты только в .env, в репо .env.example. На фронте без сборщиков; на бэке минимум зависимостей.
 - UI на русском. Подсветка реплики: `#msg-<index>` + класс `.cqa-highlight`.
+- Карточка `#/conv/:id?msg=N` (или `?msg=3-9` для участка, `?ev=<id>` для конкретной оценки). У каждого критерия есть
+  `<div class="cqa-appeal-slot" data-criterion data-evaluation>`. Апелляции из карточки: если `web/js/views/appeals.js`
+  экспортирует `mountCardAppeals({ root, evaluation, checklist, appeals, rerender })`, карточка вызывает его после отрисовки.
+  Сами апелляции и решения по ним карточка уже показывает (исходно → решение → финал).
 
 ## 7. Демо (5 минут)
 1 мин: интерфейс, сводка руководителя, выбранный диалог. 2 мин: оценка, обоснование, переход к реплике, N/A, итог.
