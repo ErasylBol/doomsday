@@ -1,4 +1,5 @@
 // Сводка для руководителя (бизнес-функция 4).
+import { economyCard } from '../economy.js';
 import { api } from '../api.js';
 import { esc, scorePill, fmtScore, bar, filterBar, channelLabel } from '../ui.js';
 
@@ -25,8 +26,10 @@ export async function render(container, params, state = {}) {
       <a class="cqa-tile ${s.gross_count ? 'cqa-tile-alert' : ''}" href="#/alerts"><div class="cqa-tile-label">Грубые ошибки</div><div class="cqa-tile-value">${s.gross_count}</div><div class="cqa-tile-sub">${s.gross_rate}% диалогов</div></a>
       <a class="cqa-tile" href="#/appeals"><div class="cqa-tile-label">Апелляции</div><div class="cqa-tile-value">${s.appeals.total}</div><div class="cqa-tile-sub">открыто ${s.appeals.open}${s.appeals.change_rate !== null ? ` · удовлетворено ${s.appeals.change_rate}%` : ''}</div></a>
       <div class="cqa-tile"><div class="cqa-tile-label">Требуют ручной проверки</div><div class="cqa-tile-value">${s.manual_review_count}</div><div class="cqa-tile-sub">модель не дала валидный ответ</div></div>
-      <div class="cqa-tile"><div class="cqa-tile-label">Стоимость оценки</div><div class="cqa-tile-value">$${s.cost.total_usd}</div><div class="cqa-tile-sub">${s.cost.avg_usd !== null ? `≈ $${s.cost.avg_usd} за диалог` : ''}</div></div>
+      <div class="cqa-tile"><div class="cqa-tile-label">Стоимость последних оценок</div><div class="cqa-tile-value">${s.cost.total_usd === null ? '—' : '$' + s.cost.total_usd}</div><div class="cqa-tile-sub">${s.cost.unknown_count ? 'часть стоимости неизвестна' : ''}${s.cost.avg_usd !== null ? `≈ $${s.cost.avg_usd} за диалог` : ''}</div></div>
     </section>
+
+    ${economyCard(s.economy)}
 
     <div class="cqa-grid2">
       <section class="cqa-card">
@@ -62,6 +65,13 @@ export async function render(container, params, state = {}) {
       <p class="cqa-muted">Колонка «Изменено» показывает, сколько оценок проверяющий исправил по апелляции. Если по критерию их много, его формулировку стоит уточнить в чек-листе.</p>
     </section>`,
   );
+  container.querySelector('#economy-assumptions').onsubmit = async e => {
+    e.preventDefault();
+    const form = e.currentTarget;
+    const next = Object.fromEntries(new FormData(form));
+    try { await render(container, params, { ...state, ...next }); }
+    catch (error) { form.querySelector('[role=alert]').textContent = error.message; }
+  };
 }
 
 function groupTable(title, rows, keyHtml) {
