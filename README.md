@@ -11,7 +11,7 @@ npm test
 ```
 
 ## Модель и стоимость
-Провайдер: OpenAI Chat Completions со structured outputs. Модель задаётся в `.env` (`LLM_MODEL`).
+Провайдер: OpenAI Chat Completions со structured outputs. Модель: `gpt-6-luna` (задаётся в `.env`, `LLM_MODEL`).
 TODO: указать модель, средние токены на диалог и стоимость одной оценки после прогона на DEV
 (`npm run eval` печатает токены и стоимость; цены модели задаются в `.env`).
 
