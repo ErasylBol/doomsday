@@ -1,24 +1,47 @@
 import { api } from '../api.js';
-import { esc } from '../ui.js';
+import { esc, fmtDate } from '../ui.js';
 
-const blankCriterion = (section = 's1') => ({ id: `c${Date.now().toString(36)}`, section, name: '', description: '', type: 'yesno', levels: [], polarity: 'positive', na_allowed: false, na_condition: '', weight: 10, kind: 'normal' });
-const field = (label, name, value, type = 'text') => `<label class="cqa-field"><span>${label}</span><input name="${name}" type="${type}" value="${esc(String(value ?? ''))}"></label>`;
-
-export async function render(container) {
-  const all = await api.checklistsAll();
-  let selected = all.reduce((a, b) => (b.version > a.version ? b : a));
-  const draw = () => {
-    container.innerHTML = `<div class="cqa-page-head"><h1>Редактор чек-листа</h1><label class="cqa-filters">Версия <select id="cl-version">${all.map(c => `<option value="${c.version}" ${c.version === selected.version ? 'selected' : ''}>v${c.version} · ${esc(c.name)}</option>`).join('')}</select></label></div>
-      <form id="cl-form"><section class="cqa-card"><div class="cqa-form-grid">${field('Название','name',selected.name)}</div><h2>Секции</h2><div id="sections">${selected.sections.map(s => `<div class="cqa-inline">${field('ID','section-id',s.id)}${field('Название','section-name',s.name)}</div>`).join('')}</div>
-      <h2>Критерии</h2><div id="criteria">${selected.criteria.map((c, i) => criterion(c, i, selected.sections)).join('')}</div><button class="cqa-btn cqa-btn-small" type="button" id="add-criterion">+ Критерий</button><div class="cqa-form-actions"><button class="cqa-btn" type="submit">Сохранить как новую версию</button><span id="cl-status" class="cqa-muted"></span></div></section></form>
-      <section class="cqa-card"><h2>История версий</h2><table class="cqa-table"><thead><tr><th>Версия</th><th>Название</th><th>Критериев</th><th>Создана</th></tr></thead><tbody>${all.slice().sort((a,b)=>b.version-a.version).map(c => `<tr><td>v${c.version}</td><td>${esc(c.name)}</td><td>${c.criteria.length}</td><td>${c.created_at ? new Date(c.created_at).toLocaleString('ru-RU') : '—'}</td></tr>`).join('')}</tbody></table></section>`;
-    container.querySelector('#cl-version').addEventListener('change', e => { selected = all.find(c => c.version === Number(e.target.value)); draw(); });
-    container.querySelector('#add-criterion').addEventListener('click', () => { const n = container.querySelectorAll('.cqa-criterion').length; container.querySelector('#criteria').insertAdjacentHTML('beforeend', criterion(blankCriterion(selected.sections[0]?.id), n, selected.sections)); });
-    container.querySelectorAll('[data-remove-criterion]').forEach(b => b.addEventListener('click', () => b.closest('.cqa-criterion').remove()));
-    container.querySelectorAll('[data-type]').forEach(s => s.addEventListener('change', () => s.closest('.cqa-criterion').querySelector('.cqa-levels').hidden = s.value !== 'scale'));
-    container.querySelector('#cl-form').addEventListener('submit', save);
-  };
-  async function save(e) { e.preventDefault(); const form = e.currentTarget; const criteria = [...form.querySelectorAll('.cqa-criterion')].map((el, i) => ({ id: el.querySelector('[name=id]').value.trim() || `c${i+1}`, section: el.querySelector('[name=section]').value, name: el.querySelector('[name=criterion-name]').value.trim(), description: el.querySelector('[name=description]').value.trim(), type: el.querySelector('[name=type]').value, levels: [...el.querySelectorAll('[data-level]')].map(x => ({ value: Number(x.querySelector('[name=level-value]').value), description: x.querySelector('[name=level-description]').value })), polarity: el.querySelector('[name=polarity]').value, na_allowed: el.querySelector('[name=na-allowed]').checked, na_condition: el.querySelector('[name=na-condition]').value.trim(), weight: Number(el.querySelector('[name=weight]').value), kind: el.querySelector('[name=kind]').value })); const next = { ...selected, version: undefined, name: form.elements.name.value.trim(), sections: [...form.querySelectorAll('[name=section-id]')].map((x,i) => ({ id:x.value.trim(), name:form.querySelectorAll('[name=section-name]')[i].value.trim() })), criteria }; try { const saved = await api.saveChecklist(next); all.push(saved); selected=saved; draw(); } catch (err) { form.querySelector('#cl-status').textContent = err.message; } }
+export async function render(root) {
+  const versions = await api.checklists(true);
+  let draft = structuredClone(versions.at(-1));
+  let notice = '';
+  const input = (name, value, type = 'text', extra = '') => `<input class="cqa-input" name="${name}" type="${type}" value="${esc(value)}" ${extra}>`;
+  function draw() {
+    root.innerHTML = `<h1>Редактор чек-листа</h1><label>Сохранённые версии <select id="versions" class="cqa-input">${versions.map((v,i) => `<option value="${i}" ${v.id === draft.id && v.version === draft.version ? 'selected' : ''}>${esc(v.name)} · v${v.version} · ${esc(fmtDate(v.created_at))}</option>`).join('')}</select></label>
+    <p role="status">${esc(notice)}</p><form id="editor"><label>Название ${input('name', draft.name, 'text', 'required')}</label><div id="criteria">${draft.criteria.map((c,i) => `<fieldset class="cqa-card" data-index="${i}"><legend>${esc(c.id)}</legend><div class="cqa-form-grid">
+    <label>ID ${input('id',c.id,'text','required')}</label><label>Название ${input('name',c.name,'text','required')}</label>
+    <label>Формулировка <textarea class="cqa-input" name="description" required>${esc(c.description)}</textarea></label>
+    <label>Тип <select name="type" class="cqa-input"><option value="yesno" ${c.type==='yesno'?'selected':''}>Да / Нет</option><option value="scale" ${c.type==='scale'?'selected':''}>Шкала</option></select></label>
+    <label>Секция <select class="cqa-input" name="section">${draft.sections.map(s=>`<option value="${esc(s.id)}" ${s.id===c.section?'selected':''}>${esc(s.name)}</option>`).join('')}</select></label>
+    <label>Вес ${input('weight',c.weight,'number','min="0" step="any" required')}</label>
+    <label>Polarity <select name="polarity" class="cqa-input"><option value="positive">Да = выполнено</option><option value="negative" ${c.polarity==='negative'?'selected':''}>Да = нарушение</option></select></label>
+    <label>Вид <select name="kind" class="cqa-input"><option value="normal">Обычный</option><option value="gross" ${c.kind==='gross'?'selected':''}>Грубая ошибка</option></select></label>
+    <label><input name="na_allowed" type="checkbox" ${c.na_allowed?'checked':''}> N/A разрешён</label>
+    <label>Условие N/A ${input('na_condition',c.na_condition)}</label>
+    <label>Ступени: одна строка «балл | описание»<textarea class="cqa-input" name="levels" rows="5">${esc((c.levels||[]).map(l=>`${l.value} | ${l.description}`).join('\n'))}</textarea></label>
+    </div><button type="button" class="cqa-btn cqa-btn-small" data-remove="${i}">Удалить критерий</button></fieldset>`).join('')}</div>
+    <button type="button" class="cqa-btn" id="add">Добавить критерий</button> <button class="cqa-btn" type="submit">Сохранить как новую версию</button><p class="cqa-error" role="alert" id="error"></p></form>`;
+    const form = root.querySelector('form');
+    function capture() {
+      draft.name = form.querySelector(':scope > label input').value.trim();
+      draft.criteria = [...form.querySelectorAll('fieldset')].map(el => {
+        const d = new FormData();
+        for (const e of el.querySelectorAll('[name]')) d.set(e.name, e.type==='checkbox' ? e.checked : e.value);
+        const c = {...draft.criteria[Number(el.dataset.index)], ...Object.fromEntries(d)};
+        c.weight = Number(c.weight); c.na_allowed = c.na_allowed === 'true';
+        c.levels = c.type === 'scale' ? c.levels.split('\n').filter(x=>x.trim()).map(line=> { const at=line.indexOf('|'); return {value:at<0?NaN:Number(line.slice(0,at).trim()),description:line.slice(at+1).trim()}; }) : [];
+        return c;
+      });
+    }
+    root.querySelector('#versions').onchange = e => { draft=structuredClone(versions[e.target.value]); notice=''; draw(); };
+    root.querySelector('#add').onclick = () => { capture(); draft.criteria.push({id:'c_'+Date.now().toString(36),name:'Новый критерий',description:'',section:draft.sections[0]?.id,type:'yesno',weight:10,kind:'normal',na_allowed:false,na_condition:''}); draw(); };
+    root.querySelectorAll('[data-remove]').forEach(b=>b.onclick=()=>{capture();draft.criteria.splice(Number(b.dataset.remove),1);draw();});
+    form.onsubmit = async e => {
+      e.preventDefault(); capture(); const button=form.querySelector('[type=submit]'); button.disabled=true;
+      try {
+        const saved=await api.saveChecklist(draft); versions.push(saved); draft=structuredClone(saved); notice=`Сохранена версия ${saved.version}. Предыдущие версии доступны в списке.`; draw();
+      } catch(e) { root.querySelector('#error').textContent=e.message; button.disabled=false; }
+    };
+  }
   draw();
 }
-function criterion(c, i, sections) { const levels = c.type === 'scale' && c.levels?.length ? c.levels : [{value:0,description:''},{value:10,description:''}]; return `<fieldset class="cqa-criterion"><legend>${i+1}. ${esc(c.name || 'Новый критерий')}</legend><div class="cqa-form-grid">${field('ID','id',c.id)}${field('Название','criterion-name',c.name)}${field('Формулировка','description',c.description)}<label class="cqa-field"><span>Секция</span><select name="section">${sections.map(s=>`<option value="${esc(s.id)}" ${s.id===c.section?'selected':''}>${esc(s.name)}</option>`).join('')}</select></label><label class="cqa-field"><span>Тип ответа</span><select name="type" data-type><option value="yesno" ${c.type==='yesno'?'selected':''}>Да / Нет</option><option value="scale" ${c.type==='scale'?'selected':''}>Шкала</option></select></label>${field('Вес','weight',c.weight,'number')}<label class="cqa-field"><span>Полярность</span><select name="polarity"><option value="positive" ${c.polarity!=='negative'?'selected':''}>Положительная</option><option value="negative" ${c.polarity==='negative'?'selected':''}>Штрафная</option></select></label><label class="cqa-field"><span>Вид</span><select name="kind"><option value="normal" ${c.kind!=='gross'?'selected':''}>Обычный</option><option value="gross" ${c.kind==='gross'?'selected':''}>Грубая ошибка</option></select></label></div><label class="cqa-check"><input name="na-allowed" type="checkbox" ${c.na_allowed?'checked':''}> Разрешить N/A</label>${field('Условие N/A','na-condition',c.na_condition)}<div class="cqa-levels" ${c.type!=='scale'?'hidden':''}><strong>Ступени шкалы</strong>${levels.map(l=>`<div data-level class="cqa-inline">${field('Баллы','level-value',l.value,'number')}${field('Описание','level-description',l.description)}</div>`).join('')}</div><button type="button" class="cqa-btn cqa-btn-small" data-remove-criterion>Удалить критерий</button></fieldset>`; }

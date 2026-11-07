@@ -1,13 +1,40 @@
 import { api } from '../api.js';
 import { esc, scorePill } from '../ui.js';
-import { currentRole } from '../app.js';
-
-export async function render(container) {
-  const role = currentRole();
-  const appeals = await api.appeals(role === 'reviewer' ? { status: 'open' } : {});
-  const evaluations = new Map();
-  await Promise.all(appeals.map(async a => { try { evaluations.set(a.evaluation_id, await api.evaluation(a.evaluation_id)); } catch {} }));
-  container.innerHTML = `<div class="cqa-page-head"><h1>Апелляции</h1><span class="cqa-muted">Режим: ${role === 'reviewer' ? 'очередь проверяющего' : 'мои апелляции'}</span></div>${appeals.length ? appeals.map(a => card(a, evaluations.get(a.evaluation_id), role)).join('') : '<section class="cqa-card"><p class="cqa-muted">Апелляций пока нет.</p></section>'}`;
-  container.querySelectorAll('[data-decide]').forEach(form => form.addEventListener('submit', async e => { e.preventDefault(); const fd = new FormData(form); await api.decideAppeal(form.dataset.decide, { action: fd.get('action'), new_answer: fd.get('new_answer') || undefined, reason: fd.get('reason') }); await render(container); }));
+import { role } from '../role.js';
+export const answerLabel = a => ({yes:'Да',no:'Нет',na:'N/A',manual:'Ручная проверка'}[a] ?? a ?? '—');
+export function appealForm(evaluation, checklist, appeals, done) {
+  const box=document.createElement('section'); box.className='cqa-card';
+  const available=checklist.criteria.filter(c=>!appeals.some(a=>a.criterion_id===c.id && a.status==='open'));
+  box.innerHTML=`<h2>Подать апелляцию</h2>${available.length ? `<form class="cqa-form-grid"><label>Критерий <select class="cqa-input" name="criterion_id">${available.map(c=>`<option value="${esc(c.id)}">${esc(c.name)}</option>`).join('')}</select></label><label>Комментарий <textarea class="cqa-input" name="comment" required></textarea></label><button class="cqa-btn">Подать апелляцию</button><p role="alert" class="cqa-error"></p></form>`:'<p>По всем критериям есть открытые апелляции.</p>'}`;
+  const form=box.querySelector('form');
+  if(form) form.onsubmit=async e=>{ e.preventDefault(); const b=form.querySelector('button'); b.disabled=true; try {await api.createAppeal({evaluation_id:evaluation.id,...Object.fromEntries(new FormData(form))}); await done();} catch(e){form.querySelector('[role=alert]').textContent=e.message;b.disabled=false;} };
+  return box;
 }
-function card(a, ev, role) { const result = ev?.results?.find(r => r.criterion_id === a.criterion_id); return `<section class="cqa-card cqa-appeal"><div class="cqa-page-head"><h2>${esc(a.conversation_id)} · критерий ${esc(a.criterion_id)}</h2><span class="cqa-tag ${a.status==='open'?'cqa-tag-open':'cqa-tag-resolved'}">${a.status==='open'?'Открыта':'Решена'}</span></div><p>${esc(a.comment)}</p><p class="cqa-muted">Исходный ответ: <strong>${esc(String(result?.answer ?? '—'))}</strong> · итог: ${scorePill(ev?.score?.total)}</p>${a.decision ? `<p><strong>Решение:</strong> ${a.decision.action === 'change' ? `изменить на ${esc(String(a.decision.new_answer))}` : 'подтвердить'} — ${esc(a.decision.reason)}</p>` : role === 'reviewer' ? `<form class="cqa-decision" data-decide="${esc(a.id)}"><label>Решение <select name="action"><option value="confirm">Подтвердить</option><option value="change">Изменить</option></select></label><label>Новый ответ <input class="cqa-input" name="new_answer" placeholder="yes / no / na / число"></label><textarea class="cqa-input" name="reason" required placeholder="Причина решения"></textarea><button class="cqa-btn" type="submit">Сохранить решение</button></form>` : ''}</section>`; }
+export async function render(root, params={}) {
+  const status=params.status || 'open';
+  root.innerHTML=`<h1>${role()==='reviewer'?'Очередь проверяющего':'Апелляции'}</h1><label>Статус <select id="status" class="cqa-input"><option value="open">Открытые</option><option value="resolved">С решением</option><option value="all">Все</option></select></label><div id="queue"></div>`;
+  root.querySelector('#status').value=status;
+  root.querySelector('#status').onchange=e=>{location.hash=`#/appeals?status=${e.target.value}`;};
+  const appeals=await api.appeals(status==='all'?{}:{status});
+  const queue=root.querySelector('#queue');
+  if(!appeals.length) queue.textContent='Апелляций нет.';
+  for(const a of appeals) {
+    const ev=await api.evaluation(a.evaluation_id), cl=await api.checklist(ev.checklist_id,ev.checklist_version);
+    const c=cl.criteria.find(c=>c.id===a.criterion_id), original=ev.results.find(r=>r.criterion_id===a.criterion_id);
+    const card=document.createElement('section');card.className='cqa-card';
+    card.innerHTML=`<h2>${esc(c?.name || a.criterion_id)}</h2><a href="#/conv/${encodeURIComponent(a.conversation_id)}?ev=${encodeURIComponent(ev.id)}">Диалог ${esc(a.conversation_id)}</a><p>Исходный ответ: ${esc(answerLabel(original?.answer))}</p><p>${esc(original?.explanation)}</p><p>Комментарий оператора: ${esc(a.comment)}</p>${a.decision?`<p>Решение: ${a.decision.action==='change'?`изменить на ${esc(answerLabel(a.decision.new_answer))}`:'подтвердить'}. Причина: ${esc(a.decision.reason)}</p><p>Итог на момент решения: ${scorePill(a.final_score?.total)}</p>`:''}`;
+    if(role()==='reviewer' && a.status==='open' && c) {
+      const form=document.createElement('form');form.className='cqa-form-grid';
+      const answers=c.type==='scale'?c.levels.map(l=>l.value):['yes','no']; if(c.na_allowed) answers.push('na');
+      form.innerHTML=`<label>Решение <select name="action" class="cqa-input"><option value="confirm">Подтвердить</option><option value="change">Изменить</option></select></label><label>Новый ответ <select name="new_answer" class="cqa-input" disabled>${answers.map(v=>`<option value="${esc(v)}">${esc(answerLabel(v))}</option>`).join('')}</select></label><label>Причина <textarea class="cqa-input" name="reason" required></textarea></label><button class="cqa-btn">Сохранить решение</button><p class="cqa-error" role="alert"></p>`;
+      form.elements.action.onchange=()=>{form.elements.new_answer.disabled=form.elements.action.value!=='change';};
+      form.onsubmit=async e=>{e.preventDefault();const b=form.querySelector('button');b.disabled=true;try{const d=Object.fromEntries(new FormData(form));if(c.type==='scale' && d.new_answer!=='na' && d.action==='change') d.new_answer=Number(d.new_answer);await api.decideAppeal(a.id,d);await render(root,params);}catch(e){form.querySelector('[role=alert]').textContent=e.message;b.disabled=false;}};
+      card.append(form);
+    }
+    queue.append(card);
+  }
+}
+
+export function mountCardAppeals({root, evaluation, checklist, appeals, rerender}) {
+  if (role() === 'operator') root.querySelector('.cqa-conv-eval').append(appealForm(evaluation, checklist, appeals, rerender));
+}
