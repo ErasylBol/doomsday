@@ -36,6 +36,7 @@ async function route() {
   document.querySelectorAll('#cqa-nav a').forEach((a) => {
     a.classList.toggle('cqa-active', hash === a.getAttribute('href') || hash.startsWith(a.getAttribute('href') + '/'));
   });
+  document.body.dataset.view = r.view; // тема (theme-freedom.css) подбирает иконку заголовка по экрану
   root.innerHTML = '<p class="cqa-muted">Загрузка…</p>';
   try {
     const mod = await import(`./views/${r.view}.js`);
