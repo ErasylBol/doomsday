@@ -216,8 +216,10 @@ GET  /api/alerts   POST /api/alerts/:evaluationId/ack { note }
 ## Текущее дополнение: фронт и демо
 
 - Реализованы `checklists.js`, `appeals.js`, `list.js`, `conversation.js`, переключатель роли в шапке.
-- `GET /api/datasets/:groupId` сейчас читает **локальный** снапшот `data/<groupId>.json`; загрузка API организаторов не реализована. Для тестов каталог можно задать через `DATA_DIR`.
-- `POST /api/evaluate` принимает также `checklist_version`, обрабатывает до 5 диалогов одновременно и возвращает `{evaluations, errors}` после завершения (потокового прогресса пока нет).
+- `GET /api/datasets/:groupId`: локальный `data/<groupId>.json`; если файла нет или `?refresh=1` — скачивает из `CQA_API_URL`
+  и кеширует (`server/datasets.js`). Каталог можно задать через `DATA_DIR`. `GET /api/conversations/:id/audio` → свежий mp3.
+- `POST /api/evaluate` принимает `checklist_version`; по умолчанию фоновая задача `{ job_id }` с прогрессом в `GET /api/jobs/:id`,
+  `{ wait: true }` — синхронно. До 5 диалогов одновременно. Проверено сквозь UI на реальном API (07.11).
 - `GET /api/evaluations/:id` дополнен `final_score`: учитывает все решения, исходные `results` и `score` сохраняются.
 - Решение по закрытой апелляции повторно не принимается; ответ проверяется по сохранённой версии шкалы/N/A.
 - Сценарий и план репетиции: `docs/DEMO.md`. Ступени c04/c06 сверены с отдельным PDF чек-листа в docs/.
