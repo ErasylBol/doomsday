@@ -108,8 +108,6 @@ app.get('/api/alerts', (req, res) => res.json(analytics.alerts(data(), store.get
 app.post('/api/alerts/:evaluationId/ack', (req, res) => res.json(store.ackAlert(req.params.evaluationId, req.body?.note || '')));
 
 // ---------- статика ----------
-// Формула общая для бэка и фронта: карточка пересчитывает финальный итог по всем решениям апелляций.
-app.get('/shared/scoring.js', (req, res) => res.type('application/javascript').sendFile(path.join(ROOT, 'server', 'scoring.js')));
 app.use(express.static(path.join(ROOT, 'web')));
 
 const port = Number(process.env.PORT) || 3000;
