@@ -47,7 +47,11 @@ export function scores(ev, checklist, appeals) {
   const evAppeals = appeals.filter((a) => a.evaluation_id === ev.id);
   const changed = evAppeals.some((a) => a.status === 'resolved' && a.decision?.action === 'change');
   const final = changed && checklist ? computeScore(checklist, finalResults(ev, appeals)) : original;
-  return { original, final, changed, appeals: evAppeals };
+  // «Проверить»: прогоны модели разошлись, а проверяющий по этому критерию ещё не решал
+  const decided = new Set(evAppeals.filter((a) => a.status === 'resolved').map((a) => a.criterion_id));
+  const inChecklist = (id) => !checklist || checklist.criteria.some((c) => c.id === id);
+  const unsure = (ev.results || []).filter((r) => isUnsure(r) && !decided.has(r.criterion_id) && inChecklist(r.criterion_id)).map((r) => r.criterion_id);
+  return { original, final, changed, appeals: evAppeals, unsure };
 }
 
 /** Секунды от начала: "MM:SS" / "HH:MM:SS" или ISO 8601 (как server/llm/events.js). */
@@ -99,3 +103,19 @@ export function answerClass(criterion, answer) {
   const bad = criterion?.kind === 'gross' || criterion?.polarity === 'negative' ? answer === 'yes' : answer === 'no';
   return bad ? 'cqa-ans-bad' : 'cqa-ans-good';
 }
+
+/** Порог «проверить»: доля голосов прогонов ниже порога = модели разошлись (при 3 прогонах это 2 из 3 и хуже). */
+export const UNSURE_BELOW = 0.75;
+export const isUnsure = (r) =>
+  !!r && r.answer !== 'manual' && r.confidence !== undefined && r.confidence !== null && Number(r.confidence) < UNSURE_BELOW;
+
+/** Подсказка с раскладом голосов: «Да: 2, Нет: 1». */
+export function votesLabel(criterion, r) {
+  if (!r?.votes) return r?.confidence !== undefined && r?.confidence !== null ? `Согласие прогонов ${Math.round(r.confidence * 100)}%` : '';
+  return Object.entries(r.votes)
+    .map(([k, v]) => `${answerLabel(criterion, criterion?.type === 'scale' && k !== 'na' && k !== 'manual' ? Number(k) : k)}: ${v}`)
+    .join(', ');
+}
+
+/** Ответ = нарушение (красная метка в таймлайне): «Нет», грубая/штрафная «Да», шкала ниже половины. */
+export const isViolation = (criterion, answer) => answerClass(criterion, answer) === 'cqa-ans-bad';

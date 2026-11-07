@@ -2,9 +2,15 @@
 // плеер для звонков, итоги по секциям, исходная оценка / решение по апелляции / финал.
 import { api } from '../api.js';
 import { esc, scorePill, fmtScore, fmtDate, channelLabel, bar } from '../ui.js';
-import { currentGroup, datasetRecords, checklistFor, scores, finalResults, offsets, fmtOffset, answerLabel, answerClass } from '../evalutil.js';
+import {
+  currentGroup, datasetRecords, checklistFor, scores, finalResults, offsets, fmtOffset, answerLabel, answerClass,
+  isUnsure, isViolation, votesLabel,
+} from '../evalutil.js';
 
 const SPEAKER = { client: 'Клиент', operator: 'Оператор', bot: 'Бот', system: 'Система' };
+const AVATAR = { client: 'К', operator: 'О', bot: 'Б', system: 'С' };
+const PAUSE_SEC = 60; // разрыв между соседними репликами, который показываем как паузу
+const WARN_EVENTS = new Set(['long_wait', 'hold', 'recording_paused', 'recording_resumed', 'disconnect']);
 
 export async function render(container, params) {
   const id = params.id;
@@ -28,6 +34,8 @@ export async function render(container, params) {
   const final = ev ? finalResults(ev, appeals) : [];
   const events = new Map();
   for (const e of ev?.events || []) if (e.index !== null && e.index !== undefined) (events.get(e.index) || events.set(e.index, []).get(e.index)).push(e);
+  const marks = ev && checklist ? messageMarks(ev, checklist, final, s) : new Map();
+  const pauses = findPauses(transcript, off, events);
 
   container.innerHTML = `
     <div class="cqa-page-head">
@@ -49,10 +57,12 @@ export async function render(container, params) {
     ${ev ? summary(ev, checklist, s) : '<div class="cqa-card"><p class="cqa-muted">Диалог ещё не оценён. Нажмите «Оценить».</p></div>'}
     <div class="cqa-conv">
       <section class="cqa-card cqa-conv-transcript">
-        <h2>Транскрипт</h2>
+        <div class="cqa-section-head"><h2>Диалог</h2><span class="cqa-muted">${transcript.length} реплик${off.at(-1) ? ` · ${fmtOffset(off.at(-1))}` : ''}</span></div>
         ${isCall ? '<div id="cqa-player" class="cqa-player"><span class="cqa-muted">Загрузка аудио…</span></div>' : ''}
-        ${record ? '' : '<p class="cqa-error">Транскрипт не загрузился (набор не доступен на бэкенде).</p>'}
-        <div class="cqa-transcript" id="cqa-transcript">${transcript.map((m, i) => message(m, i, off[i], isCall, events.get(i))).join('')}</div>
+        ${record ? timeline(transcript, off, marks, pauses) : '<p class="cqa-error">Транскрипт не загрузился (набор не доступен на бэкенде).</p>'}
+        <div class="cqa-transcript" id="cqa-transcript">${transcript
+          .map((m, i) => pauseRow(pauses.get(i), i) + message(m, i, off[i], isCall, events.get(i), marks.get(i)))
+          .join('')}</div>
       </section>
       <section class="cqa-conv-eval">
         ${ev && checklist ? criteriaBlock(ev, checklist, s, final) : ev ? '<div class="cqa-card"><p class="cqa-error">Версия чек-листа оценки не найдена.</p></div>' : ''}
@@ -104,6 +114,9 @@ function summary(ev, checklist, s) {
       <div class="cqa-tile"><div class="cqa-tile-label">Апелляции</div>
         <div class="cqa-tile-value">${s.appeals.length}</div>
         <div class="cqa-tile-sub">${s.appeals.length ? `решено ${resolved}, открыто ${s.appeals.length - resolved}` : 'не подавались'}</div></div>
+      <div class="cqa-tile ${s.unsure.length ? 'cqa-tile-warn' : ''}"><div class="cqa-tile-label">Проверить</div>
+        <div class="cqa-tile-value">${s.unsure.length}</div>
+        <div class="cqa-tile-sub">${s.unsure.length ? `модели разошлись: ${s.unsure.map((c) => esc(nameOf(c))).join(', ')}` : 'прогоны модели согласны'}</div></div>
       <div class="cqa-tile"><div class="cqa-tile-label">Ручная проверка</div>
         <div class="cqa-tile-value">${manual.length}</div>
         <div class="cqa-tile-sub">${manual.length ? manual.map((c) => esc(nameOf(c))).join(', ') : 'не требуется'}</div></div>
@@ -129,18 +142,98 @@ function summary(ev, checklist, s) {
       .join('')}</div>` : ''}`;
 }
 
-function message(m, i, offset, isCall, evs = []) {
-  const sp = m.speaker || 'system';
-  return `<div class="cqa-msg cqa-msg-${esc(sp)}" id="msg-${i}" data-idx="${i}">
-    <div class="cqa-msg-meta">
-      <span class="cqa-msg-idx">[${i}]</span>
-      <span class="cqa-msg-who">${esc(SPEAKER[sp] || sp)}</span>
-      <span class="cqa-muted" title="${esc(m.timestamp)}">${esc(shortTs(m.timestamp))}</span>
-      ${isCall && offset !== null ? `<button class="cqa-btn cqa-btn-small cqa-seek" data-seek="${offset}" title="Перемотать запись">▶ ${fmtOffset(offset)}</button>` : ''}
-      ${evs.map((e) => `<span class="cqa-tag cqa-tag-event" title="${esc(e.type)}">${esc(e.label)}</span>`).join('')}
+function message(m, i, offset, isCall, evs = [], mk) {
+  const sp = SPEAKER[m.speaker] ? m.speaker : 'system';
+  const cls = [`cqa-msg`, `cqa-msg-${sp}`, mk?.violations.length ? 'cqa-msg-violation' : '', mk?.unsure.length ? 'cqa-msg-unsure' : ''].join(' ');
+  const chips = [
+    ...(mk?.violations || []).map((x) => `<button class="cqa-mark cqa-mark-bad" data-crit="${esc(x.id)}" title="Перейти к критерию">Нарушение · ${esc(x.name)}</button>`),
+    ...(mk?.unsure || []).map((x) => `<button class="cqa-mark cqa-mark-warn" data-crit="${esc(x.id)}" title="Модели разошлись — проверьте">Проверить · ${esc(x.name)}</button>`),
+  ].join('');
+  return `<div class="${cls}" id="msg-${i}" data-idx="${i}">
+    <span class="cqa-avatar cqa-avatar-${sp}" aria-hidden="true">${AVATAR[sp]}</span>
+    <div class="cqa-bubble">
+      <div class="cqa-msg-meta">
+        <span class="cqa-msg-who">${esc(SPEAKER[sp])}</span>
+        <span class="cqa-msg-idx">#${i}</span>
+        <span class="cqa-msg-time" title="${esc(m.timestamp)}">${esc(shortTs(m.timestamp))}</span>
+        ${isCall && offset !== null ? `<button class="cqa-seek" data-seek="${offset}" title="Перемотать запись на эту реплику">▶ ${fmtOffset(offset)}</button>` : ''}
+      </div>
+      <div class="cqa-msg-text">${esc(m.text)}</div>
+      ${evs.length ? `<div class="cqa-msg-events">${evs
+        .map((e) => `<span class="cqa-event ${WARN_EVENTS.has(e.type) ? 'cqa-event-warn' : ''}" title="${esc(e.type)}">${esc(e.label)}</span>`)
+        .join('')}</div>` : ''}
+      ${chips ? `<div class="cqa-msg-marks">${chips}</div>` : ''}
     </div>
-    <div class="cqa-msg-text">${esc(m.text)}</div>
   </div>`;
+}
+
+/** Разделитель-пауза перед репликой i. */
+function pauseRow(p, i) {
+  if (!p) return '';
+  return `<button class="cqa-pause ${p.long ? 'cqa-pause-long' : ''}" data-goto="${i}" title="Перейти к реплике #${i}">
+    <span>${p.long ? 'Долгий ответ оператора' : 'Пауза'} · ${fmtDuration(p.sec)}</span></button>`;
+}
+
+const fmtDuration = (sec) => {
+  const s = Math.round(sec);
+  return s >= 60 ? `${Math.floor(s / 60)} мин ${String(s % 60).padStart(2, '0')} с` : `${s} с`;
+};
+
+/** Паузы ≥ PAUSE_SEC между соседними репликами; долгий ответ оператора — из разметки событий (long_wait). */
+function findPauses(transcript, off, events) {
+  const out = new Map();
+  for (let i = 1; i < transcript.length; i++) {
+    if (off[i] === null || off[i - 1] === null) continue;
+    const gap = off[i] - off[i - 1];
+    if (gap < PAUSE_SEC) continue;
+    out.set(i, { sec: gap, long: (events.get(i) || []).some((e) => e.type === 'long_wait') });
+  }
+  return out;
+}
+
+/** Метки на репликах: нарушения (по финальному ответу) и «проверить» (прогоны модели разошлись). */
+function messageMarks(ev, checklist, final, s) {
+  const out = new Map();
+  const get = (i) => out.get(i) || out.set(i, { violations: [], unsure: [] }).get(i);
+  const finalById = new Map(final.map((r) => [r.criterion_id, r.answer]));
+  for (const r of ev.results || []) {
+    const c = checklist.criteria.find((x) => x.id === r.criterion_id);
+    if (!c) continue;
+    const ans = finalById.has(c.id) ? finalById.get(c.id) : r.answer;
+    for (const i of r.evidence || []) {
+      if (isViolation(c, ans)) get(i).violations.push({ id: c.id, name: c.name });
+      else if (s.unsure.includes(c.id)) get(i).unsure.push({ id: c.id, name: c.name });
+    }
+  }
+  return out;
+}
+
+/** Таймлайн: полоса реплик по времени, цвет = роль, красная точка = нарушение, жёлтая = проверить, штриховка = пауза. */
+function timeline(transcript, off, marks, pauses) {
+  if (!transcript.length) return '';
+  const segs = transcript.map((m, i) => {
+    const sp = SPEAKER[m.speaker] ? m.speaker : 'system';
+    const next = off[i + 1] ?? null;
+    const dur = off[i] !== null && next !== null ? next - off[i] : null;
+    const grow = dur === null ? 4 : Math.max(2, Math.min(dur >= PAUSE_SEC ? 6 : dur, 30));
+    const mk = marks.get(i);
+    const dot = mk?.violations.length ? '<i class="cqa-tl-dot cqa-tl-dot-bad"></i>' : mk?.unsure.length ? '<i class="cqa-tl-dot cqa-tl-dot-warn"></i>' : '';
+    const p = pauses.get(i);
+    const pause = p
+      ? `<button class="cqa-tl-seg cqa-tl-pause ${p.long ? 'cqa-tl-pause-long' : ''}" data-goto="${i}" style="flex-grow:${Math.max(4, Math.min(p.sec / 8, 40)).toFixed(1)}"
+          title="${p.long ? 'Долгий ответ оператора' : 'Пауза'} ${fmtDuration(p.sec)}"></button>`
+      : '';
+    const tip = `#${i} ${SPEAKER[sp]} ${shortTs(m.timestamp)}${mk?.violations.length ? ` · нарушение: ${mk.violations.map((x) => x.name).join(', ')}` : ''}${
+      mk?.unsure.length ? ` · проверить: ${mk.unsure.map((x) => x.name).join(', ')}` : ''}\n${String(m.text || '').slice(0, 90)}`;
+    return `${pause}<button class="cqa-tl-seg cqa-tl-${sp}" data-goto="${i}" data-tl="${i}" style="flex-grow:${grow.toFixed(1)}" title="${esc(tip)}">${dot}</button>`;
+  });
+  return `<div class="cqa-timeline" aria-label="Таймлайн диалога">${segs.join('')}</div>
+    <div class="cqa-tl-legend">
+      <span><i class="cqa-sw cqa-tl-client"></i>Клиент</span><span><i class="cqa-sw cqa-tl-operator"></i>Оператор</span>
+      <span><i class="cqa-sw cqa-tl-bot"></i>Бот</span><span><i class="cqa-sw cqa-tl-system"></i>Система</span>
+      <span><i class="cqa-sw cqa-tl-pause"></i>Пауза ≥ ${PAUSE_SEC} с</span>
+      <span><i class="cqa-tl-dot cqa-tl-dot-bad"></i>Нарушение</span><span><i class="cqa-tl-dot cqa-tl-dot-warn"></i>Проверить</span>
+    </div>`;
 }
 
 // ISO-метки звонков показываем как время суток, исходная метка в title
@@ -159,7 +252,9 @@ function criteriaBlock(ev, checklist, s, final) {
     .map((sec) => {
       const crit = checklist.criteria.filter((c) => (sec.id === '__none' ? orphan.includes(c) : c.section === sec.id));
       if (!crit.length) return '';
-      return `<div class="cqa-card cqa-crit-section"><h2>${esc(sec.name)}</h2>${crit
+      const st = s.final?.sections?.[sec.id]?.total;
+      return `<div class="cqa-card cqa-crit-section"><div class="cqa-section-head"><h2>${esc(sec.name)}</h2>${
+        crit.every((c) => c.kind === 'gross') ? '' : scorePill(st)}</div>${crit
         .map((c) => criterion(c, byId.get(c.id), finalById.get(c.id), s, ev))
         .join('')}</div>`;
     })
@@ -175,6 +270,7 @@ function criterion(c, r = {}, finalAnswer, s, ev) {
   const ev_ = r.evidence || [];
   const range = r.checked_range;
   const isNo = c.type === 'yesno' && (c.polarity === 'negative' || c.kind === 'gross' ? orig === 'yes' : orig === 'no');
+  const unsure = s.unsure.includes(c.id);
   const level = c.type === 'scale' ? (c.levels || []).find((l) => Number(l.value) === Number(changed ? finalAnswer : orig)) : null;
 
   const points = c.kind === 'gross'
@@ -183,12 +279,13 @@ function criterion(c, r = {}, finalAnswer, s, ev) {
       ? `<span title="Баллы в итоге из 100 / эффективный вес">${fmtScore(pcF.points)} из ${fmtScore(pcF.weight_eff)}</span>`
       : '<span class="cqa-muted">не учитывается</span>';
 
-  return `<article class="cqa-crit ${c.kind === 'gross' && (changed ? finalAnswer : orig) === 'yes' ? 'cqa-crit-gross' : ''}" id="crit-${esc(c.id)}" data-criterion="${esc(c.id)}">
+  return `<article class="cqa-crit ${c.kind === 'gross' && (changed ? finalAnswer : orig) === 'yes' ? 'cqa-crit-gross' : ''} ${unsure ? 'cqa-crit-unsure' : ''}" id="crit-${esc(c.id)}" data-criterion="${esc(c.id)}">
     <div class="cqa-crit-head">
       <span class="cqa-ans ${answerClass(c, changed ? finalAnswer : orig)}">${esc(answerLabel(c, changed ? finalAnswer : orig))}</span>
       <strong class="cqa-crit-name" title="${esc(c.description)}">${esc(c.name)}</strong>
       ${c.kind === 'gross' ? '<span class="cqa-tag cqa-tag-gross">грубая</span>' : ''}
       ${c.polarity === 'negative' ? '<span class="cqa-tag cqa-tag-manual" title="«Да» = нарушение">штрафной</span>' : ''}
+      ${unsure ? `<span class="cqa-tag cqa-tag-unsure" title="${esc(votesLabel(c, r))}">Проверить</span>` : ''}
       <span class="cqa-spacer"></span>
       <span class="cqa-muted">вес ${esc(c.weight)}</span>
       ${points}
@@ -202,7 +299,8 @@ function criterion(c, r = {}, finalAnswer, s, ev) {
       ${ev_.length ? `<span>Доказательство: ${ev_.map((i) => `<button class="cqa-link" data-goto="${i}">реплика ${i}</button>`).join(', ')}</span>` : '<span class="cqa-muted">Без ссылок на реплики</span>'}
       ${(isNo || orig === 'manual') && Array.isArray(range) && range.length === 2
         ? `<span>Проверен участок: <button class="cqa-link" data-goto-range="${range[0]}-${range[1]}">реплики ${range[0]}–${range[1]}</button></span>` : ''}
-      ${r.confidence !== undefined && r.confidence !== null ? `<span class="cqa-muted" title="${r.votes ? esc(Object.entries(r.votes).map(([k, v]) => `${k}: ${v}`).join(', ')) : 'Доля прогонов с этим ответом'}">уверенность ${Math.round(r.confidence * 100)}%</span>` : ''}
+      ${r.confidence !== undefined && r.confidence !== null
+        ? `<span class="${unsure ? 'cqa-unsure-note' : 'cqa-muted'}" title="Доля прогонов модели с этим ответом">уверенность ${Math.round(r.confidence * 100)}%${unsure && r.votes ? ` (${esc(votesLabel(c, r))})` : ''}</span>` : ''}
     </div>
     ${aps.map((a) => appealView(c, a)).join('')}
     <div class="cqa-appeal-slot" data-criterion="${esc(c.id)}" data-evaluation="${esc(ev.id)}"></div>
@@ -223,9 +321,10 @@ function appealView(c, a) {
 
 // ---------- поведение ----------
 function highlight(container, indices, { updateUrl = true } = {}) {
-  container.querySelectorAll('.cqa-msg.cqa-highlight').forEach((el) => el.classList.remove('cqa-highlight'));
+  container.querySelectorAll('.cqa-msg.cqa-highlight, .cqa-tl-active').forEach((el) => el.classList.remove('cqa-highlight', 'cqa-tl-active'));
   const els = indices.map((i) => container.querySelector(`#msg-${i}`)).filter(Boolean);
   els.forEach((el) => el.classList.add('cqa-highlight'));
+  indices.forEach((i) => container.querySelector(`[data-tl="${i}"]`)?.classList.add('cqa-tl-active'));
   if (els[0]) scrollToMsg(container, els[0]);
   if (updateUrl && indices.length) {
     // меняем ?msg без перерисовки экрана (replaceState не вызывает hashchange)
@@ -251,6 +350,12 @@ function scrollToMsg(container, el) {
 function wire(container, ctx) {
   const { id, group, ev, record, off, isCall, params } = ctx;
   let audio = null;
+  // До загрузки метаданных браузер может проигнорировать currentTime — откладываем перемотку
+  const seekTo = (t) => {
+    if (!audio || t === null || t === undefined) return;
+    if (audio.readyState >= 1) audio.currentTime = t;
+    else audio.addEventListener('loadedmetadata', () => { audio.currentTime = t; }, { once: true });
+  };
 
   container.querySelector('#cqa-ev-pick')?.addEventListener('change', (e) => {
     location.hash = `#/conv/${encodeURIComponent(id)}?ev=${encodeURIComponent(e.target.value)}`;
@@ -292,8 +397,20 @@ function wire(container, ctx) {
     }
   });
 
-  // клик по доказательству → прокрутка к реплике и подсветка; у звонка — ещё и перемотка плеера
-  container.addEventListener('click', (e) => {
+  // клик по доказательству → прокрутка к реплике и подсветка; у звонка — ещё и перемотка плеера.
+  // Слушатель на .cqa-conv (пересоздаётся при каждой отрисовке), а не на корне, чтобы не копились обработчики.
+  container.querySelector('.cqa-conv').addEventListener('click', (e) => {
+    const crit = e.target.closest('[data-crit]');
+    if (crit) {
+      const el = container.querySelector(`#crit-${CSS.escape(crit.dataset.crit)}`);
+      if (el) {
+        el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        el.classList.remove('cqa-crit-flash');
+        void el.offsetWidth;
+        el.classList.add('cqa-crit-flash');
+      }
+      return;
+    }
     const g = e.target.closest('[data-goto], [data-goto-range]');
     if (g) {
       let idx;
@@ -302,12 +419,12 @@ function wire(container, ctx) {
         idx = Array.from({ length: Math.max(0, b - a + 1) }, (_, k) => a + k);
       } else idx = [Number(g.dataset.goto)];
       highlight(container, idx);
-      if (isCall && audio && off[idx[0]] !== null && off[idx[0]] !== undefined) audio.currentTime = off[idx[0]];
+      if (isCall) seekTo(off[idx[0]]);
       return;
     }
     const seek = e.target.closest('[data-seek]');
     if (seek && audio) {
-      audio.currentTime = Number(seek.dataset.seek);
+      seekTo(Number(seek.dataset.seek));
       audio.play().catch(() => {});
       highlight(container, [Number(seek.closest('.cqa-msg').dataset.idx)]);
     }
@@ -324,13 +441,11 @@ function wire(container, ctx) {
         box.innerHTML = '<audio controls preload="metadata"></audio>';
         audio = box.querySelector('audio');
         audio.src = src;
-        if (t) audio.currentTime = t;
+        container.querySelector('.cqa-conv').classList.remove('cqa-no-audio');
+        if (t) seekTo(t);
         // SAS-ссылка живёт ~1 час: при ошибке один раз берём свежую
         audio.addEventListener('error', () => { if (!retried) { retried = true; load(); } else fallback(); });
-        if (params.msg !== undefined) {
-          const i = parseIdx(params.msg)[0];
-          audio.addEventListener('loadedmetadata', () => { if (off[i] !== null && off[i] !== undefined) audio.currentTime = off[i]; }, { once: true });
-        }
+        if (params.msg !== undefined && !t) seekTo(off[parseIdx(params.msg)[0]]);
         syncWithAudio(container, audio, off);
       } catch {
         fallback();
@@ -341,6 +456,7 @@ function wire(container, ctx) {
         ? `<a class="cqa-btn cqa-btn-small" href="${esc(record.audio_url)}" target="_blank" rel="noopener">Открыть плеер</a>
            <span class="cqa-muted">Аудио не встроилось; перемотка по репликам недоступна.</span>`
         : '<span class="cqa-muted">Аудиозаписи нет.</span>';
+      container.querySelector('.cqa-conv').classList.add('cqa-no-audio');
       audio = null;
     };
     if (record?.audio_url || ev) load();
@@ -356,8 +472,9 @@ function syncWithAudio(container, audio, off) {
     let i = -1;
     for (let k = 0; k < off.length; k++) if (off[k] !== null && off[k] <= t) i = k;
     if (i === cur) return;
-    container.querySelector('.cqa-msg-playing')?.classList.remove('cqa-msg-playing');
+    container.querySelectorAll('.cqa-msg-playing, .cqa-tl-playing').forEach((el) => el.classList.remove('cqa-msg-playing', 'cqa-tl-playing'));
     container.querySelector(`#msg-${i}`)?.classList.add('cqa-msg-playing');
+    container.querySelector(`[data-tl="${i}"]`)?.classList.add('cqa-tl-playing');
     cur = i;
   });
 }
