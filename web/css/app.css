@@ -81,6 +81,23 @@ a.cqa-tile:hover { text-decoration: none; border-color: var(--cqa-accent); }
 .cqa-input { flex: 1; min-width: 160px; }
 .cqa-btn { font: inherit; font-size: 14px; padding: 6px 12px; border-radius: 6px; border: 1px solid var(--cqa-accent); background: var(--cqa-accent); color: #fff; cursor: pointer; }
 .cqa-btn-small { font-size: 12px; padding: 3px 8px; background: transparent; color: var(--cqa-accent); }
+.cqa-role { font-size: 12px; color: var(--cqa-muted); white-space: nowrap; }
+.cqa-role select, .cqa-field input, .cqa-field select, .cqa-decision textarea { font: inherit; padding: 6px 8px; border: 1px solid var(--cqa-border); border-radius: 6px; background: var(--cqa-surface); color: var(--cqa-text); }
+.cqa-form-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 10px; }
+.cqa-field { display: flex; flex-direction: column; gap: 4px; font-size: 12px; color: var(--cqa-muted); margin: 7px 0; }
+.cqa-field input, .cqa-field select { width: 100%; }
+.cqa-inline { display: flex; gap: 10px; align-items: end; flex-wrap: wrap; }
+.cqa-inline .cqa-field { flex: 1; min-width: 150px; }
+.cqa-criterion { border: 1px solid var(--cqa-border); border-radius: 8px; margin: 12px 0; padding: 10px 14px; }
+.cqa-criterion legend { color: var(--cqa-muted); font-size: 13px; }
+.cqa-check { display: inline-flex; gap: 6px; align-items: center; font-size: 13px; margin: 8px 0; }
+.cqa-levels { margin: 8px 0; padding: 8px; background: var(--cqa-bg); border-radius: 6px; }
+.cqa-form-actions { display: flex; align-items: center; gap: 12px; margin-top: 16px; }
+.cqa-appeal { display: flex; flex-direction: column; gap: 8px; }
+.cqa-tag-open { background: #fff1d2; color: #8a5a00; }
+.cqa-tag-resolved { background: #dff5e8; color: var(--cqa-good); }
+.cqa-decision { display: flex; gap: 8px; align-items: end; flex-wrap: wrap; }
+.cqa-decision textarea { min-width: 260px; min-height: 60px; }
 
 .cqa-alert { border-left: 4px solid var(--cqa-bad); display: flex; flex-direction: column; gap: 8px; }
 .cqa-alert-acked { border-left-color: var(--cqa-border); opacity: .75; }
