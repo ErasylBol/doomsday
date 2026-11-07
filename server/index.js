@@ -177,7 +177,7 @@ app.post('/api/appeals/:id/decision', (req, res) => {
 });
 
 // ---------- бизнес-аналитика ----------
-app.get('/api/analytics/summary', (req, res) => res.json(analytics.summary(data(), filters(req.query))));
+app.get('/api/analytics/summary', (req, res) => res.json(analytics.summary(data(), filters(req.query), req.query)));
 app.get('/api/analytics/operators', (req, res) => res.json(analytics.operators(data(), filters(req.query))));
 app.get('/api/analytics/operators/:name', (req, res) => {
   const p = analytics.operatorProfile(data(), req.params.name, filters(req.query));

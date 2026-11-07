@@ -27,6 +27,19 @@ export async function render(container, { name }) {
       </section>
     </div>
 
+    <section class="cqa-card" aria-labelledby="coaching-title"><h2 id="coaching-title">Коучинг: план улучшения</h2>
+      <p class="cqa-muted">До трёх приоритетов по последним оценкам диалогов с учётом решений по апелляциям. Сначала грубые нарушения, затем потери по весу критерия. План составлен по правилам чек-листа.</p>
+      ${p.coaching.length ? p.coaching.map((c,i) => `<article class="cqa-coaching-item">
+        <h3>${i+1}. ${esc(c.name)} ${c.gross ? '<span class="cqa-tag cqa-tag-gross">риск</span>' : ''}</h3>
+        <p>Случаев для разбора: ${c.failed}. <strong>Практика:</strong> ${esc(c.exercise)}</p>
+        <p><strong>Цель:</strong> ${esc(c.target)}</p>
+        ${c.examples.map(example => {
+          const query = new URLSearchParams({ ev: example.evaluation_id, ...(example.group_id ? {group:example.group_id} : {}), ...(Number.isInteger(example.evidence[0]) ? {msg:example.evidence[0]} : {}) });
+          return `<div class="cqa-coaching-example"><a href="#/conv/${encodeURIComponent(example.conversation_id)}?${esc(query)}">Разобрать ${esc(example.conversation_id)} · v${example.checklist_version}</a><p>${esc(example.explanation || 'Откройте оценку для разбора ответа.')}</p><p class="cqa-muted">Правило этой версии: ${esc(example.rule)}</p></div>`;
+        }).join('')}
+      </article>`).join('') : '<p>Подтверждённых оценкой отклонений нет. Разберите с наставником один успешный диалог; ответы N/A и ручная проверка не считаются ошибками.</p>'}
+    </section>
+
     <section class="cqa-card"><h2>По критериям</h2>
       <p class="cqa-muted">Полоса показывает выполнение критерия оператором, риска — среднее по команде.</p>
       ${p.criteria

@@ -272,6 +272,7 @@ function wire(container, ctx) {
       st.innerHTML = `<div class="cqa-card cqa-job">Оцениваю по «${esc(cl?.name)}» v${cl?.version}…</div>`;
       const res = await api.evaluate({ conversation_ids: [id], group_id: ev?.group_id || group, checklist_id: cl?.id, checklist_version: cl?.version });
       if (res.errors?.length) throw new Error(res.errors.map(e=>e.error).join('; '));
+      let next = res.evaluations?.[0]?.id;
       const jobId = res.job_id || res.id || res.job?.id;
       if (jobId) {
         for (;;) {
@@ -279,11 +280,11 @@ function wire(container, ctx) {
           const j = await api.job(jobId);
           if (['done', 'finished', 'completed', 'error', 'failed'].includes(j.status)) {
             if (['error', 'failed'].includes(j.status) || (j.errors || []).length) throw new Error(j.error || JSON.stringify(j.errors?.[0] || j.status));
+            next = j.evaluation_ids?.[0] || next;
             break;
           }
         }
       }
-      const next = res.evaluations?.[0]?.id;
       location.hash = `#/conv/${encodeURIComponent(id)}?group=${encodeURIComponent(group)}${next ? '&ev='+encodeURIComponent(next) : ''}`;
     } catch (err) {
       st.innerHTML = `<div class="cqa-card cqa-job"><span class="cqa-error">Оценка не удалась: ${esc(err.message)}</span></div>`;
