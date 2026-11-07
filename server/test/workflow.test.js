@@ -37,12 +37,26 @@ test('повторная оценка через API использует выб
    const criteria=Object.fromEntries(Object.entries(schema.properties.criteria.properties).map(([id,c])=>[id,{reasoning:'Тест',answer:c.properties.answer.enum[0],evidence:[0],checked_range:[],explanation:'Тестовый ответ'}]));
    return {json:{operator_name:null,criteria},model:'test-only',usage:{}};
  }};
- const first=await req('/evaluate',{group_id:'TEST',conversation_ids:['reapply'],checklist_id:'default',checklist_version:1});
- const second=await req('/evaluate',{group_id:'TEST',conversation_ids:['reapply'],checklist_id:'default',checklist_version:2});
+ const first=await req('/evaluate',{group_id:'TEST',conversation_ids:['reapply'],checklist_id:'default',checklist_version:1,wait:true});
+ const second=await req('/evaluate',{group_id:'TEST',conversation_ids:['reapply'],checklist_id:'default',checklist_version:2,wait:true});
  assert.equal(first.data.errors.length,0);assert.equal(second.data.errors.length,0);
  assert.ok(first.data.evaluations[0].results.some(r=>r.criterion_id==='c01'));
  assert.ok(second.data.evaluations[0].results.some(r=>r.criterion_id==='replacement'));
  assert.ok(!second.data.evaluations[0].results.some(r=>r.criterion_id==='c01'));
  assert.equal(second.data.evaluations[0].checklist_version,2);
  assert.equal((await req('/evaluations?conversation_id=reapply')).data.length,2);
+});
+
+test('фоновая задача оценки: job_id сразу, затем прогресс до done',async()=>{
+ const start=await req('/evaluate',{group_id:'TEST',conversation_ids:'all',checklist_id:'default'});
+ assert.ok(start.data.job_id);
+ let j; for(let i=0;i<50;i++){j=(await req(`/jobs/${start.data.job_id}`)).data;if(j.status!=='running')break;await new Promise(r=>setTimeout(r,20));}
+ assert.equal(j.status,'done');assert.equal(j.done,1);assert.equal(j.total,1);assert.equal(j.evaluation_ids.length,1);
+});
+
+test('набор: без CQA_API_URL понятная ошибка, локальный файл читается',async()=>{
+ const saved=process.env.CQA_API_URL;delete process.env.CQA_API_URL;
+ const r=await req('/datasets/NOPE');assert.equal(r.status,400);assert.match(r.data.error,/CQA_API_URL/);
+ const ok=await req('/datasets/TEST');assert.equal(ok.data.total,1);
+ if(saved!==undefined)process.env.CQA_API_URL=saved;
 });
