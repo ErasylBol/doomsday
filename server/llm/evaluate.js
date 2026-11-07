@@ -43,12 +43,38 @@ export function vote(criterion, runResults) {
   return { result: { ...pick }, confidence: Math.round((counts.get(chosen) / runResults.length) * 100) / 100, votes: Object.fromEntries(counts) };
 }
 
+/** Критерии для перепроверки: прогоны разошлись (confidence < 1) или валидного ответа нет (manual). */
+export function needsEscalation(results, runs) {
+  return results.filter((r) => r.answer === 'manual' || (runs > 1 && r.confidence < 1)).map((r) => r.criterion_id);
+}
+
 /**
- * @param {object} p { record, checklist, provider, runs=3, group_id }
+ * Перепроверка спорных критериев более сильной моделью (escalation.provider, обычно gpt-6.1-sol).
+ * Возвращает новые results и отчёт; при ошибке сильной модели остаются ответы голосования.
  */
-export async function evaluateConversation({ record, checklist, provider, runs = 3, group_id = null }) {
+async function escalate({ ids, results, record, checklist, events, examples, escalation }) {
+  const sub = { ...checklist, criteria: checklist.criteria.filter((c) => ids.includes(c.id)) };
+  const messages = buildMessages(checklist, record, events, { examples, only: ids });
+  const { out, usage, error } = await runOnce(escalation.provider, messages, buildSchema(sub), sub, record.transcript.length);
+  const report = { model: escalation.provider.model, criteria: ids, changed: [], usage, cost_usd: escalation.cost ? escalation.cost(usage) : null };
+  if (!out) return { results, report: { ...report, error: error?.message || 'нет валидного ответа' } };
+  const next = results.map((r) => {
+    const e = out.results[r.criterion_id];
+    if (!ids.includes(r.criterion_id) || !e) return r;
+    if (String(e.answer) !== String(r.answer)) report.changed.push(r.criterion_id);
+    return { ...e, confidence: r.confidence, ...(r.votes ? { votes: r.votes } : {}), escalated: { model: report.model, from: r.answer } };
+  });
+  return { results: next, report };
+}
+
+/**
+ * @param {object} p { record, checklist, provider, runs=3, group_id, examples, escalation }
+ *   examples   — прецеденты из апелляций по критериям (collectExamples), попадают в промпт у критерия
+ *   escalation — { provider, cost(usage) }: спорные критерии перепроверяются этой моделью
+ */
+export async function evaluateConversation({ record, checklist, provider, runs = 3, group_id = null, examples = {}, escalation = null }) {
   const events = detectEvents(record.transcript);
-  const messages = buildMessages(checklist, record, events);
+  const messages = buildMessages(checklist, record, events, { examples });
   const schema = buildSchema(checklist);
   const started = Date.now();
 
@@ -58,10 +84,15 @@ export async function evaluateConversation({ record, checklist, provider, runs =
   const ok = outs.filter((o) => o.out);
   if (!ok.length) throw outs[0].error || new Error('Все прогоны завершились ошибкой');
 
-  const results = checklist.criteria.map((c) => {
+  let results = checklist.criteria.map((c) => {
     const v = vote(c, outs.map((o) => o.out?.results?.[c.id] || null));
     return { ...v.result, confidence: v.confidence, ...(v.votes && Object.keys(v.votes).length > 1 ? { votes: v.votes } : {}) };
   });
+
+  let escalationReport = null;
+  const disputed = escalation?.provider ? needsEscalation(results, runs) : [];
+  if (disputed.length) ({ results, report: escalationReport } = await escalate({ ids: disputed, results, record, checklist, events, examples, escalation }));
+  const baseCost = costUSD(usage);
 
   // Имя оператора: самое частое непустое значение среди прогонов
   const names = ok.map((o) => o.out.operator_name).filter(Boolean);
@@ -78,7 +109,9 @@ export async function evaluateConversation({ record, checklist, provider, runs =
     model: ok[0].out.model || provider.model,
     runs,
     usage,
-    cost_usd: costUSD(usage),
+    cost_usd: baseCost === null && !escalationReport?.cost_usd ? null : Math.round(((baseCost || 0) + (escalationReport?.cost_usd || 0)) * 1e6) / 1e6,
+    ...(escalationReport ? { escalation: escalationReport } : {}),
+    ...(Object.keys(examples).length ? { appeal_examples: Object.fromEntries(Object.entries(examples).map(([k, v]) => [k, v.length])) } : {}),
     duration_ms: Date.now() - started,
     events,
     results,

@@ -8,7 +8,8 @@ import { checklistError, validAnswer } from './validation.js';
 import { recordsFor, hasLocal, fetchDataset, resolveAudio } from './datasets.js';
 import crypto from 'node:crypto';
 import { evaluateConversation } from './llm/evaluate.js';
-import { createOpenAIProvider } from './llm/provider.js';
+import { createOpenAIProvider, createEscalation } from './llm/provider.js';
+import { collectExamples } from './llm/examples.js';
 import { computeScore, replaceAnswer } from './scoring.js';
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
@@ -82,6 +83,9 @@ app.post('/api/evaluate', async (req, res) => {
     const records = conversation_ids === 'all' ? all : all.filter(r=>conversation_ids.includes(r.conversation_id));
     if (!records.length) return res.status(400).json({ error: 'Диалоги не найдены' });
     const provider = app.locals.evaluationProvider || createOpenAIProvider();
+    // Перепроверка спорных критериев сильной моделью (LLM_ESCALATE_MODEL); в тестах — только явно заданная.
+    const escalation = app.locals.evaluationProvider ? app.locals.escalation || null : createEscalation();
+    const getRecord = (id, g) => recordsFor(g || group_id).find((r) => r.conversation_id === id) || null;
     const job = { id: 'job_' + crypto.randomBytes(5).toString('hex'), status: 'running', group_id, checklist_id: checklist.id, checklist_version: checklist.version,
       total: records.length, done: 0, failed: 0, errors: [], evaluation_ids: [], cost_usd: 0, started_at: new Date().toISOString() };
     jobs.set(job.id, job);
@@ -91,7 +95,11 @@ app.post('/api/evaluate', async (req, res) => {
       while (queue.length) {
         const record = queue.shift();
         try {
-          const ev = store.saveEvaluation(await evaluateConversation({ record, checklist, provider, group_id, runs: Number(process.env.LLM_RUNS) || 3 }));
+          const ev = store.saveEvaluation(await evaluateConversation({
+            record, checklist, provider, group_id, escalation, runs: Number(process.env.LLM_RUNS) || 3,
+            // решения проверяющих по апелляциям — прецеденты у критериев (кроме апелляций на этот же диалог)
+            examples: collectExamples({ checklist, appeals: store.listAppeals(), evaluations: store.listEvaluations(), getRecord, excludeConversation: record.conversation_id }),
+          }));
           evaluations.push(ev); job.evaluation_ids.push(ev.id); job.cost_usd = Math.round((job.cost_usd + (ev.cost_usd || 0)) * 1e6) / 1e6;
         } catch(e) { job.failed++; job.errors.push({ conversation_id: record.conversation_id, error: e.message }); }
         job.done++;

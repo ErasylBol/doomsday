@@ -46,3 +46,20 @@ export function costUSD(usage, env = process.env) {
   const uncached = usage.input_tokens - (usage.cached_input_tokens || 0);
   return Math.round(((uncached * pin + (usage.cached_input_tokens || 0) * pcached + usage.output_tokens * pout) / 1e6) * 1e6) / 1e6;
 }
+
+/**
+ * Модель для перепроверки спорных критериев (LLM_ESCALATE_MODEL, например gpt-6.1-sol). Нет переменной — null.
+ * Ключ и endpoint общие; reasoning и цены — свои: LLM_ESCALATE_REASONING_EFFORT, LLM_ESCALATE_PRICE_*.
+ */
+export function createEscalation(env = process.env) {
+  if (!env.LLM_ESCALATE_MODEL) return null;
+  const sub = {
+    ...env,
+    LLM_MODEL: env.LLM_ESCALATE_MODEL,
+    LLM_REASONING_EFFORT: env.LLM_ESCALATE_REASONING_EFFORT ?? env.LLM_REASONING_EFFORT,
+    LLM_PRICE_INPUT_PER_1M: env.LLM_ESCALATE_PRICE_INPUT_PER_1M,
+    LLM_PRICE_CACHED_INPUT_PER_1M: env.LLM_ESCALATE_PRICE_CACHED_INPUT_PER_1M,
+    LLM_PRICE_OUTPUT_PER_1M: env.LLM_ESCALATE_PRICE_OUTPUT_PER_1M,
+  };
+  return { provider: createOpenAIProvider(sub), cost: (usage) => costUSD(usage, sub) };
+}

@@ -3,7 +3,8 @@
 import 'dotenv/config';
 import fs from 'node:fs';
 import { evaluateConversation } from '../server/llm/evaluate.js';
-import { createOpenAIProvider } from '../server/llm/provider.js';
+import { createOpenAIProvider, createEscalation } from '../server/llm/provider.js';
+import { collectExamples } from '../server/llm/examples.js';
 import * as store from '../server/store.js';
 
 const args = Object.fromEntries(
@@ -17,6 +18,7 @@ if (!fs.existsSync(file)) {
 }
 const raw = JSON.parse(fs.readFileSync(file, 'utf8'));
 let records = raw?.data?.records || raw?.records || raw;
+const allRecords = records;
 if (args.ids) {
   const ids = new Set(String(args.ids).split(','));
   records = records.filter((r) => ids.has(r.conversation_id));
@@ -25,10 +27,14 @@ if (args.limit) records = records.slice(0, Number(args.limit));
 
 const checklist = store.getChecklist(args.checklist || 'default');
 const provider = createOpenAIProvider();
+// --no-escalate 1 / --no-examples 1 — выключить перепроверку спорных критериев и прецеденты из апелляций
+const escalation = args['no-escalate'] ? null : createEscalation();
+const useExamples = !args['no-examples'];
+const byId = new Map(allRecords.map((r) => [r.conversation_id, r]));
 const runs = Number(args.runs || process.env.LLM_RUNS || 3);
 const concurrency = Number(args.concurrency || 5);
 
-console.log(`Оцениваю ${records.length} диалогов · модель ${provider.model} · прогонов ${runs} · чек-лист ${checklist.id} v${checklist.version}`);
+console.log(`Оцениваю ${records.length} диалогов · модель ${provider.model} · прогонов ${runs}${escalation ? ` · спорное → ${escalation.provider.model}` : ''} · чек-лист ${checklist.id} v${checklist.version}`);
 let done = 0;
 let cost = 0;
 let tokens = { in: 0, out: 0 };
@@ -37,12 +43,16 @@ async function worker() {
   while (queue.length) {
     const rec = queue.shift();
     try {
-      const ev = store.saveEvaluation(await evaluateConversation({ record: rec, checklist, provider, runs, group_id: group }));
+      const ev = store.saveEvaluation(await evaluateConversation({
+        record: rec, checklist, provider, runs, group_id: group, escalation,
+        examples: useExamples ? collectExamples({ checklist, appeals: store.listAppeals(), evaluations: store.listEvaluations(), getRecord: (id) => byId.get(id) || null, excludeConversation: rec.conversation_id }) : {},
+      }));
       cost += ev.cost_usd || 0;
       tokens.in += ev.usage.input_tokens;
       tokens.out += ev.usage.output_tokens;
       const low = ev.results.filter((r) => r.confidence < 1).map((r) => r.criterion_id);
-      console.log(`[${++done}/${records.length}] ${rec.conversation_id}: итог ${ev.score.total ?? '—'}${ev.score.gross_error ? ' ГРУБАЯ' : ''}${low.length ? ` · спорные: ${low.join(',')}` : ''}`);
+      const esc = ev.escalation ? ` · перепроверено ${ev.escalation.model}: ${ev.escalation.criteria.join(',')}${ev.escalation.changed.length ? ` (изменено ${ev.escalation.changed.join(',')})` : ''}` : '';
+      console.log(`[${++done}/${records.length}] ${rec.conversation_id}: итог ${ev.score.total ?? '—'}${ev.score.gross_error ? ' ГРУБАЯ' : ''}${low.length ? ` · спорные: ${low.join(',')}` : ''}${esc}`);
     } catch (e) {
       console.error(`[${++done}/${records.length}] ${rec.conversation_id}: ОШИБКА ${e.message}`);
     }
