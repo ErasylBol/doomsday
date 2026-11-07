@@ -15,6 +15,17 @@ const routes = [
 
 const root = document.getElementById('cqa-app');
 
+export function currentRole() { return localStorage.getItem('cqa-role') || 'operator'; }
+export function setRole(role) { localStorage.setItem('cqa-role', role); renderRoleSwitch(); }
+function renderRoleSwitch() {
+  const host = document.getElementById('cqa-role-switch');
+  if (!host) return;
+  host.innerHTML = `<label class="cqa-role">Роль <select id="cqa-role"><option value="operator">Оператор</option><option value="reviewer">Проверяющий</option></select></label>`;
+  const select = host.querySelector('select');
+  select.value = currentRole();
+  select.addEventListener('change', () => setRole(select.value));
+}
+
 async function route() {
   // #/conv/p1-ru-001?msg=5 → путь + query-параметры (msg — индекс реплики для подсветки)
   const [hash, query = ''] = (location.hash || '#/dashboard').split('?');
@@ -36,6 +47,7 @@ async function route() {
     }
   }
   refreshAlertBadge();
+  renderRoleSwitch();
 }
 
 export async function refreshAlertBadge() {

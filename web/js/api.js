@@ -20,6 +20,7 @@ const qs = (params = {}) => {
 export const api = {
   // чек-листы
   checklists: () => req('GET', '/checklists'),
+  checklistsAll: () => req('GET', '/checklists?all=1'),
   checklist: (id, version) => req('GET', `/checklists/${encodeURIComponent(id)}${qs({ version })}`),
   saveChecklist: (c) => req('POST', '/checklists', c),
   // данные организаторов и оценка (бэкенд: человек 1)
