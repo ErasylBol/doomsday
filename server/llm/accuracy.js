@@ -7,8 +7,9 @@ const pct = (a, b) => (b ? Math.round((a / b) * 1000) / 10 : null);
  */
 export function compare(pairs, computeScore) {
   const per = new Map();
-  let match = 0, total = 0, naTP = 0, naFP = 0, naFN = 0, grossOk = 0, totalErr = [];
+  let match = 0, total = 0, matchClear = 0, totalClear = 0, naTP = 0, naFP = 0, naFN = 0, grossOk = 0, totalErr = [];
   const mismatches = [];
+  const byLang = {};
   for (const { gt, ev, checklist } of pairs) {
     const modelAns = Object.fromEntries(ev.results.map((r) => [r.criterion_id, r]));
     for (const c of checklist.criteria) {
@@ -18,9 +19,13 @@ export function compare(pairs, computeScore) {
       const m = mr ? String(mr.answer) : 'нет';
       if (!per.has(c.id)) per.set(c.id, { id: c.id, n: 0, ok: 0, absErr: [] });
       const s = per.get(c.id);
-      s.n++; total++;
-      if (g === m) { s.ok++; match++; }
-      else mismatches.push({ conversation_id: gt.conversation_id, criterion_id: c.id, gt: g, model: m, confidence: mr?.confidence });
+      const amb = (gt.ambiguous || []).includes(c.id);
+      const lang = ev.language || '—';
+      byLang[lang] ??= { n: 0, ok: 0 };
+      s.n++; total++; byLang[lang].n++;
+      if (!amb) totalClear++;
+      if (g === m) { s.ok++; match++; byLang[lang].ok++; if (!amb) matchClear++; }
+      else mismatches.push({ conversation_id: gt.conversation_id, criterion_id: c.id, gt: g, model: m, confidence: mr?.confidence, ambiguous: amb, explanation: mr?.explanation });
       if (c.type === 'scale' && g !== 'na' && m !== 'na' && !Number.isNaN(Number(m))) s.absErr.push(Math.abs(Number(g) - Number(m)));
       if (g === 'na' && m === 'na') naTP++;
       else if (m === 'na') naFP++;
@@ -35,6 +40,8 @@ export function compare(pairs, computeScore) {
   return {
     n: pairs.length,
     overall: pct(match, total),
+    overall_clear: pct(matchClear, totalClear), // без критериев, помеченных в эталоне как ambiguous
+    by_language: Object.fromEntries(Object.entries(byLang).map(([l, x]) => [l, pct(x.ok, x.n)])),
     total_mae: totalErr.length ? Math.round((totalErr.reduce((a, b) => a + b, 0) / totalErr.length) * 10) / 10 : null,
     gross_match: pct(grossOk, pairs.length),
     na: { precision: pct(naTP, naTP + naFP), recall: pct(naTP, naTP + naFN) },

@@ -10,8 +10,7 @@
 Источники истины:
 - docs/CQA_Hackathon_Student_Guide.pdf: задание, требования, тайминг
 - docs/CQA_Chat_Quality_Checklist.pdf: стартовый чек-лист (8 критериев, веса, шкалы, правила N/A)
-- data/dev.json: снапшот DEV-набора (65 диалогов), ответ API как есть
-(PDF и dev.json пока не закоммичены — тот, у кого они есть, положите в docs/ и data/.)
+- data/DEV.json: снапшот DEV-набора (65 диалогов), ответ API как есть (имя = group_id, его читает `npm run eval`)
 
 ### Обязательные функции
 Контур 1 · Оценка
@@ -65,7 +64,7 @@ group_id передаём параметром. Из браузера CORS, по
 
 ## 3. Чек-лист и формула
 Стартовая конфигурация: `server/seed/checklist.default.json` (8 критериев, секции s1–s4).
-**TODO:** описания ступеней шкал c04 и c06 перенести из PDF стр. 2 (сейчас там заглушки «TODO»).
+Описания ступеней шкал c04 и c06 перенесены из PDF стр. 2. В c02 уточнено, когда «Нет», а когда N/A.
 
 Формула реализована в `server/scoring.js` (детерминированно, не в LLM), тесты в `server/test/scoring.test.js`:
 - применимы критерии с kind ≠ gross, weight > 0 и ответом ≠ na/manual;
@@ -88,6 +87,9 @@ group_id передаём параметром. Из браузера CORS, по
   index.html       hash-роутинг: #/dashboard, #/list, #/conv/:id?msg=N, #/operators[/:name], #/alerts, #/checklists, #/appeals
   js/api.js        единственное место с fetch
   js/ui.js         общие помощники (esc, scorePill, bar, filterBar, trendChart)
+  js/evalutil.js   помощники оценки: текущий group_id (localStorage), последняя оценка диалога, финальный итог
+                   с учётом всех решений апелляций, кеш версий чек-листа, смещения реплик для плеера.
+                   Формулу берёт с бэка: GET /shared/scoring.js отдаёт server/scoring.js (одна формула на фронт и бэк).
   js/views/*.js    экран = export async function render(container, params). Нет модуля → «Экран в разработке»
   css/app.css      CSS-переменные, префикс .cqa-
 Запуск: `npm install && npm start` → http://localhost:3000. Тесты: `npm test`.
@@ -118,6 +120,9 @@ group_id передаём параметром. Из браузера CORS, по
 GET  /api/datasets/:groupId (?refresh=1)
 GET  /api/conversations/:id/audio → { src }
 POST /api/evaluate { conversation_ids:[...]|"all", group_id, checklist_id } (concurrency 5, прогресс)
+     → { job_id }; GET /api/jobs/:id → { id, status:"running"|"done"|"error", total, done, failed, errors:[{conversation_id,error}], cost_usd }
+     (фронт терпим и к синхронному ответу без job_id)
+GET  /api/conversations/:id?group_id= → запись диалога (как в датасете); фронт при 404 ищет её в /api/datasets/:groupId
 GET  /api/checklists (?all=1 — все версии)   GET /api/checklists/:id(?version=)   POST /api/checklists
 GET  /api/evaluations?conversation_id=…   GET /api/evaluations/:id
 POST /api/appeals   GET /api/appeals?status=&evaluation_id=   POST /api/appeals/:id/decision
@@ -141,13 +146,34 @@ GET  /api/alerts   POST /api/alerts/:evaluationId/ack { note }
   Сохраняются usage, cost_usd, events, score.
 - CLI: `npm run eval -- --group DEV [--ids a,b] [--limit 5] [--runs 3]` (читает `data/<group>.json`, пишет в хранилище).
 - Точность: разметка в `data/gt/<conversation_id>.json` = `{ "conversation_id", "answers": { "<criterion_id>": "yes"|"no"|"na"|<число> } }`,
-  `npm run accuracy` — совпадение по критериям, N/A precision/recall, ошибка шкалы и итога, совпадение флага, список расхождений.
+  плюс `ambiguous` (спорные критерии) и `note`. `npm run accuracy [-- --verbose 1]` — совпадение по критериям, без спорных,
+  по языкам, N/A precision/recall, ошибка шкалы и итога, совпадение флага, расхождения (с объяснением модели в --verbose).
+- Эталон: 20 диалогов DEV (12 RU / 4 KZ / 4 EN, звонков нет). **Черновик разметки ИИ-ассистента — проверить человеку**
+  (особенно KZ), иначе цифры точности завышены. Соглашения разметки — `data/gt/README.md`.
+
+### Замеры точности (07.11, 20 диалогов × 8 критериев)
+| Модель | Прогонов | Точность | Без спорных | RU / KZ / EN | $ за диалог |
+|---|---|---|---|---|---|
+| gpt-6-luna, промпт без правил 10–12 | 3 | 85.0% | — | — | 0.0017 |
+| gpt-6-luna | 3 | 88.8% | 92.8% | 84 / 97 / 94% | 0.0018 |
+| **gpt-6.1-sol** | 1 | **92.5%** | **96.4%** | 91 / 100 / 91% | 0.011 |
+
+Грубые ошибки совпали в 100% случаев на всех вариантах, N/A без ложных срабатываний.
+Правила 10–12 в SYSTEM_PROMPT (критерии независимы; не требовать лишних уточнений; не учитывать первую реакцию)
+подняли c02 «Выявление потребности» с 55% до 80%.
+По умолчанию `gpt-6-luna`. **Рекомендация по замерам: для демо и контрольного набора переключить на `gpt-6.1-sol`, LLM_RUNS=1**
+(≈ $0.75 за 65 диалогов, +4 п.п. точности); не забыть поменять цены LLM_PRICE_* в `.env`.
+Голосование (3 прогона) мало меняет точность, но даёт `confidence`; неуверенные ответы стоит подсветить в UI.
 
 ## 6. Правила работы в репо
 - Ветка: `claude/hopeful-babbage-eu9bry` (сюда же сдаём, если не договоримся о main). Мелкие коммиты, `git pull --rebase` перед push.
 - Каждый в своей папке/модуле, контракт из раздела 4 не ломаем молча (поменял — поправь этот файл).
 - Секреты только в .env, в репо .env.example. На фронте без сборщиков; на бэке минимум зависимостей.
 - UI на русском. Подсветка реплики: `#msg-<index>` + класс `.cqa-highlight`.
+- Карточка `#/conv/:id?msg=N` (или `?msg=3-9` для участка, `?ev=<id>` для конкретной оценки). У каждого критерия есть
+  `<div class="cqa-appeal-slot" data-criterion data-evaluation>`. Апелляции из карточки: если `web/js/views/appeals.js`
+  экспортирует `mountCardAppeals({ root, evaluation, checklist, appeals, rerender })`, карточка вызывает его после отрисовки.
+  Сами апелляции и решения по ним карточка уже показывает (исходно → решение → финал).
 
 ## 7. Демо (5 минут)
 1 мин: интерфейс, сводка руководителя, выбранный диалог. 2 мин: оценка, обоснование, переход к реплике, N/A, итог.

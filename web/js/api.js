@@ -23,6 +23,12 @@ export const api = {
   checklistsAll: () => req('GET', '/checklists?all=1'),
   checklist: (id, version) => req('GET', `/checklists/${encodeURIComponent(id)}${qs({ version })}`),
   saveChecklist: (c) => req('POST', '/checklists', c),
+  // данные организаторов и оценка (бэкенд: человек 1)
+  dataset: (groupId, refresh) => req('GET', `/datasets/${encodeURIComponent(groupId)}${qs({ refresh: refresh ? 1 : undefined })}`),
+  conversation: (id, group_id) => req('GET', `/conversations/${encodeURIComponent(id)}${qs({ group_id })}`),
+  audio: (id, group_id) => req('GET', `/conversations/${encodeURIComponent(id)}/audio${qs({ group_id })}`),
+  evaluate: (body) => req('POST', '/evaluate', body),
+  job: (id) => req('GET', `/jobs/${encodeURIComponent(id)}`),
   // оценки и апелляции
   evaluations: (conversation_id) => req('GET', `/evaluations${qs({ conversation_id })}`),
   evaluation: (id) => req('GET', `/evaluations/${encodeURIComponent(id)}`),
