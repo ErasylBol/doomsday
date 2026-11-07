@@ -4,6 +4,10 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import * as store from './store.js';
 import * as analytics from './analytics.js';
+import { checklistError, validAnswer } from './validation.js';
+import { recordsFor } from './datasets.js';
+import { evaluateConversation } from './llm/evaluate.js';
+import { createOpenAIProvider } from './llm/provider.js';
 import { computeScore, replaceAnswer } from './scoring.js';
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
@@ -36,11 +40,46 @@ app.get('/api/checklists/:id', (req, res) => {
 });
 app.post('/api/checklists', (req, res) => {
   const c = req.body;
-  if (!c?.criteria?.length) return res.status(400).json({ error: 'criteria required' });
+  const error = checklistError(c);
+  if (error) return res.status(400).json({ error });
   res.json(store.saveChecklistVersion(c));
 });
 
-// ---------- evaluations (POST /api/evaluate делает задача C) ----------
+// Локальные снапшоты организаторов: тот же формат, что использует CLI.
+app.get('/api/datasets/:groupId', (req, res) => {
+  try { res.json({ records: recordsFor(req.params.groupId) }); }
+  catch (e) { res.status(400).json({ error: e.message }); }
+});
+app.get('/api/conversations/:id', (req, res) => {
+  try {
+    const record = recordsFor(req.query.group_id || 'DEV').find(r=>r.conversation_id === req.params.id);
+    record ? res.json(record) : res.status(404).json({error:'Диалог не найден'});
+  } catch(e) { res.status(400).json({error:e.message}); }
+});
+app.post('/api/evaluate', async (req, res) => {
+  try {
+    const { group_id, conversation_ids, checklist_id, checklist_version } = req.body;
+    const checklist = store.getChecklist(checklist_id, checklist_version);
+    if (!checklist) return res.status(400).json({ error: 'Чек-лист не найден' });
+    const all = recordsFor(group_id);
+    if (conversation_ids !== 'all' && (!Array.isArray(conversation_ids) || !conversation_ids.length)) return res.status(400).json({ error: 'Выберите диалоги' });
+    const records = conversation_ids === 'all' ? all : all.filter(r=>conversation_ids.includes(r.conversation_id));
+    if (!records.length) return res.status(400).json({ error: 'Диалоги не найдены' });
+    const provider = app.locals.evaluationProvider || createOpenAIProvider();
+    const queue = [...records], evaluations = [], errors = [];
+    async function worker() {
+      while (queue.length) {
+        const record = queue.shift();
+        try { evaluations.push(store.saveEvaluation(await evaluateConversation({ record, checklist, provider, group_id, runs: Number(process.env.LLM_RUNS) || 3 }))); }
+        catch(e) { errors.push({ conversation_id: record.conversation_id, error: e.message }); }
+      }
+    }
+    await Promise.all(Array.from({length: Math.min(5, records.length)}, worker));
+    res.json({ evaluations, errors });
+  } catch(e) { res.status(400).json({ error: e.message }); }
+});
+
+// ---------- evaluations ----------
 app.get('/api/evaluations', (req, res) => {
   let all = store.listEvaluations();
   if (req.query.conversation_id) all = all.filter((e) => e.conversation_id === req.query.conversation_id);
@@ -48,8 +87,14 @@ app.get('/api/evaluations', (req, res) => {
 });
 app.get('/api/evaluations/:id', (req, res) => {
   const e = store.getEvaluation(req.params.id);
-  e ? res.json(e) : res.status(404).json({ error: 'not found' });
+  e ? res.json({ ...e, final_score: finalScore(e) }) : res.status(404).json({ error: 'not found' });
 });
+
+function finalScore(ev) {
+  let results = ev.results;
+  for (const a of store.listAppeals().filter(a=>a.evaluation_id === ev.id && a.status === 'resolved' && a.decision?.action === 'change')) results = replaceAnswer(results, a.criterion_id, a.decision.new_answer);
+  return computeScore(store.getChecklist(ev.checklist_id, ev.checklist_version), results);
+}
 
 // ---------- appeals ----------
 app.get('/api/appeals', (req, res) => {
@@ -62,7 +107,9 @@ app.post('/api/appeals', (req, res) => {
   const { evaluation_id, criterion_id, comment } = req.body || {};
   const ev = store.getEvaluation(evaluation_id);
   if (!ev) return res.status(404).json({ error: 'evaluation not found' });
-  if (!criterion_id || !comment) return res.status(400).json({ error: 'criterion_id and comment required' });
+  const checklist = store.getChecklist(ev.checklist_id, ev.checklist_version);
+  if (!checklist?.criteria.some(c=>c.id === criterion_id) || typeof comment !== 'string' || !comment.trim()) return res.status(400).json({ error: 'Укажите критерий и комментарий' });
+  if (store.listAppeals().some(a=>a.evaluation_id === evaluation_id && a.criterion_id === criterion_id && a.status === 'open')) return res.status(409).json({ error: 'По критерию уже есть открытая апелляция' });
   res.json(
     store.saveAppeal({
       id: store.newId('ap'),
@@ -78,11 +125,16 @@ app.post('/api/appeals', (req, res) => {
 app.post('/api/appeals/:id/decision', (req, res) => {
   const ap = store.listAppeals().find((a) => a.id === req.params.id);
   if (!ap) return res.status(404).json({ error: 'not found' });
+  if (ap.status !== 'open') return res.status(409).json({ error: 'Решение уже принято' });
   const { action, new_answer, reason } = req.body || {};
-  if (!['confirm', 'change'].includes(action) || !reason) return res.status(400).json({ error: 'action and reason required' });
+  if (!['confirm', 'change'].includes(action) || typeof reason !== 'string' || !reason.trim()) return res.status(400).json({ error: 'action and reason required' });
   const ev = store.getEvaluation(ap.evaluation_id);
   const checklist = store.getChecklist(ev.checklist_id, ev.checklist_version);
-  const results = action === 'change' ? replaceAnswer(ev.results, ap.criterion_id, new_answer) : ev.results;
+  const criterion = checklist.criteria.find(c=>c.id === ap.criterion_id);
+  if (action === 'change' && !validAnswer(criterion, new_answer)) return res.status(400).json({ error: 'Ответ не соответствует шкале или правилу N/A' });
+  let results = ev.results;
+  for (const a of store.listAppeals().filter(a=>a.evaluation_id === ev.id && a.status === 'resolved' && a.decision?.action === 'change')) results = replaceAnswer(results, a.criterion_id, a.decision.new_answer);
+  if (action === 'change') results = replaceAnswer(results, ap.criterion_id, new_answer);
   res.json(
     store.saveAppeal({
       ...ap,

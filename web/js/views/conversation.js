@@ -8,14 +8,15 @@ const SPEAKER = { client: 'Клиент', operator: 'Оператор', bot: 'Б
 
 export async function render(container, params) {
   const id = params.id;
-  const group = currentGroup();
+  const group = params.group || currentGroup();
+  const versions = await api.checklists(true);
 
   const [evaluations, record] = await Promise.all([
     api.evaluations(id).catch(() => []),
     loadRecord(id, group),
   ]);
   evaluations.sort((a, b) => (a.created_at < b.created_at ? 1 : -1)); // новые сверху
-  const ev = evaluations.find((e) => e.id === params.ev) || evaluations[0] || null;
+  const ev = evaluations.find((e) => e.id === (params.ev || params.evaluation)) || evaluations[0] || null;
   const [checklist, appeals] = ev
     ? await Promise.all([checklistFor(ev.checklist_id, ev.checklist_version), api.appeals({ evaluation_id: ev.id }).catch(() => [])])
     : [null, []];
@@ -40,6 +41,7 @@ export async function render(container, params) {
         ${evaluations.length > 1 ? `<label>Оценка <select id="cqa-ev-pick">${evaluations
           .map((e) => `<option value="${esc(e.id)}" ${e.id === ev.id ? 'selected' : ''}>${fmtDate(e.created_at)} · v${e.checklist_version} · ${fmtScore(e.score?.total)}</option>`)
           .join('')}</select></label>` : ''}
+        <label>Чек-лист <select id="cqa-checklist-version">${[...versions].reverse().map((c,i)=>`<option value="${versions.length-1-i}">${esc(c.name)} v${c.version}</option>`).join('')}</select></label>
         <button class="cqa-btn" id="cqa-reeval">${ev ? 'Оценить заново' : 'Оценить'}</button>
       </div>
     </div>
@@ -57,7 +59,7 @@ export async function render(container, params) {
       </section>
     </div>`;
 
-  wire(container, { id, group, ev, record, transcript, off, isCall, checklist, appeals, params });
+  wire(container, { id, group, ev, record, transcript, off, isCall, checklist, appeals, params, versions });
   if (params.msg !== undefined) highlight(container, parseIdx(params.msg), { updateUrl: false });
 
   // Слот для апелляций (человек 4): если appeals.js экспортирует mountCardAppeals — подключаем в карточку.
@@ -266,10 +268,10 @@ function wire(container, ctx) {
     const st = container.querySelector('#cqa-reeval-status');
     btn.disabled = true;
     try {
-      const lists = await api.checklists();
-      const cl = lists.find((c) => c.id === (ev?.checklist_id || 'default')) || lists[0];
+      const cl = ctx.versions[container.querySelector('#cqa-checklist-version').value];
       st.innerHTML = `<div class="cqa-card cqa-job">Оцениваю по «${esc(cl?.name)}» v${cl?.version}…</div>`;
-      const res = await api.evaluate({ conversation_ids: [id], group_id: ev?.group_id || group, checklist_id: cl?.id });
+      const res = await api.evaluate({ conversation_ids: [id], group_id: ev?.group_id || group, checklist_id: cl?.id, checklist_version: cl?.version });
+      if (res.errors?.length) throw new Error(res.errors.map(e=>e.error).join('; '));
       const jobId = res.job_id || res.id || res.job?.id;
       if (jobId) {
         for (;;) {
@@ -281,8 +283,8 @@ function wire(container, ctx) {
           }
         }
       }
-      location.hash = `#/conv/${encodeURIComponent(id)}`;
-      render(container, { id });
+      const next = res.evaluations?.[0]?.id;
+      location.hash = `#/conv/${encodeURIComponent(id)}?group=${encodeURIComponent(group)}${next ? '&ev='+encodeURIComponent(next) : ''}`;
     } catch (err) {
       st.innerHTML = `<div class="cqa-card cqa-job"><span class="cqa-error">Оценка не удалась: ${esc(err.message)}</span></div>`;
       btn.disabled = false;

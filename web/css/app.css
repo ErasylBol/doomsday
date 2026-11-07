@@ -179,3 +179,11 @@ a.cqa-tile:hover { text-decoration: none; border-color: var(--cqa-accent); }
   .cqa-main { padding: 16px; }
   .cqa-row { grid-template-columns: 1fr 1fr 48px; }
 }
+.cqa-form-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(240px,1fr)); gap:12px; }
+.cqa-form-grid label, #editor > label { display:flex; flex-direction:column; gap:6px; }
+#editor { display:flex; flex-direction:column; gap:16px; }
+#criteria { display:grid; gap:16px; }
+.cqa-btn:disabled { opacity:.5; cursor:wait; }
+.cqa-header { height:auto; min-height:52px; flex-wrap:wrap; padding-top:8px; padding-bottom:8px; }
+.cqa-header label { white-space:nowrap; }
+.cqa-message { padding:10px; border-bottom:1px solid var(--cqa-border); scroll-margin-top:110px; }
