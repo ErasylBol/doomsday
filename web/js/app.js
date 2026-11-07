@@ -1,6 +1,7 @@
 // Hash-роутер. Каждый экран — модуль с render(container, params).
 import { esc } from './ui.js';
 import { api } from './api.js';
+import './theme.js'; // кнопка смены темы в шапке
 
 const routes = [
   { re: /^#\/dashboard$/, view: 'dashboard' },

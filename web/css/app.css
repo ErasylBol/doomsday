@@ -29,8 +29,9 @@
   font-family: 'SF Pro Display', 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
   color: var(--cqa-text);
 }
+/* тёмная тема: по системе, если не выбрана вручную (кнопка в шапке), или принудительно data-theme="dark" */
 @media (prefers-color-scheme: dark) {
-  :root {
+:root:not([data-theme="light"]) {
     --cqa-bg: #111316;
     --cqa-surface: #1b1e23;
     --cqa-soft: #23272d;
@@ -46,6 +47,21 @@
     --cqa-role-bot-bg: #262046;
   }
 }
+:root[data-theme="dark"] {
+    --cqa-bg: #111316;
+    --cqa-surface: #1b1e23;
+    --cqa-soft: #23272d;
+    --cqa-text: #eef0f3;
+    --cqa-muted: #9aa0aa;
+    --cqa-border: #2b3037;
+    --cqa-accent-soft: #173524;
+    --cqa-gross-bg: #3a2023;
+    --cqa-warn-bg: #3a3018;
+    --cqa-highlight: #4a4220;
+    --cqa-role-client-bg: #23272d;
+    --cqa-role-operator-bg: #173524;
+    --cqa-role-bot-bg: #262046;
+  }
 * { box-sizing: border-box; }
 body.cqa { margin: 0; background: var(--cqa-bg); }
 a { color: var(--cqa-accent); text-decoration: none; }
@@ -341,7 +357,13 @@ a.cqa-tile:hover { text-decoration: none; border-color: var(--cqa-accent); }
 .cqa-cl-kind span { color: var(--cqa-muted); font-weight: 400; font-size: 12px; }
 .cqa-cl-kind:hover { border-color: var(--cqa-accent); }
 .cqa-cl-kind-on { border: 2px solid var(--cqa-accent); padding: 9px 11px; background: #eef4ff; }
-@media (prefers-color-scheme: dark) { .cqa-cl-kind-on { background: #1d2a44; } .cqa-tag-new { background: #1d2a44; } }
+/* тёмная тема: по системе, если не выбрана вручную (кнопка в шапке), или принудительно data-theme="dark" */
+@media (prefers-color-scheme: dark) {
+:root:not([data-theme="light"]) .cqa-cl-kind-on { background: #1d2a44; }
+:root:not([data-theme="light"]) .cqa-tag-new { background: #1d2a44; }
+}
+:root[data-theme="dark"] .cqa-cl-kind-on { background: #1d2a44; }
+:root[data-theme="dark"] .cqa-tag-new { background: #1d2a44; }
 .cqa-cl-switch { display: flex; gap: 8px; align-items: center; font-size: 14px; cursor: pointer; }
 .cqa-cl-levels { width: 100%; border-collapse: collapse; font-weight: 400; }
 .cqa-cl-levels th { text-align: left; font-size: 12px; color: var(--cqa-muted); padding: 4px; }
