@@ -4,6 +4,11 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import * as store from './store.js';
 import * as analytics from './analytics.js';
+import { checklistError, validAnswer } from './validation.js';
+import { recordsFor, hasLocal, fetchDataset, resolveAudio } from './datasets.js';
+import crypto from 'node:crypto';
+import { evaluateConversation } from './llm/evaluate.js';
+import { createOpenAIProvider } from './llm/provider.js';
 import { computeScore, replaceAnswer } from './scoring.js';
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
@@ -36,11 +41,76 @@ app.get('/api/checklists/:id', (req, res) => {
 });
 app.post('/api/checklists', (req, res) => {
   const c = req.body;
-  if (!c?.criteria?.length) return res.status(400).json({ error: 'criteria required' });
+  const error = checklistError(c);
+  if (error) return res.status(400).json({ error });
   res.json(store.saveChecklistVersion(c));
 });
 
-// ---------- evaluations (POST /api/evaluate делает задача C) ----------
+// Наборы организаторов: локальный снапшот data/<group>.json; ?refresh=1 или отсутствие файла → загрузка из API.
+app.get('/api/datasets/:groupId', async (req, res) => {
+  try {
+    const g = req.params.groupId;
+    const records = req.query.refresh || !hasLocal(g) ? await fetchDataset(g) : recordsFor(g);
+    res.json({ group_id: g, total: records.length, records });
+  } catch (e) { res.status(400).json({ error: e.message }); }
+});
+app.get('/api/conversations/:id/audio', async (req, res) => {
+  try {
+    const record = recordsFor(req.query.group_id || 'DEV').find((r) => r.conversation_id === req.params.id);
+    if (!record) return res.status(404).json({ error: 'Диалог не найден' });
+    if (!record.audio_url) return res.status(404).json({ error: 'У диалога нет аудио' });
+    const src = await resolveAudio(record);
+    src ? res.json({ src, page: record.audio_url }) : res.status(502).json({ error: 'Не удалось найти ссылку на запись', page: record.audio_url });
+  } catch (e) { res.status(502).json({ error: e.message }); }
+});
+app.get('/api/conversations/:id', (req, res) => {
+  try {
+    const record = recordsFor(req.query.group_id || 'DEV').find(r=>r.conversation_id === req.params.id);
+    record ? res.json(record) : res.status(404).json({error:'Диалог не найден'});
+  } catch(e) { res.status(400).json({error:e.message}); }
+});
+
+// Пакетная оценка: по умолчанию фоновая задача с прогрессом (GET /api/jobs/:id); { wait: true } — синхронно.
+const jobs = new Map();
+app.post('/api/evaluate', async (req, res) => {
+  try {
+    const { group_id, conversation_ids, checklist_id, checklist_version, wait } = req.body;
+    const checklist = store.getChecklist(checklist_id, checklist_version);
+    if (!checklist) return res.status(400).json({ error: 'Чек-лист не найден' });
+    const all = recordsFor(group_id);
+    if (conversation_ids !== 'all' && (!Array.isArray(conversation_ids) || !conversation_ids.length)) return res.status(400).json({ error: 'Выберите диалоги' });
+    const records = conversation_ids === 'all' ? all : all.filter(r=>conversation_ids.includes(r.conversation_id));
+    if (!records.length) return res.status(400).json({ error: 'Диалоги не найдены' });
+    const provider = app.locals.evaluationProvider || createOpenAIProvider();
+    const job = { id: 'job_' + crypto.randomBytes(5).toString('hex'), status: 'running', group_id, checklist_id: checklist.id, checklist_version: checklist.version,
+      total: records.length, done: 0, failed: 0, errors: [], evaluation_ids: [], cost_usd: 0, started_at: new Date().toISOString() };
+    jobs.set(job.id, job);
+    const evaluations = [];
+    const queue = [...records];
+    async function worker() {
+      while (queue.length) {
+        const record = queue.shift();
+        try {
+          const ev = store.saveEvaluation(await evaluateConversation({ record, checklist, provider, group_id, runs: Number(process.env.LLM_RUNS) || 3 }));
+          evaluations.push(ev); job.evaluation_ids.push(ev.id); job.cost_usd = Math.round((job.cost_usd + (ev.cost_usd || 0)) * 1e6) / 1e6;
+        } catch(e) { job.failed++; job.errors.push({ conversation_id: record.conversation_id, error: e.message }); }
+        job.done++;
+      }
+    }
+    const run = Promise.all(Array.from({length: Math.min(Number(process.env.EVAL_CONCURRENCY) || 5, records.length)}, worker)).then(() => {
+      job.status = job.failed === job.total ? 'error' : 'done';
+      job.finished_at = new Date().toISOString();
+    });
+    if (wait) { await run; return res.json({ job_id: job.id, evaluations, errors: job.errors }); }
+    res.json({ job_id: job.id, total: job.total });
+  } catch(e) { res.status(400).json({ error: e.message }); }
+});
+app.get('/api/jobs/:id', (req, res) => {
+  const j = jobs.get(req.params.id);
+  j ? res.json(j) : res.status(404).json({ error: 'Задача не найдена (сервер перезапускался?)' });
+});
+
+// ---------- evaluations ----------
 app.get('/api/evaluations', (req, res) => {
   let all = store.listEvaluations();
   if (req.query.conversation_id) all = all.filter((e) => e.conversation_id === req.query.conversation_id);
@@ -48,8 +118,14 @@ app.get('/api/evaluations', (req, res) => {
 });
 app.get('/api/evaluations/:id', (req, res) => {
   const e = store.getEvaluation(req.params.id);
-  e ? res.json(e) : res.status(404).json({ error: 'not found' });
+  e ? res.json({ ...e, final_score: finalScore(e) }) : res.status(404).json({ error: 'not found' });
 });
+
+function finalScore(ev) {
+  let results = ev.results;
+  for (const a of store.listAppeals().filter(a=>a.evaluation_id === ev.id && a.status === 'resolved' && a.decision?.action === 'change')) results = replaceAnswer(results, a.criterion_id, a.decision.new_answer);
+  return computeScore(store.getChecklist(ev.checklist_id, ev.checklist_version), results);
+}
 
 // ---------- appeals ----------
 app.get('/api/appeals', (req, res) => {
@@ -62,7 +138,9 @@ app.post('/api/appeals', (req, res) => {
   const { evaluation_id, criterion_id, comment } = req.body || {};
   const ev = store.getEvaluation(evaluation_id);
   if (!ev) return res.status(404).json({ error: 'evaluation not found' });
-  if (!criterion_id || !comment) return res.status(400).json({ error: 'criterion_id and comment required' });
+  const checklist = store.getChecklist(ev.checklist_id, ev.checklist_version);
+  if (!checklist?.criteria.some(c=>c.id === criterion_id) || typeof comment !== 'string' || !comment.trim()) return res.status(400).json({ error: 'Укажите критерий и комментарий' });
+  if (store.listAppeals().some(a=>a.evaluation_id === evaluation_id && a.criterion_id === criterion_id && a.status === 'open')) return res.status(409).json({ error: 'По критерию уже есть открытая апелляция' });
   res.json(
     store.saveAppeal({
       id: store.newId('ap'),
@@ -78,11 +156,16 @@ app.post('/api/appeals', (req, res) => {
 app.post('/api/appeals/:id/decision', (req, res) => {
   const ap = store.listAppeals().find((a) => a.id === req.params.id);
   if (!ap) return res.status(404).json({ error: 'not found' });
+  if (ap.status !== 'open') return res.status(409).json({ error: 'Решение уже принято' });
   const { action, new_answer, reason } = req.body || {};
-  if (!['confirm', 'change'].includes(action) || !reason) return res.status(400).json({ error: 'action and reason required' });
+  if (!['confirm', 'change'].includes(action) || typeof reason !== 'string' || !reason.trim()) return res.status(400).json({ error: 'action and reason required' });
   const ev = store.getEvaluation(ap.evaluation_id);
   const checklist = store.getChecklist(ev.checklist_id, ev.checklist_version);
-  const results = action === 'change' ? replaceAnswer(ev.results, ap.criterion_id, new_answer) : ev.results;
+  const criterion = checklist.criteria.find(c=>c.id === ap.criterion_id);
+  if (action === 'change' && !validAnswer(criterion, new_answer)) return res.status(400).json({ error: 'Ответ не соответствует шкале или правилу N/A' });
+  let results = ev.results;
+  for (const a of store.listAppeals().filter(a=>a.evaluation_id === ev.id && a.status === 'resolved' && a.decision?.action === 'change')) results = replaceAnswer(results, a.criterion_id, a.decision.new_answer);
+  if (action === 'change') results = replaceAnswer(results, ap.criterion_id, new_answer);
   res.json(
     store.saveAppeal({
       ...ap,

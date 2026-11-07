@@ -1,4 +1,5 @@
 // Hash-роутер. Каждый экран — модуль с render(container, params).
+import { esc } from './ui.js';
 import { api } from './api.js';
 
 const routes = [
@@ -14,6 +15,17 @@ const routes = [
 ];
 
 const root = document.getElementById('cqa-app');
+
+export function currentRole() { return localStorage.getItem('cqa-role') || 'operator'; }
+export function setRole(role) { localStorage.setItem('cqa-role', role); renderRoleSwitch(); route(); }
+function renderRoleSwitch() {
+  const host = document.getElementById('cqa-role-switch');
+  if (!host) return;
+  host.innerHTML = `<label class="cqa-role">Роль <select id="cqa-role"><option value="operator">Оператор</option><option value="reviewer">Проверяющий</option></select></label>`;
+  const select = host.querySelector('select');
+  select.value = currentRole();
+  select.addEventListener('change', () => setRole(select.value));
+}
 
 async function route() {
   // #/conv/p1-ru-001?msg=5 → путь + query-параметры (msg — индекс реплики для подсветки)
@@ -32,10 +44,11 @@ async function route() {
     if (String(e.message).includes('Failed to fetch dynamically imported module') || String(e.message).includes('Importing a module script failed')) {
       root.innerHTML = '<p class="cqa-muted">Экран в разработке.</p>';
     } else {
-      root.innerHTML = `<p class="cqa-error">Ошибка: ${e.message}</p>`;
+      root.innerHTML = `<p class="cqa-error">Ошибка: ${esc(e.message)}</p>`;
     }
   }
   refreshAlertBadge();
+  renderRoleSwitch();
 }
 
 export async function refreshAlertBadge() {

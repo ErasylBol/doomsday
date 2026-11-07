@@ -117,3 +117,21 @@ test('сравнение с эталоном', () => {
   assert.equal(r.criteria.find((c) => c.id === 'c04').mae, 5);
   assert.equal(r.mismatches.length, 2);
 });
+
+test('датасеты: загрузка из API сохраняет снапшот, src аудио из HTML', async () => {
+  const os = await import('node:os'); const path = await import('node:path');
+  const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'cqa-ds-'));
+  process.env.DATA_DIR = dir;
+  const ds = await import(`../datasets.js?${Date.now()}`);
+  const fakeFetch = async (url) => {
+    assert.equal(new URL(url).searchParams.get('group_id'), 'CTRL');
+    return { ok: true, json: async () => ({ isSuccess: true, data: { records: [{ conversation_id: 'x', transcript: [] }] } }) };
+  };
+  const recs = await ds.fetchDataset('CTRL', { fetchImpl: fakeFetch, env: { CQA_API_URL: 'https://example.test/api?sig=secret' } });
+  assert.equal(recs.length, 1);
+  assert.equal(ds.recordsFor('CTRL')[0].conversation_id, 'x');
+  assert.equal(ds.extractAudioSrc('<audio controls><source src="https://a.test/f.mp3?a=1&amp;se=2" type="audio/mpeg"></audio>'), 'https://a.test/f.mp3?a=1&se=2');
+  assert.throws(() => ds.recordsFor('../etc'), /group_id/);
+  delete process.env.DATA_DIR;
+  fs.rmSync(dir, { recursive: true, force: true });
+});
