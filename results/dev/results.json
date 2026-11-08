@@ -1,0 +1,5435 @@
+{
+  "schema_version": "1.0",
+  "team_name": "doomsday",
+  "model": {
+    "mode": "external_api",
+    "name": "gpt-6-luna, gpt-6.1-sol"
+  },
+  "results": [
+    {
+      "conversation_id": "p1-ru-001",
+      "status": "ok",
+      "criteria": [
+        {
+          "criterion_id": "contact",
+          "value": true,
+          "rationale": "Оператор начала ответ с приветствия и назвала своё имя.",
+          "evidence_turns": [
+            10
+          ]
+        },
+        {
+          "criterion_id": "discovery",
+          "value": null,
+          "rationale": "Для ответа не требовалось уточнять дополнительные сведения.",
+          "evidence_turns": [
+            1,
+            10
+          ]
+        },
+        {
+          "criterion_id": "identification",
+          "value": null,
+          "rationale": "Это общий справочный запрос, не требующий идентификации.",
+          "evidence_turns": [
+            1,
+            10
+          ]
+        },
+        {
+          "criterion_id": "consultation",
+          "value": 20,
+          "rationale": "Основной вопрос решён: клиент нашёл тариф.",
+          "evidence_turns": [
+            10
+          ]
+        },
+        {
+          "criterion_id": "empathy",
+          "value": true,
+          "rationale": "В репликах оператора нет невежливости, а повода для дополнительной эмпатической реакции не было.",
+          "evidence_turns": [
+            10,
+            12
+          ]
+        },
+        {
+          "criterion_id": "dialogue",
+          "value": 10,
+          "rationale": "Диалог шёл последовательно, ответ понятен клиенту.",
+          "evidence_turns": [
+            10
+          ]
+        },
+        {
+          "criterion_id": "closure",
+          "value": false,
+          "rationale": "Фразы «Пожалуйста» и «Хорошего вечера» сами по себе не соответствуют требованию завершения.",
+          "evidence_turns": [
+            12
+          ]
+        },
+        {
+          "criterion_id": "critical",
+          "value": false,
+          "rationale": "Грубых нарушений в диалоге не обнаружено.",
+          "evidence_turns": []
+        }
+      ],
+      "score": {
+        "final_score": 92.31,
+        "critical_flag": false
+      }
+    },
+    {
+      "conversation_id": "p1-ru-002",
+      "status": "ok",
+      "criteria": [
+        {
+          "criterion_id": "contact",
+          "value": true,
+          "rationale": "Оператор поздоровался и назвал своё имя в первом ответе.",
+          "evidence_turns": [
+            10
+          ]
+        },
+        {
+          "criterion_id": "discovery",
+          "value": true,
+          "rationale": "Уточнения помогли определить, какие сведения нужны для дальнейшей проверки; клиенту не пришлось повторять уже сообщённые детали.",
+          "evidence_turns": [
+            10,
+            11,
+            15
+          ]
+        },
+        {
+          "criterion_id": "identification",
+          "value": null,
+          "rationale": "Фактическая консультация не требовала идентификации: клиент решил сначала самостоятельно сверить даты. Проверку счёта оператор прямо обусловил предварительным подтверждением личности.",
+          "evidence_turns": [
+            12,
+            13,
+            15,
+            17
+          ]
+        },
+        {
+          "criterion_id": "consultation",
+          "value": 20,
+          "rationale": "Дан корректный следующий шаг с учётом отказа клиента от проверки счёта на данном этапе. Вопросы о подготовке к проверке и необходимости отправлять отчёт закрыты; неподтверждённую причину смены тарифа оператор не утверждал.",
+          "evidence_turns": [
+            10,
+            11,
+            12,
+            13,
+            15,
+            17,
+            19
+          ]
+        },
+        {
+          "criterion_id": "empathy",
+          "value": true,
+          "rationale": "Оператор отреагировал на беспокойство клиента и сохранил вежливый тон.",
+          "evidence_turns": [
+            10
+          ]
+        },
+        {
+          "criterion_id": "dialogue",
+          "value": 10,
+          "rationale": "Диалог вёлся ясно и связно, а предупреждать об ожидании не требовалось.",
+          "evidence_turns": [
+            10,
+            12,
+            15,
+            17,
+            19
+          ]
+        },
+        {
+          "criterion_id": "closure",
+          "value": true,
+          "rationale": "Есть дальнейший шаг, предложение продолжить обращение и прощание.",
+          "evidence_turns": [
+            19
+          ]
+        },
+        {
+          "criterion_id": "critical",
+          "value": false,
+          "rationale": "Грубых нарушений в проверенных репликах оператора не обнаружено.",
+          "evidence_turns": []
+        }
+      ],
+      "score": {
+        "final_score": 100,
+        "critical_flag": false
+      }
+    },
+    {
+      "conversation_id": "p1-ru-003",
+      "status": "ok",
+      "criteria": [
+        {
+          "criterion_id": "contact",
+          "value": true,
+          "rationale": "Оператор поздоровалась и назвала своё имя.",
+          "evidence_turns": [
+            11
+          ]
+        },
+        {
+          "criterion_id": "discovery",
+          "value": true,
+          "rationale": "Оператор уточнила недостающую информацию, необходимую для инструкции по просмотру тарифа. Неполнота последующего ответа сама по себе не означает нарушения выявления потребности.",
+          "evidence_turns": [
+            1,
+            5,
+            10,
+            11,
+            12,
+            13
+          ]
+        },
+        {
+          "criterion_id": "identification",
+          "value": null,
+          "rationale": "Для общего вопроса о комиссии и месте просмотра тарифа идентификация не требовалась.",
+          "evidence_turns": [
+            1,
+            5
+          ]
+        },
+        {
+          "criterion_id": "consultation",
+          "value": 10,
+          "rationale": "Часть запроса о просмотре тарифа закрыта, но существенный вопрос о комиссии остался открытым.",
+          "evidence_turns": [
+            13,
+            14,
+            15
+          ]
+        },
+        {
+          "criterion_id": "empathy",
+          "value": true,
+          "rationale": "Оператор сохраняла вежливый тон.",
+          "evidence_turns": [
+            11,
+            13,
+            15
+          ]
+        },
+        {
+          "criterion_id": "dialogue",
+          "value": 4,
+          "rationale": "Клиент был вынужден повторить вопрос о комиссии, поскольку оператор ответила только о названии тарифа. Последняя реплика также не соответствовала заданному вопросу.",
+          "evidence_turns": [
+            1,
+            10,
+            13,
+            14,
+            15
+          ]
+        },
+        {
+          "criterion_id": "closure",
+          "value": false,
+          "rationale": "Одного прощания недостаточно для выполнения критерия завершения.",
+          "evidence_turns": [
+            15
+          ]
+        },
+        {
+          "criterion_id": "critical",
+          "value": false,
+          "rationale": "Грубых нарушений в диалоге не обнаружено.",
+          "evidence_turns": [
+            11,
+            13,
+            15
+          ]
+        }
+      ],
+      "score": {
+        "final_score": 70,
+        "critical_flag": false
+      }
+    },
+    {
+      "conversation_id": "p1-ru-004",
+      "status": "ok",
+      "criteria": [
+        {
+          "criterion_id": "contact",
+          "value": true,
+          "rationale": "Оператор поздоровался и назвал своё имя в первом ответе.",
+          "evidence_turns": [
+            10
+          ]
+        },
+        {
+          "criterion_id": "discovery",
+          "value": false,
+          "rationale": "Оператор уточнил уже обозначенную потребность вместо того, чтобы сразу ответить по существу.",
+          "evidence_turns": [
+            1,
+            10
+          ]
+        },
+        {
+          "criterion_id": "identification",
+          "value": null,
+          "rationale": "Для ответа на общий вопрос идентификация не требовалась.",
+          "evidence_turns": [
+            1
+          ]
+        },
+        {
+          "criterion_id": "consultation",
+          "value": 20,
+          "rationale": "Оператор дал понятную инструкцию и уточнил способ выбрать реквизиты в евро; клиент подтвердил, что вопрос решён.",
+          "evidence_turns": [
+            10,
+            12,
+            13
+          ]
+        },
+        {
+          "criterion_id": "empathy",
+          "value": true,
+          "rationale": "В репликах оператора нет невежливости, а клиент не сообщал о проблеме или неудобстве.",
+          "evidence_turns": [
+            10,
+            12,
+            14
+          ]
+        },
+        {
+          "criterion_id": "dialogue",
+          "value": 7,
+          "rationale": "Был один заметный сбой — повторное уточнение уже сформулированного запроса; при этом продолжить диалог клиенту было понятно.",
+          "evidence_turns": [
+            10
+          ]
+        },
+        {
+          "criterion_id": "closure",
+          "value": false,
+          "rationale": "Одного прощания недостаточно для выполнения критерия завершения.",
+          "evidence_turns": [
+            14
+          ]
+        },
+        {
+          "criterion_id": "critical",
+          "value": false,
+          "rationale": "Грубых нарушений в диалоге не выявлено.",
+          "evidence_turns": [
+            10,
+            12,
+            14
+          ]
+        }
+      ],
+      "score": {
+        "final_score": 69.38,
+        "critical_flag": false
+      }
+    },
+    {
+      "conversation_id": "p1-ru-005",
+      "status": "ok",
+      "criteria": [
+        {
+          "criterion_id": "contact",
+          "value": true,
+          "rationale": "Оператор начала ответ с приветствия и назвала своё имя.",
+          "evidence_turns": [
+            10
+          ]
+        },
+        {
+          "criterion_id": "discovery",
+          "value": null,
+          "rationale": "Исходный запрос и способ пополнения уже были известны. Обязательной необходимости уточнять дополнительные сведения не было.",
+          "evidence_turns": [
+            1,
+            5,
+            10
+          ]
+        },
+        {
+          "criterion_id": "identification",
+          "value": null,
+          "rationale": "Запрос не требовал идентификации клиента.",
+          "evidence_turns": [
+            1,
+            5
+          ]
+        },
+        {
+          "criterion_id": "consultation",
+          "value": 10,
+          "rationale": "Вопрос о реквизитах был решён, но существенная часть запроса о комиссии осталась без ответа.",
+          "evidence_turns": [
+            10,
+            12,
+            14,
+            16
+          ]
+        },
+        {
+          "criterion_id": "empathy",
+          "value": true,
+          "rationale": "В репликах оператора нет невежливости; при уточнении инструкции она извинилась.",
+          "evidence_turns": [
+            10,
+            14,
+            16
+          ]
+        },
+        {
+          "criterion_id": "dialogue",
+          "value": 4,
+          "rationale": "Клиенту пришлось переспросить из-за неясной инструкции оператора. Последующее исправление помогло найти реквизиты, но не отменяет сбой, соответствующий ступени 4.",
+          "evidence_turns": [
+            11,
+            12,
+            13,
+            14,
+            15
+          ]
+        },
+        {
+          "criterion_id": "closure",
+          "value": true,
+          "rationale": "Оператор указала, что сделать перед переводом, и завершила разговор прощанием.",
+          "evidence_turns": [
+            16
+          ]
+        },
+        {
+          "criterion_id": "critical",
+          "value": false,
+          "rationale": "Грубых нарушений в диалоге не обнаружено.",
+          "evidence_turns": [
+            10,
+            12,
+            14,
+            16
+          ]
+        }
+      ],
+      "score": {
+        "final_score": 70.77,
+        "critical_flag": false
+      }
+    },
+    {
+      "conversation_id": "p1-ru-006",
+      "status": "ok",
+      "criteria": [
+        {
+          "criterion_id": "contact",
+          "value": true,
+          "rationale": "Оператор поздоровался и назвал своё имя.",
+          "evidence_turns": [
+            10
+          ]
+        },
+        {
+          "criterion_id": "discovery",
+          "value": true,
+          "rationale": "Недостающую для обращения информацию оператор уточнил до того, как завершил оформление передачи вопроса.",
+          "evidence_turns": [
+            13,
+            14
+          ]
+        },
+        {
+          "criterion_id": "identification",
+          "value": true,
+          "rationale": "Личность клиента подтверждена до дальнейших действий по запросу.",
+          "evidence_turns": [
+            10,
+            12,
+            13
+          ]
+        },
+        {
+          "criterion_id": "consultation",
+          "value": 20,
+          "rationale": "Дан корректный следующий шаг и объяснено, как клиент получит ответ.",
+          "evidence_turns": [
+            13,
+            14,
+            15
+          ]
+        },
+        {
+          "criterion_id": "empathy",
+          "value": true,
+          "rationale": "Оператор признал беспокойство клиента и завершил разговор вежливо.",
+          "evidence_turns": [
+            10,
+            15
+          ]
+        },
+        {
+          "criterion_id": "dialogue",
+          "value": 10,
+          "rationale": "Диалог велся ясно и связно, заметных сбоев не было.",
+          "evidence_turns": [
+            10,
+            13,
+            15
+          ]
+        },
+        {
+          "criterion_id": "closure",
+          "value": true,
+          "rationale": "Есть и информация о дальнейшем шаге, и прощание.",
+          "evidence_turns": [
+            15
+          ]
+        },
+        {
+          "criterion_id": "critical",
+          "value": false,
+          "rationale": "Грубых нарушений в проверенных репликах оператора нет.",
+          "evidence_turns": [
+            10,
+            13,
+            15
+          ]
+        }
+      ],
+      "score": {
+        "final_score": 100,
+        "critical_flag": false
+      }
+    },
+    {
+      "conversation_id": "p1-ru-007",
+      "status": "ok",
+      "criteria": [
+        {
+          "criterion_id": "contact",
+          "value": true,
+          "rationale": "Оператор начал ответ с приветствия и назвал своё имя.",
+          "evidence_turns": [
+            11
+          ]
+        },
+        {
+          "criterion_id": "discovery",
+          "value": null,
+          "rationale": "Данных для ответа хватало с самого начала; условие N/A выполнено.",
+          "evidence_turns": [
+            5
+          ]
+        },
+        {
+          "criterion_id": "identification",
+          "value": null,
+          "rationale": "Запрос не требовал идентификации клиента.",
+          "evidence_turns": [
+            5
+          ]
+        },
+        {
+          "criterion_id": "consultation",
+          "value": 10,
+          "rationale": "Часть запроса закрыта, но существенный вопрос о сроке повторной попытки остался без ответа.",
+          "evidence_turns": [
+            11,
+            12,
+            13
+          ]
+        },
+        {
+          "criterion_id": "empathy",
+          "value": false,
+          "rationale": "Формальное приветствие и пожелание хорошего дня не компенсируют отмахивающуюся реакцию на конкретную проблему клиента.",
+          "evidence_turns": [
+            12,
+            13
+          ]
+        },
+        {
+          "criterion_id": "dialogue",
+          "value": 7,
+          "rationale": "Есть один заметный сбой: оператор не отвечает на вопрос, но остальная инструкция понятна.",
+          "evidence_turns": [
+            12,
+            13
+          ]
+        },
+        {
+          "criterion_id": "closure",
+          "value": true,
+          "rationale": "Оператор обозначил, что сделал, и попрощался. Формальные условия критерия завершения выполнены.",
+          "evidence_turns": [
+            13
+          ]
+        },
+        {
+          "criterion_id": "critical",
+          "value": false,
+          "rationale": "Грубых нарушений в проверенных репликах не выявлено.",
+          "evidence_turns": []
+        }
+      ],
+      "score": {
+        "final_score": 54.62,
+        "critical_flag": false
+      }
+    },
+    {
+      "conversation_id": "p1-ru-008",
+      "status": "ok",
+      "criteria": [
+        {
+          "criterion_id": "contact",
+          "value": true,
+          "rationale": "Оператор сказала «Добрый день!» и назвала своё имя.",
+          "evidence_turns": [
+            10
+          ]
+        },
+        {
+          "criterion_id": "discovery",
+          "value": null,
+          "rationale": "Данных для ответа хватало с самого начала: оператору не требовалось выяснять дополнительные обстоятельства.",
+          "evidence_turns": [
+            1
+          ]
+        },
+        {
+          "criterion_id": "identification",
+          "value": null,
+          "rationale": "Запрос касался общего порядка действий, а не получения защищённых сведений или выполнения операции оператором.",
+          "evidence_turns": [
+            1,
+            10
+          ]
+        },
+        {
+          "criterion_id": "consultation",
+          "value": 20,
+          "rationale": "Оператор дала понятный следующий шаг и подтвердила, что вторую заявку следует подавать после обновления данных.",
+          "evidence_turns": [
+            10,
+            12
+          ]
+        },
+        {
+          "criterion_id": "empathy",
+          "value": true,
+          "rationale": "В репликах оператора нет невежливости или игнорирования выраженного клиентом недовольства.",
+          "evidence_turns": [
+            10,
+            12,
+            14
+          ]
+        },
+        {
+          "criterion_id": "dialogue",
+          "value": 10,
+          "rationale": "Диалог вёлся ясно и последовательно, заметных сбоев не было.",
+          "evidence_turns": [
+            10,
+            12
+          ]
+        },
+        {
+          "criterion_id": "closure",
+          "value": false,
+          "rationale": "Одного прощания недостаточно для выполнения критерия завершения.",
+          "evidence_turns": [
+            14
+          ]
+        },
+        {
+          "criterion_id": "critical",
+          "value": false,
+          "rationale": "Грубых нарушений в сообщениях оператора не обнаружено.",
+          "evidence_turns": [
+            10,
+            12,
+            14
+          ]
+        }
+      ],
+      "score": {
+        "final_score": 92.31,
+        "critical_flag": false
+      }
+    },
+    {
+      "conversation_id": "p1-ru-009",
+      "status": "ok",
+      "criteria": [
+        {
+          "criterion_id": "contact",
+          "value": true,
+          "rationale": "Оператор поздоровался и назвал своё имя.",
+          "evidence_turns": [
+            10
+          ]
+        },
+        {
+          "criterion_id": "discovery",
+          "value": true,
+          "rationale": "Уточнение помогло понять, что именно происходит при попытке вывода; затем оператор проверил счёт.",
+          "evidence_turns": [
+            10,
+            11,
+            12
+          ]
+        },
+        {
+          "criterion_id": "identification",
+          "value": false,
+          "rationale": "Индивидуальные сведения о счёте раскрыты без подтверждённой идентификации.",
+          "evidence_turns": [
+            12,
+            13,
+            14
+          ]
+        },
+        {
+          "criterion_id": "consultation",
+          "value": 20,
+          "rationale": "Оператор сообщил о выявленном ограничении и обозначил дальнейшую проверку причины. По критерию консультации корректный следующий шаг допускает полную оценку.",
+          "evidence_turns": [
+            12,
+            15,
+            16
+          ]
+        },
+        {
+          "criterion_id": "empathy",
+          "value": false,
+          "rationale": "Формальная вежливость соблюдена, но конкретное неудобство и обеспокоенность клиента остались без эмпатичной реакции.",
+          "evidence_turns": [
+            11,
+            13,
+            14
+          ]
+        },
+        {
+          "criterion_id": "dialogue",
+          "value": 7,
+          "rationale": "Есть один заметный сбой: неуместное возвращение к зависанию приложения после сообщения об ограничении. В остальном диалог понятен; явного ожидания с уходом на проверку не было.",
+          "evidence_turns": [
+            12,
+            14,
+            15,
+            16
+          ]
+        },
+        {
+          "criterion_id": "closure",
+          "value": true,
+          "rationale": "Завершение содержит следующий шаг и прощание, то есть оба обязательных элемента.",
+          "evidence_turns": [
+            16
+          ]
+        },
+        {
+          "criterion_id": "critical",
+          "value": true,
+          "rationale": "Оператор сообщил конфиденциальную информацию о состоянии счёта до подтверждения личности клиента. В диалоге есть прямое подтверждение отсутствия идентификации.",
+          "evidence_turns": [
+            12,
+            13,
+            14
+          ]
+        }
+      ],
+      "score": {
+        "final_score": 60.5,
+        "critical_flag": true
+      }
+    },
+    {
+      "conversation_id": "p1-ru-010",
+      "status": "ok",
+      "criteria": [
+        {
+          "criterion_id": "contact",
+          "value": true,
+          "rationale": "Оператор поздоровалась и назвала своё имя.",
+          "evidence_turns": [
+            11
+          ]
+        },
+        {
+          "criterion_id": "discovery",
+          "value": false,
+          "rationale": "Оператор начал выяснение корректно, но не довёл его до конца: название пропавшей бумаги осталось неизвестным. Клиентское «Нашёл название» не является сообщением самого названия, необходимого для проверки конкретной позиции.",
+          "evidence_turns": [
+            16,
+            17,
+            18,
+            19,
+            32
+          ]
+        },
+        {
+          "criterion_id": "identification",
+          "value": true,
+          "rationale": "Идентификация подтверждена до передачи вопроса на проверку.",
+          "evidence_turns": [
+            13,
+            15,
+            16
+          ]
+        },
+        {
+          "criterion_id": "consultation",
+          "value": 10,
+          "rationale": "Вопрос о скачивании отчёта решён, рекомендации по периоду сверки даны. Существенный вопрос о пропавшей позиции остался открытым: оператор заявил о передаче на проверку, не установив, какую именно бумагу нужно проверить.",
+          "evidence_turns": [
+            16,
+            18,
+            19,
+            21,
+            24,
+            26,
+            28,
+            30,
+            32
+          ]
+        },
+        {
+          "criterion_id": "empathy",
+          "value": true,
+          "rationale": "Оператор отреагировала на конкретное неудобство клиента и сохраняла вежливый тон.",
+          "evidence_turns": [
+            11,
+            32
+          ]
+        },
+        {
+          "criterion_id": "dialogue",
+          "value": 10,
+          "rationale": "Диалог шёл связно, инструкции и дальнейшие действия изложены ясно.",
+          "evidence_turns": [
+            11,
+            16,
+            19,
+            21,
+            23,
+            26,
+            28,
+            30
+          ]
+        },
+        {
+          "criterion_id": "closure",
+          "value": true,
+          "rationale": "Есть итог о передаче вопроса и прощание.",
+          "evidence_turns": [
+            32
+          ]
+        },
+        {
+          "criterion_id": "critical",
+          "value": false,
+          "rationale": "Грубых нарушений в диалоге не обнаружено.",
+          "evidence_turns": [
+            11,
+            32
+          ]
+        }
+      ],
+      "score": {
+        "final_score": 75,
+        "critical_flag": false
+      }
+    },
+    {
+      "conversation_id": "p1-ru-011",
+      "status": "ok",
+      "criteria": [
+        {
+          "criterion_id": "contact",
+          "value": true,
+          "rationale": "Оператор поздоровалась на языке клиента и представилась в первом сообщении.",
+          "evidence_turns": [
+            10
+          ]
+        },
+        {
+          "criterion_id": "discovery",
+          "value": null,
+          "rationale": "Данных для ответа хватало: оператор сразу указала нужный раздел приложения.",
+          "evidence_turns": [
+            5,
+            10
+          ]
+        },
+        {
+          "criterion_id": "identification",
+          "value": null,
+          "rationale": "Запрос не требовал идентификации клиента.",
+          "evidence_turns": [
+            5,
+            10
+          ]
+        },
+        {
+          "criterion_id": "consultation",
+          "value": 20,
+          "rationale": "Основной вопрос решён: клиент нашёл и скачал отчёт.",
+          "evidence_turns": [
+            10,
+            12,
+            13
+          ]
+        },
+        {
+          "criterion_id": "empathy",
+          "value": true,
+          "rationale": "Оператор была вежлива; признаков недовольства клиента в диалоге нет.",
+          "evidence_turns": [
+            10,
+            12,
+            14
+          ]
+        },
+        {
+          "criterion_id": "dialogue",
+          "value": 10,
+          "rationale": "Диалог вёлся понятно и связно, заметных сбоев нет.",
+          "evidence_turns": [
+            10,
+            12,
+            13
+          ]
+        },
+        {
+          "criterion_id": "closure",
+          "value": false,
+          "rationale": "Одного вежливого прощания недостаточно для выполнения критерия завершения.",
+          "evidence_turns": [
+            14
+          ]
+        },
+        {
+          "criterion_id": "critical",
+          "value": false,
+          "rationale": "Грубых нарушений в диалоге не обнаружено.",
+          "evidence_turns": [
+            10,
+            12,
+            14
+          ]
+        }
+      ],
+      "score": {
+        "final_score": 92.31,
+        "critical_flag": false
+      }
+    },
+    {
+      "conversation_id": "p1-ru-012",
+      "status": "ok",
+      "criteria": [
+        {
+          "criterion_id": "contact",
+          "value": true,
+          "rationale": "Оператор поздоровался и назвал своё имя.",
+          "evidence_turns": [
+            10
+          ]
+        },
+        {
+          "criterion_id": "discovery",
+          "value": null,
+          "rationale": "Данных из вопроса клиента хватало для ответа без уточнений.",
+          "evidence_turns": [
+            5
+          ]
+        },
+        {
+          "criterion_id": "identification",
+          "value": null,
+          "rationale": "Это общий информационный вопрос, для ответа на который идентификация не нужна.",
+          "evidence_turns": [
+            5
+          ]
+        },
+        {
+          "criterion_id": "consultation",
+          "value": 20,
+          "rationale": "Основной вопрос клиента получил прямой ответ.",
+          "evidence_turns": [
+            10
+          ]
+        },
+        {
+          "criterion_id": "empathy",
+          "value": true,
+          "rationale": "В реплике оператора нет невежливых или неподходящих формулировок.",
+          "evidence_turns": [
+            10
+          ]
+        },
+        {
+          "criterion_id": "dialogue",
+          "value": 10,
+          "rationale": "Диалог после подключения оператора прошёл ясно и связно.",
+          "evidence_turns": [
+            10,
+            11
+          ]
+        },
+        {
+          "criterion_id": "closure",
+          "value": null,
+          "rationale": "Завершение не оценивалось, поскольку соединение было прервано.",
+          "evidence_turns": [
+            12
+          ]
+        },
+        {
+          "criterion_id": "critical",
+          "value": false,
+          "rationale": "Грубых нарушений в ответе оператора не обнаружено.",
+          "evidence_turns": [
+            10
+          ]
+        }
+      ],
+      "score": {
+        "final_score": 100,
+        "critical_flag": false
+      }
+    },
+    {
+      "conversation_id": "p1-ru-013",
+      "status": "ok",
+      "criteria": [
+        {
+          "criterion_id": "contact",
+          "value": true,
+          "rationale": "Оператор поздоровалась и представилась: «Я Кира».",
+          "evidence_turns": [
+            10
+          ]
+        },
+        {
+          "criterion_id": "discovery",
+          "value": null,
+          "rationale": "Уточнения не требовались, чтобы ответить на запрос.",
+          "evidence_turns": [
+            1,
+            10
+          ]
+        },
+        {
+          "criterion_id": "identification",
+          "value": null,
+          "rationale": "Для вопроса о публичном разделе сайта идентификация не требовалась.",
+          "evidence_turns": [
+            1,
+            10
+          ]
+        },
+        {
+          "criterion_id": "consultation",
+          "value": 20,
+          "rationale": "Запрос решён: дан точный путь к отчётности, и клиент сообщил, что искал в другом разделе.",
+          "evidence_turns": [
+            10,
+            11
+          ]
+        },
+        {
+          "criterion_id": "empathy",
+          "value": true,
+          "rationale": "Тон оператора был корректным и доброжелательным.",
+          "evidence_turns": [
+            10,
+            12
+          ]
+        },
+        {
+          "criterion_id": "dialogue",
+          "value": 10,
+          "rationale": "Оператор дал ясные инструкции и затем подтвердил, где искать раздел.",
+          "evidence_turns": [
+            10,
+            12
+          ]
+        },
+        {
+          "criterion_id": "closure",
+          "value": true,
+          "rationale": "Фраза о разделе подводит итог, а «Хорошего дня!» завершает диалог.",
+          "evidence_turns": [
+            12
+          ]
+        },
+        {
+          "criterion_id": "critical",
+          "value": false,
+          "rationale": "Грубых нарушений в сообщениях оператора не обнаружено.",
+          "evidence_turns": [
+            10,
+            12
+          ]
+        }
+      ],
+      "score": {
+        "final_score": 100,
+        "critical_flag": false
+      }
+    },
+    {
+      "conversation_id": "p1-ru-014",
+      "status": "ok",
+      "criteria": [
+        {
+          "criterion_id": "contact",
+          "value": false,
+          "rationale": "Оператор не представился в первом ответе.",
+          "evidence_turns": [
+            10
+          ]
+        },
+        {
+          "criterion_id": "discovery",
+          "value": false,
+          "rationale": "Оператор переспросил уже указанную клиентом информацию.",
+          "evidence_turns": [
+            10
+          ]
+        },
+        {
+          "criterion_id": "identification",
+          "value": null,
+          "rationale": "Для ответа на общий вопрос идентификация не требовалась.",
+          "evidence_turns": [
+            12
+          ]
+        },
+        {
+          "criterion_id": "consultation",
+          "value": 20,
+          "rationale": "Основной вопрос решён, клиент смог перейти по указанному адресу.",
+          "evidence_turns": [
+            12,
+            13
+          ]
+        },
+        {
+          "criterion_id": "empathy",
+          "value": true,
+          "rationale": "В репликах оператора нет невежливости.",
+          "evidence_turns": [
+            12,
+            14
+          ]
+        },
+        {
+          "criterion_id": "dialogue",
+          "value": 7,
+          "rationale": "Был один заметный сбой, но после него диалог продолжился понятно.",
+          "evidence_turns": [
+            10,
+            11,
+            12
+          ]
+        },
+        {
+          "criterion_id": "closure",
+          "value": false,
+          "rationale": "Одного прощания для выполнения критерия недостаточно.",
+          "evidence_turns": [
+            14
+          ]
+        },
+        {
+          "criterion_id": "critical",
+          "value": false,
+          "rationale": "Грубых нарушений в диалоге не выявлено.",
+          "evidence_turns": []
+        }
+      ],
+      "score": {
+        "final_score": 56.88,
+        "critical_flag": false
+      }
+    },
+    {
+      "conversation_id": "p1-ru-015",
+      "status": "ok",
+      "criteria": [
+        {
+          "criterion_id": "contact",
+          "value": true,
+          "rationale": "Оператор поприветствовала клиента и назвала своё имя.",
+          "evidence_turns": [
+            10
+          ]
+        },
+        {
+          "criterion_id": "discovery",
+          "value": null,
+          "rationale": "Данных в сообщении клиента хватало, чтобы ответить по существу без уточнений.",
+          "evidence_turns": [
+            1,
+            10
+          ]
+        },
+        {
+          "criterion_id": "identification",
+          "value": null,
+          "rationale": "Запрос не требовал идентификации клиента.",
+          "evidence_turns": [
+            1,
+            10
+          ]
+        },
+        {
+          "criterion_id": "consultation",
+          "value": 20,
+          "rationale": "Основной вопрос закрыт, клиенту предложен корректный следующий шаг для регистрации.",
+          "evidence_turns": [
+            10,
+            12
+          ]
+        },
+        {
+          "criterion_id": "empathy",
+          "value": true,
+          "rationale": "В репликах оператора нет невежливости или пропуска реакции на выраженное недовольство.",
+          "evidence_turns": [
+            10,
+            12
+          ]
+        },
+        {
+          "criterion_id": "dialogue",
+          "value": 10,
+          "rationale": "Ответы ясные и последовательные. Уточнение клиента о необходимости ждать освобождения логина — нормальное продолжение диалога, а не сбой.",
+          "evidence_turns": [
+            10,
+            11,
+            12
+          ]
+        },
+        {
+          "criterion_id": "closure",
+          "value": true,
+          "rationale": "Оператор указал, что клиенту делать дальше, и попрощался. Оба условия корректного завершения выполнены.",
+          "evidence_turns": [
+            12
+          ]
+        },
+        {
+          "criterion_id": "critical",
+          "value": false,
+          "rationale": "Грубых нарушений не обнаружено.",
+          "evidence_turns": [
+            10,
+            12
+          ]
+        }
+      ],
+      "score": {
+        "final_score": 100,
+        "critical_flag": false
+      }
+    },
+    {
+      "conversation_id": "p1-ru-016",
+      "status": "ok",
+      "criteria": [
+        {
+          "criterion_id": "contact",
+          "value": true,
+          "rationale": "Оператор поздоровался на русском языке и назвал своё имя.",
+          "evidence_turns": [
+            10
+          ]
+        },
+        {
+          "criterion_id": "discovery",
+          "value": false,
+          "rationale": "Оператор дал совет до выяснения устройства и места входа, поэтому первоначальный ответ оказался не по ситуации.",
+          "evidence_turns": [
+            1,
+            10,
+            11
+          ]
+        },
+        {
+          "criterion_id": "identification",
+          "value": null,
+          "rationale": "Запрос касался доступности входа на публичном сайте и не требовал идентификации клиента.",
+          "evidence_turns": [
+            13,
+            14
+          ]
+        },
+        {
+          "criterion_id": "consultation",
+          "value": 20,
+          "rationale": "Основной вопрос клиента полностью закрыт: оператор объяснил, почему на сайте нет кнопки входа, и назвал адрес веб-кабинета.",
+          "evidence_turns": [
+            14,
+            15
+          ]
+        },
+        {
+          "criterion_id": "empathy",
+          "value": true,
+          "rationale": "Оператор сохранил вежливость и отреагировал на конкретное затруднение клиента, указав, где находится вход в веб-кабинет. Сухость отдельных формулировок сама по себе не означает нарушения этого критерия.",
+          "evidence_turns": [
+            10,
+            12,
+            13,
+            14,
+            16
+          ]
+        },
+        {
+          "criterion_id": "dialogue",
+          "value": 7,
+          "rationale": "Был один заметный сбой: оператор не уточнил контекст, и клиенту пришлось поправить его; далее диалог был понятным.",
+          "evidence_turns": [
+            10,
+            11,
+            12,
+            14
+          ]
+        },
+        {
+          "criterion_id": "closure",
+          "value": false,
+          "rationale": "Одного прощания недостаточно для выполнения критерия завершения.",
+          "evidence_turns": [
+            16
+          ]
+        },
+        {
+          "criterion_id": "critical",
+          "value": false,
+          "rationale": "Грубых нарушений в диалоге не обнаружено.",
+          "evidence_turns": [
+            10,
+            12,
+            14,
+            16
+          ]
+        }
+      ],
+      "score": {
+        "final_score": 69.38,
+        "critical_flag": false
+      }
+    },
+    {
+      "conversation_id": "p1-ru-017",
+      "status": "ok",
+      "criteria": [
+        {
+          "criterion_id": "contact",
+          "value": true,
+          "rationale": "Оператор поприветствовал клиента и представился в первом ответе.",
+          "evidence_turns": [
+            11
+          ]
+        },
+        {
+          "criterion_id": "discovery",
+          "value": true,
+          "rationale": "Оператор учёл затруднение клиента и уточнил, какой способ поиска доступен, прежде чем дать инструкцию.",
+          "evidence_turns": [
+            10,
+            11,
+            12,
+            13
+          ]
+        },
+        {
+          "criterion_id": "identification",
+          "value": null,
+          "rationale": "Для ответа на общий вопрос о поиске облигации идентификация не требовалась.",
+          "evidence_turns": [
+            1
+          ]
+        },
+        {
+          "criterion_id": "consultation",
+          "value": 20,
+          "rationale": "Оператор дал корректный следующий шаг с учётом актуального затруднения клиента. Клиент подтвердил, что нужная бумага найдена; требовать дополнительных инструкций, о которых он далее не спрашивал, оснований нет.",
+          "evidence_turns": [
+            5,
+            10,
+            12,
+            13,
+            14
+          ]
+        },
+        {
+          "criterion_id": "empathy",
+          "value": true,
+          "rationale": "В репликах оператора нет невежливости, а повода для специальной эмпатической реакции клиент не выражал.",
+          "evidence_turns": [
+            11,
+            15
+          ]
+        },
+        {
+          "criterion_id": "dialogue",
+          "value": 10,
+          "rationale": "Диалог шёл связно, клиент понял инструкцию и сообщил, что нашёл нужную бумагу.",
+          "evidence_turns": [
+            11,
+            13
+          ]
+        },
+        {
+          "criterion_id": "closure",
+          "value": false,
+          "rationale": "Одного пожелания хорошего дня и вежливой формулы недостаточно для выполнения критерия завершения.",
+          "evidence_turns": [
+            15
+          ]
+        },
+        {
+          "criterion_id": "critical",
+          "value": false,
+          "rationale": "Грубых нарушений в диалоге не обнаружено.",
+          "evidence_turns": []
+        }
+      ],
+      "score": {
+        "final_score": 93.75,
+        "critical_flag": false
+      }
+    },
+    {
+      "conversation_id": "p1-ru-018",
+      "status": "ok",
+      "criteria": [
+        {
+          "criterion_id": "contact",
+          "value": true,
+          "rationale": "Оператор поздоровался и назвал своё имя.",
+          "evidence_turns": [
+            10
+          ]
+        },
+        {
+          "criterion_id": "discovery",
+          "value": false,
+          "rationale": "Оператор сделал вывод без необходимых уточнений, что подтвердилось вопросом клиента о том, что бумага ещё не была названа.",
+          "evidence_turns": [
+            10
+          ]
+        },
+        {
+          "criterion_id": "identification",
+          "value": null,
+          "rationale": "Запрос не требовал идентификации клиента.",
+          "evidence_turns": [
+            1
+          ]
+        },
+        {
+          "criterion_id": "consultation",
+          "value": 0,
+          "rationale": "По существу запрос не решён, а ключевое утверждение оператора не было обосновано.",
+          "evidence_turns": [
+            10,
+            11,
+            12
+          ]
+        },
+        {
+          "criterion_id": "empathy",
+          "value": false,
+          "rationale": "Формального приветствия недостаточно: оператор не проявил участия к затруднению клиента. Формулировки «ничего не сделать» и «Тогда не знаю» оставляют его проблему без внимательной реакции.",
+          "evidence_turns": [
+            1,
+            10,
+            11,
+            12
+          ]
+        },
+        {
+          "criterion_id": "dialogue",
+          "value": 7,
+          "rationale": "Был один заметный сбой в ведении диалога: оператор сначала уверенно заявил причину, а затем признал, что не знает.",
+          "evidence_turns": [
+            10,
+            11,
+            12
+          ]
+        },
+        {
+          "criterion_id": "closure",
+          "value": false,
+          "rationale": "Оператор завершил диалог без итога, следующего шага или прощания.",
+          "evidence_turns": [
+            12
+          ]
+        },
+        {
+          "criterion_id": "critical",
+          "value": false,
+          "rationale": "Грубых нарушений в сообщениях оператора нет.",
+          "evidence_turns": [
+            10,
+            12
+          ]
+        }
+      ],
+      "score": {
+        "final_score": 25.62,
+        "critical_flag": false
+      }
+    },
+    {
+      "conversation_id": "p1-ru-019",
+      "status": "ok",
+      "criteria": [
+        {
+          "criterion_id": "contact",
+          "value": true,
+          "rationale": "Оператор поздоровалась и назвала своё имя в первом ответе.",
+          "evidence_turns": [
+            10
+          ]
+        },
+        {
+          "criterion_id": "discovery",
+          "value": true,
+          "rationale": "Уточнение было уместным; затем оператор объяснила, куда ввести имеющиеся у клиента буквы.",
+          "evidence_turns": [
+            10,
+            11,
+            12
+          ]
+        },
+        {
+          "criterion_id": "identification",
+          "value": null,
+          "rationale": "Запрос не требовал идентификации клиента.",
+          "evidence_turns": [
+            12
+          ]
+        },
+        {
+          "criterion_id": "consultation",
+          "value": 20,
+          "rationale": "Запрос решён: клиент получил инструкцию и сообщил, что нашёл бумагу.",
+          "evidence_turns": [
+            12,
+            13
+          ]
+        },
+        {
+          "criterion_id": "empathy",
+          "value": true,
+          "rationale": "Реплики оператора вежливы, повода для дополнительной эмпатической реакции не было.",
+          "evidence_turns": [
+            10,
+            12,
+            14
+          ]
+        },
+        {
+          "criterion_id": "dialogue",
+          "value": 10,
+          "rationale": "Ответы ясные и связные; заметных сбоев в управлении диалогом нет.",
+          "evidence_turns": [
+            10,
+            12
+          ]
+        },
+        {
+          "criterion_id": "closure",
+          "value": false,
+          "rationale": "Одного «Пожалуйста. До свидания!» недостаточно для выполнения критерия завершения.",
+          "evidence_turns": [
+            14
+          ]
+        },
+        {
+          "criterion_id": "critical",
+          "value": false,
+          "rationale": "Грубых нарушений в репликах оператора не обнаружено.",
+          "evidence_turns": [
+            10,
+            12,
+            14
+          ]
+        }
+      ],
+      "score": {
+        "final_score": 93.75,
+        "critical_flag": false
+      }
+    },
+    {
+      "conversation_id": "p1-ru-020",
+      "status": "ok",
+      "criteria": [
+        {
+          "criterion_id": "contact",
+          "value": true,
+          "rationale": "Оператор поздоровался на русском языке и представился.",
+          "evidence_turns": [
+            10
+          ]
+        },
+        {
+          "criterion_id": "discovery",
+          "value": null,
+          "rationale": "Данных изначально хватало, чтобы объяснить, где отключить использование маржи.",
+          "evidence_turns": [
+            1
+          ]
+        },
+        {
+          "criterion_id": "identification",
+          "value": null,
+          "rationale": "Для ответа на общий вопрос о настройке идентификация не требовалась.",
+          "evidence_turns": [
+            1
+          ]
+        },
+        {
+          "criterion_id": "consultation",
+          "value": 10,
+          "rationale": "Вопрос об отключении галочки решён. Существенный дополнительный вопрос о влиянии этого действия на уже открытую позицию остался без однозначного ответа или конкретного следующего шага.",
+          "evidence_turns": [
+            10,
+            11,
+            12
+          ]
+        },
+        {
+          "criterion_id": "empathy",
+          "value": true,
+          "rationale": "Реплики оператора вежливые, реакции на выраженное недовольство не требовалось.",
+          "evidence_turns": [
+            10,
+            12,
+            14
+          ]
+        },
+        {
+          "criterion_id": "dialogue",
+          "value": 10,
+          "rationale": "Оператор дал ясные ответы, клиенту не пришлось повторять вопрос из-за непонимания.",
+          "evidence_turns": [
+            10,
+            12
+          ]
+        },
+        {
+          "criterion_id": "closure",
+          "value": false,
+          "rationale": "Фразы «Пожалуйста. Хорошего дня!» недостаточно для выполнения критерия завершения.",
+          "evidence_turns": [
+            14
+          ]
+        },
+        {
+          "criterion_id": "critical",
+          "value": false,
+          "rationale": "Грубых нарушений в сообщениях оператора не выявлено.",
+          "evidence_turns": [
+            10,
+            12,
+            14
+          ]
+        }
+      ],
+      "score": {
+        "final_score": 76.92,
+        "critical_flag": false
+      }
+    },
+    {
+      "conversation_id": "p1-ru-021",
+      "status": "ok",
+      "criteria": [
+        {
+          "criterion_id": "contact",
+          "value": true,
+          "rationale": "Олеся начала с приветствия и назвала своё имя.",
+          "evidence_turns": [
+            10
+          ]
+        },
+        {
+          "criterion_id": "discovery",
+          "value": null,
+          "rationale": "Запрос был достаточно конкретным, чтобы сразу дать общий ответ.",
+          "evidence_turns": [
+            5,
+            10
+          ]
+        },
+        {
+          "criterion_id": "identification",
+          "value": null,
+          "rationale": "Для ответа на общий вопрос об отличиях бирж идентификация не требовалась.",
+          "evidence_turns": [
+            10
+          ]
+        },
+        {
+          "criterion_id": "consultation",
+          "value": 20,
+          "rationale": "Основной вопрос клиента закрыт кратким и понятным объяснением.",
+          "evidence_turns": [
+            10
+          ]
+        },
+        {
+          "criterion_id": "empathy",
+          "value": true,
+          "rationale": "В репликах оператора нет невежливости, а повода для отдельной реакции на недовольство не было.",
+          "evidence_turns": [
+            10,
+            12
+          ]
+        },
+        {
+          "criterion_id": "dialogue",
+          "value": 10,
+          "rationale": "Клиент подтвердил, что понял ответ, и не переспрашивал.",
+          "evidence_turns": [
+            10,
+            11,
+            12
+          ]
+        },
+        {
+          "criterion_id": "closure",
+          "value": false,
+          "rationale": "Одного прощания и формулы «Рада помочь» недостаточно для выполнения критерия.",
+          "evidence_turns": [
+            12
+          ]
+        },
+        {
+          "criterion_id": "critical",
+          "value": false,
+          "rationale": "Грубых нарушений в репликах оператора не выявлено.",
+          "evidence_turns": [
+            10,
+            12
+          ]
+        }
+      ],
+      "score": {
+        "final_score": 92.31,
+        "critical_flag": false
+      }
+    },
+    {
+      "conversation_id": "p1-ru-022",
+      "status": "ok",
+      "criteria": [
+        {
+          "criterion_id": "contact",
+          "value": true,
+          "rationale": "Оператор поздоровался и представился.",
+          "evidence_turns": [
+            10
+          ]
+        },
+        {
+          "criterion_id": "discovery",
+          "value": false,
+          "rationale": "Оператор не уточнил параметры запроса и не выяснил потребность перед ответом.",
+          "evidence_turns": [
+            1,
+            10
+          ]
+        },
+        {
+          "criterion_id": "identification",
+          "value": null,
+          "rationale": "Для ответа на общий вопрос об облигациях идентификация не требовалась.",
+          "evidence_turns": [
+            1
+          ]
+        },
+        {
+          "criterion_id": "consultation",
+          "value": 0,
+          "rationale": "Ответа по существу нет: оператор не помог выбрать облигации и дал недопустимое предложение.",
+          "evidence_turns": [
+            10,
+            12
+          ]
+        },
+        {
+          "criterion_id": "empathy",
+          "value": false,
+          "rationale": "Оператор не отреагировал на конкретное беспокойство клиента и продолжил настаивать на личном предложении.",
+          "evidence_turns": [
+            11,
+            12
+          ]
+        },
+        {
+          "criterion_id": "dialogue",
+          "value": 4,
+          "rationale": "Клиенту пришлось повторно обозначить цель обращения из-за ответа оператора невпопад. Даже после уточнения оператор не вернулся к запросу клиента.",
+          "evidence_turns": [
+            1,
+            10,
+            11,
+            12
+          ]
+        },
+        {
+          "criterion_id": "closure",
+          "value": false,
+          "rationale": "Завершения диалога со стороны оператора нет.",
+          "evidence_turns": [
+            12
+          ]
+        },
+        {
+          "criterion_id": "critical",
+          "value": true,
+          "rationale": "Оператор предложил личную платную финансовую услугу в обход компании.",
+          "evidence_turns": [
+            10,
+            12
+          ]
+        }
+      ],
+      "score": {
+        "final_score": 20,
+        "critical_flag": true
+      }
+    },
+    {
+      "conversation_id": "p1-ru-023",
+      "status": "ok",
+      "criteria": [
+        {
+          "criterion_id": "contact",
+          "value": true,
+          "rationale": "Оператор начал с приветствия и назвал своё имя.",
+          "evidence_turns": [
+            10
+          ]
+        },
+        {
+          "criterion_id": "discovery",
+          "value": null,
+          "rationale": "Исходных данных хватало, чтобы дать общий путь к поиску.",
+          "evidence_turns": [
+            1
+          ]
+        },
+        {
+          "criterion_id": "identification",
+          "value": null,
+          "rationale": "Для ответа на общий вопрос идентификация не требовалась.",
+          "evidence_turns": [
+            1
+          ]
+        },
+        {
+          "criterion_id": "consultation",
+          "value": 20,
+          "rationale": "На вопрос о поиске облигаций дан конкретный путь в приложении, и клиент подтвердил результат. По диалогу нет оснований считать, что существенная часть запроса осталась нерешённой.",
+          "evidence_turns": [
+            1,
+            10,
+            11
+          ]
+        },
+        {
+          "criterion_id": "empathy",
+          "value": true,
+          "rationale": "Оператор был вежлив; отдельной реакции на недовольство клиента не требовалось.",
+          "evidence_turns": [
+            10,
+            14
+          ]
+        },
+        {
+          "criterion_id": "dialogue",
+          "value": 10,
+          "rationale": "Диалог понятен, заметных сбоев в управлении ходом общения нет.",
+          "evidence_turns": [
+            10,
+            11,
+            12,
+            14
+          ]
+        },
+        {
+          "criterion_id": "closure",
+          "value": false,
+          "rationale": "Одного прощания для критерия завершения недостаточно.",
+          "evidence_turns": [
+            14
+          ]
+        },
+        {
+          "criterion_id": "critical",
+          "value": true,
+          "rationale": "Предложение платной услуги в обход компании является грубым нарушением.",
+          "evidence_turns": [
+            12
+          ]
+        }
+      ],
+      "score": {
+        "final_score": 92.31,
+        "critical_flag": true
+      }
+    },
+    {
+      "conversation_id": "p1-ru-024",
+      "status": "ok",
+      "criteria": [
+        {
+          "criterion_id": "contact",
+          "value": true,
+          "rationale": "Оператор поздоровалась на языке клиента и назвала своё имя.",
+          "evidence_turns": [
+            10
+          ]
+        },
+        {
+          "criterion_id": "discovery",
+          "value": null,
+          "rationale": "Данных для ответа хватало с самого начала, поэтому уточняющие вопросы не требовались.",
+          "evidence_turns": [
+            1,
+            5
+          ]
+        },
+        {
+          "criterion_id": "identification",
+          "value": null,
+          "rationale": "Запрос не требовал идентификации клиента.",
+          "evidence_turns": [
+            1,
+            10
+          ]
+        },
+        {
+          "criterion_id": "consultation",
+          "value": 20,
+          "rationale": "Оператор ответила на существенный вопрос клиента: для покупки бумаг используется торговый счёт, а не D-счёт. Оснований требовать дополнительную инструкцию по переводу средств в данном диалоге нет.",
+          "evidence_turns": [
+            1,
+            5,
+            10,
+            11,
+            12,
+            13
+          ]
+        },
+        {
+          "criterion_id": "empathy",
+          "value": true,
+          "rationale": "Оператор была вежлива; признаков недовольства клиента в диалоге нет.",
+          "evidence_turns": [
+            10,
+            12,
+            14
+          ]
+        },
+        {
+          "criterion_id": "dialogue",
+          "value": 10,
+          "rationale": "Диалог вёлся понятно, клиенту не пришлось повторять вопрос.",
+          "evidence_turns": [
+            10,
+            12,
+            13
+          ]
+        },
+        {
+          "criterion_id": "closure",
+          "value": false,
+          "rationale": "Оператор только попрощалась. Для выполнения критерия требовалось также подвести итог или предложить дальнейшую помощь.",
+          "evidence_turns": [
+            12,
+            13,
+            14
+          ]
+        },
+        {
+          "criterion_id": "critical",
+          "value": false,
+          "rationale": "Грубых нарушений в репликах оператора не обнаружено.",
+          "evidence_turns": [
+            10,
+            12,
+            14
+          ]
+        }
+      ],
+      "score": {
+        "final_score": 92.31,
+        "critical_flag": false
+      }
+    },
+    {
+      "conversation_id": "p1-ru-025",
+      "status": "ok",
+      "criteria": [
+        {
+          "criterion_id": "contact",
+          "value": true,
+          "rationale": "Оператор поздоровалась и назвала своё имя.",
+          "evidence_turns": [
+            10
+          ]
+        },
+        {
+          "criterion_id": "discovery",
+          "value": true,
+          "rationale": "Оператор задала необходимый вопрос для выяснения потребности. N/A неприменимо: исходных данных для ответа по существу не было.",
+          "evidence_turns": [
+            5,
+            10,
+            11
+          ]
+        },
+        {
+          "criterion_id": "identification",
+          "value": null,
+          "rationale": "Для просьбы подключить оператора идентификация не требовалась.",
+          "evidence_turns": [
+            1,
+            10
+          ]
+        },
+        {
+          "criterion_id": "consultation",
+          "value": null,
+          "rationale": "Чат завершился до того, как клиент сформулировал запрос.",
+          "evidence_turns": [
+            10,
+            11
+          ]
+        },
+        {
+          "criterion_id": "empathy",
+          "value": true,
+          "rationale": "Тон оператора вежливый.",
+          "evidence_turns": [
+            10
+          ]
+        },
+        {
+          "criterion_id": "dialogue",
+          "value": 10,
+          "rationale": "Оператор ясно представилась и предложила клиенту назвать вопрос.",
+          "evidence_turns": [
+            10
+          ]
+        },
+        {
+          "criterion_id": "closure",
+          "value": null,
+          "rationale": "Зафиксирован обрыв чата: клиент покинул его.",
+          "evidence_turns": [
+            11
+          ]
+        },
+        {
+          "criterion_id": "critical",
+          "value": false,
+          "rationale": "Грубых нарушений в сообщении оператора нет.",
+          "evidence_turns": [
+            10
+          ]
+        }
+      ],
+      "score": {
+        "final_score": 100,
+        "critical_flag": false
+      }
+    },
+    {
+      "conversation_id": "p1-ru-026",
+      "status": "ok",
+      "criteria": [
+        {
+          "criterion_id": "contact",
+          "value": true,
+          "rationale": "Оператор поздоровался и назвал своё имя в первом ответе.",
+          "evidence_turns": [
+            10
+          ]
+        },
+        {
+          "criterion_id": "discovery",
+          "value": false,
+          "rationale": "Оператор переспросил уже изложенный запрос вместо того, чтобы учесть историю диалога.",
+          "evidence_turns": [
+            1,
+            5,
+            10,
+            11
+          ]
+        },
+        {
+          "criterion_id": "identification",
+          "value": null,
+          "rationale": "Это общий вопрос о навигации в приложении, поэтому идентификация не требовалась.",
+          "evidence_turns": [
+            1
+          ]
+        },
+        {
+          "criterion_id": "consultation",
+          "value": 5,
+          "rationale": "Оператор дал только общую подсказку, не ответив, какую кнопку нажать.",
+          "evidence_turns": [
+            11,
+            12
+          ]
+        },
+        {
+          "criterion_id": "empathy",
+          "value": false,
+          "rationale": "Приветствие было вежливым, но конкретное неудобство клиента осталось без реакции: его снова направили в приложение, где он уже не смог разобраться.",
+          "evidence_turns": [
+            5,
+            11,
+            12
+          ]
+        },
+        {
+          "criterion_id": "dialogue",
+          "value": 4,
+          "rationale": "Клиенту пришлось повторить уже заданный вопрос, поскольку оператор не учёл историю обращения. Последующий ответ также не пояснил, какую кнопку нажать.",
+          "evidence_turns": [
+            1,
+            5,
+            10,
+            11,
+            12
+          ]
+        },
+        {
+          "criterion_id": "closure",
+          "value": false,
+          "rationale": "В финале нет ни итогов или предложения помощи, ни прощания; закрытие чата оператором не является обрывом со стороны клиента.",
+          "evidence_turns": [
+            12,
+            13
+          ]
+        },
+        {
+          "criterion_id": "critical",
+          "value": false,
+          "rationale": "Грубых нарушений в сообщениях оператора не обнаружено.",
+          "evidence_turns": [
+            10,
+            12
+          ]
+        }
+      ],
+      "score": {
+        "final_score": 26.25,
+        "critical_flag": false
+      }
+    },
+    {
+      "conversation_id": "p1-ru-027",
+      "status": "ok",
+      "criteria": [
+        {
+          "criterion_id": "contact",
+          "value": true,
+          "rationale": "Оператор начала общение с приветствия и назвала своё имя.",
+          "evidence_turns": [
+            11
+          ]
+        },
+        {
+          "criterion_id": "discovery",
+          "value": null,
+          "rationale": "Данных о том, что клиент ищет отчёт в приложении, хватало для ответа по существу.",
+          "evidence_turns": [
+            5,
+            10
+          ]
+        },
+        {
+          "criterion_id": "identification",
+          "value": null,
+          "rationale": "Запрос носил общий информационный характер и не требовал идентификации.",
+          "evidence_turns": [
+            1
+          ]
+        },
+        {
+          "criterion_id": "consultation",
+          "value": 20,
+          "rationale": "Основные вопросы клиента закрыты, дальнейшие действия понятны.",
+          "evidence_turns": [
+            11,
+            13,
+            15,
+            17,
+            20,
+            22
+          ]
+        },
+        {
+          "criterion_id": "empathy",
+          "value": true,
+          "rationale": "Реплики оператора корректны и доброжелательны.",
+          "evidence_turns": [
+            11,
+            24
+          ]
+        },
+        {
+          "criterion_id": "dialogue",
+          "value": 10,
+          "rationale": "Диалог ведётся ясно, клиент может последовательно выполнить инструкции.",
+          "evidence_turns": [
+            11,
+            13,
+            15,
+            17,
+            20,
+            22
+          ]
+        },
+        {
+          "criterion_id": "closure",
+          "value": false,
+          "rationale": "Одного прощания недостаточно для выполнения критерия завершения.",
+          "evidence_turns": [
+            24
+          ]
+        },
+        {
+          "criterion_id": "critical",
+          "value": false,
+          "rationale": "Грубых нарушений в диалоге не обнаружено.",
+          "evidence_turns": [
+            11,
+            13,
+            15,
+            17,
+            20,
+            22,
+            24
+          ]
+        }
+      ],
+      "score": {
+        "final_score": 92.31,
+        "critical_flag": false
+      }
+    },
+    {
+      "conversation_id": "p1-ru-028",
+      "status": "ok",
+      "criteria": [
+        {
+          "criterion_id": "contact",
+          "value": true,
+          "rationale": "Оператор начала ответ с приветствия и назвала своё имя.",
+          "evidence_turns": [
+            10
+          ]
+        },
+        {
+          "criterion_id": "discovery",
+          "value": null,
+          "rationale": "Данных в исходном запросе хватало, чтобы сразу указать нужный раздел.",
+          "evidence_turns": [
+            1
+          ]
+        },
+        {
+          "criterion_id": "identification",
+          "value": null,
+          "rationale": "Для общего вопроса о том, где найти нужный раздел, идентификация не требовалась.",
+          "evidence_turns": [
+            1
+          ]
+        },
+        {
+          "criterion_id": "consultation",
+          "value": 20,
+          "rationale": "На вопрос дан конкретный путь, а возникшее сомнение насчёт банковских реквизитов устранено.",
+          "evidence_turns": [
+            12,
+            14
+          ]
+        },
+        {
+          "criterion_id": "empathy",
+          "value": true,
+          "rationale": "В репликах оператора соблюдён вежливый тон.",
+          "evidence_turns": [
+            10,
+            12,
+            16
+          ]
+        },
+        {
+          "criterion_id": "dialogue",
+          "value": 10,
+          "rationale": "Явное ожидание было обозначено заранее, ответы изложены понятно и последовательно.",
+          "evidence_turns": [
+            10,
+            12,
+            14
+          ]
+        },
+        {
+          "criterion_id": "closure",
+          "value": false,
+          "rationale": "В конце есть только формула вежливости и прощание, без итога или предложения дальнейшей помощи.",
+          "evidence_turns": [
+            16
+          ]
+        },
+        {
+          "criterion_id": "critical",
+          "value": false,
+          "rationale": "Грубых нарушений в проверенных репликах не обнаружено.",
+          "evidence_turns": []
+        }
+      ],
+      "score": {
+        "final_score": 92.31,
+        "critical_flag": false
+      }
+    },
+    {
+      "conversation_id": "p1-ru-029",
+      "status": "ok",
+      "criteria": [
+        {
+          "criterion_id": "contact",
+          "value": true,
+          "rationale": "Оператор поздоровался и назвал своё имя в первой реплике.",
+          "evidence_turns": [
+            10
+          ]
+        },
+        {
+          "criterion_id": "discovery",
+          "value": null,
+          "rationale": "Данных запроса хватало, чтобы дать конкретный следующий шаг без дополнительных уточнений.",
+          "evidence_turns": [
+            1,
+            11,
+            12
+          ]
+        },
+        {
+          "criterion_id": "identification",
+          "value": null,
+          "rationale": "Для подсказки адреса платформы идентификация не требовалась.",
+          "evidence_turns": [
+            12
+          ]
+        },
+        {
+          "criterion_id": "consultation",
+          "value": 20,
+          "rationale": "Основной вопрос решён: клиенту указали нужный сайт, после чего он вошёл.",
+          "evidence_turns": [
+            12,
+            13
+          ]
+        },
+        {
+          "criterion_id": "empathy",
+          "value": false,
+          "rationale": "Оператор допустил грубую реплику и проигнорировал жалобу клиента на тон общения.",
+          "evidence_turns": [
+            10,
+            13,
+            14
+          ]
+        },
+        {
+          "criterion_id": "dialogue",
+          "value": 10,
+          "rationale": "Ответ по вопросу сформулирован ясно, клиент смог продолжить и войти.",
+          "evidence_turns": [
+            10,
+            12
+          ]
+        },
+        {
+          "criterion_id": "closure",
+          "value": false,
+          "rationale": "Одного «До свидания» для выполнения критерия недостаточно.",
+          "evidence_turns": [
+            14
+          ]
+        },
+        {
+          "criterion_id": "critical",
+          "value": true,
+          "rationale": "В диалоге было оскорбление со стороны оператора.",
+          "evidence_turns": [
+            10
+          ]
+        }
+      ],
+      "score": {
+        "final_score": 69.23,
+        "critical_flag": true
+      }
+    },
+    {
+      "conversation_id": "p1-ru-030",
+      "status": "ok",
+      "criteria": [
+        {
+          "criterion_id": "contact",
+          "value": true,
+          "rationale": "Оператор поздоровалась и назвала своё имя.",
+          "evidence_turns": [
+            10
+          ]
+        },
+        {
+          "criterion_id": "discovery",
+          "value": true,
+          "rationale": "Оператор уточнила недостающую деталь, а затем дала ответ с учётом контекста.",
+          "evidence_turns": [
+            10,
+            11,
+            12
+          ]
+        },
+        {
+          "criterion_id": "identification",
+          "value": null,
+          "rationale": "Для ответа на общий вопрос о расположении информации идентификация не требовалась.",
+          "evidence_turns": [
+            1,
+            12
+          ]
+        },
+        {
+          "criterion_id": "consultation",
+          "value": 20,
+          "rationale": "Вопрос решён по существу, клиент подтвердил результат.",
+          "evidence_turns": [
+            12,
+            13
+          ]
+        },
+        {
+          "criterion_id": "empathy",
+          "value": true,
+          "rationale": "В репликах оператора нет невежливости.",
+          "evidence_turns": [
+            10,
+            14
+          ]
+        },
+        {
+          "criterion_id": "dialogue",
+          "value": 10,
+          "rationale": "Ответы ясные и связные, клиенту не пришлось повторять вопрос.",
+          "evidence_turns": [
+            10,
+            12,
+            13
+          ]
+        },
+        {
+          "criterion_id": "closure",
+          "value": false,
+          "rationale": "Одного прощания и благодарности для выполнения критерия недостаточно.",
+          "evidence_turns": [
+            14
+          ]
+        },
+        {
+          "criterion_id": "critical",
+          "value": false,
+          "rationale": "Грубых нарушений в диалоге не обнаружено.",
+          "evidence_turns": [
+            10,
+            12,
+            14
+          ]
+        }
+      ],
+      "score": {
+        "final_score": 93.75,
+        "critical_flag": false
+      }
+    },
+    {
+      "conversation_id": "p1-kz-001",
+      "status": "ok",
+      "criteria": [
+        {
+          "criterion_id": "contact",
+          "value": true,
+          "rationale": "Оператор қазақ тілінде амандасып, өзін Аружан деп таныстырды.",
+          "evidence_turns": [
+            10
+          ]
+        },
+        {
+          "criterion_id": "discovery",
+          "value": null,
+          "rationale": "Сұраққа жауап беру үшін бастапқыда-ақ жеткілікті ақпарат болды.",
+          "evidence_turns": [
+            1,
+            10
+          ]
+        },
+        {
+          "criterion_id": "identification",
+          "value": null,
+          "rationale": "Бұл жалпы ақпараттық сұрақ болғандықтан, сәйкестендіру талап етілмеді.",
+          "evidence_turns": [
+            1,
+            10
+          ]
+        },
+        {
+          "criterion_id": "consultation",
+          "value": 20,
+          "rationale": "Оператор клиентке тарифті қайдан табатынын нақты әрі дұрыс түсіндірді.",
+          "evidence_turns": [
+            10,
+            11
+          ]
+        },
+        {
+          "criterion_id": "empathy",
+          "value": true,
+          "rationale": "Оператордың қарым-қатынасы сыпайы болды.",
+          "evidence_turns": [
+            10,
+            12
+          ]
+        },
+        {
+          "criterion_id": "dialogue",
+          "value": 10,
+          "rationale": "Диалог түсінікті өтті; оператордан күту туралы ескерту талап етілмеді.",
+          "evidence_turns": [
+            10
+          ]
+        },
+        {
+          "criterion_id": "closure",
+          "value": false,
+          "rationale": "«Оқасы жоқ. Сау болыңыз!» деген қоштасу өздігінен критерийді орындауға жеткіліксіз.",
+          "evidence_turns": [
+            12
+          ]
+        },
+        {
+          "criterion_id": "critical",
+          "value": false,
+          "rationale": "Қатаң бұзушылық белгілері жоқ.",
+          "evidence_turns": [
+            10,
+            12
+          ]
+        }
+      ],
+      "score": {
+        "final_score": 92.31,
+        "critical_flag": false
+      }
+    },
+    {
+      "conversation_id": "p1-kz-002",
+      "status": "ok",
+      "criteria": [
+        {
+          "criterion_id": "contact",
+          "value": true,
+          "rationale": "Оператор приветствует клиента и называет своё имя.",
+          "evidence_turns": [
+            10
+          ]
+        },
+        {
+          "criterion_id": "discovery",
+          "value": null,
+          "rationale": "Запрос можно было решить без предварительных уточнений — оператор сразу указал нужный раздел приложения.",
+          "evidence_turns": [
+            1,
+            10
+          ]
+        },
+        {
+          "criterion_id": "identification",
+          "value": null,
+          "rationale": "Для ответа на общий вопрос об открытии реквизитов идентификация не требовалась.",
+          "evidence_turns": [
+            1
+          ]
+        },
+        {
+          "criterion_id": "consultation",
+          "value": 20,
+          "rationale": "Основной вопрос решён, и оператор дал понятный следующий шаг для получения реквизитов в нужной валюте.",
+          "evidence_turns": [
+            10,
+            12,
+            13
+          ]
+        },
+        {
+          "criterion_id": "empathy",
+          "value": true,
+          "rationale": "В репликах оператора нет невежливости; он корректно отвечает клиенту.",
+          "evidence_turns": [
+            10,
+            12,
+            14
+          ]
+        },
+        {
+          "criterion_id": "dialogue",
+          "value": 10,
+          "rationale": "Диалог ведётся ясно и связно, клиент находит нужный раздел и подтверждает это.",
+          "evidence_turns": [
+            10,
+            12,
+            14
+          ]
+        },
+        {
+          "criterion_id": "closure",
+          "value": false,
+          "rationale": "Фразы «Жақсы. Күніңіз сәтті өтсін!» недостаточно для критерия: в ней есть прощание, но нет итога или предложения помощи.",
+          "evidence_turns": [
+            14
+          ]
+        },
+        {
+          "criterion_id": "critical",
+          "value": false,
+          "rationale": "Грубых нарушений в сообщениях оператора не обнаружено.",
+          "evidence_turns": [
+            10,
+            12,
+            14
+          ]
+        }
+      ],
+      "score": {
+        "final_score": 92.31,
+        "critical_flag": false
+      }
+    },
+    {
+      "conversation_id": "p1-kz-003",
+      "status": "ok",
+      "criteria": [
+        {
+          "criterion_id": "contact",
+          "value": true,
+          "rationale": "Оператор қазақ тілінде амандасып, есімін айтты.",
+          "evidence_turns": [
+            11
+          ]
+        },
+        {
+          "criterion_id": "discovery",
+          "value": false,
+          "rationale": "Оператор учёл запрос не полностью: повторно спросил примерное время перевода, хотя день клиент уже назвал. Если требовалось уточнить время суток, следовало спросить именно об этом.",
+          "evidence_turns": [
+            1,
+            14,
+            17,
+            18
+          ]
+        },
+        {
+          "criterion_id": "identification",
+          "value": true,
+          "rationale": "Қорғалған әрекетке дейін клиенттің жеке басы расталды.",
+          "evidence_turns": [
+            11,
+            13,
+            14
+          ]
+        },
+        {
+          "criterion_id": "consultation",
+          "value": 20,
+          "rationale": "Негізгі сұраққа дұрыс келесі қадам берілді, ал есепті жүктеу туралы сұрақ толық жауапталды.",
+          "evidence_turns": [
+            14,
+            19,
+            22,
+            24,
+            26
+          ]
+        },
+        {
+          "criterion_id": "empathy",
+          "value": true,
+          "rationale": "Оператор сыпайы сөйлеп, клиенттің алаңдаушылығына нақты жауап берді.",
+          "evidence_turns": [
+            11,
+            14,
+            26
+          ]
+        },
+        {
+          "criterion_id": "dialogue",
+          "value": 7,
+          "rationale": "Есть один заметный сбой — повторное уточнение уже названного срока перевода. В остальном оператор ведёт диалог связно, клиент понимает ответы и успешно загружает отчёт.",
+          "evidence_turns": [
+            1,
+            17,
+            18,
+            22,
+            23,
+            24,
+            26
+          ]
+        },
+        {
+          "criterion_id": "closure",
+          "value": true,
+          "rationale": "Оператор келесі қадамды қорытындылап, қоштасты.",
+          "evidence_turns": [
+            26
+          ]
+        },
+        {
+          "criterion_id": "critical",
+          "value": false,
+          "rationale": "Диалогта өрескел бұзушылық белгілері жоқ.",
+          "evidence_turns": []
+        }
+      ],
+      "score": {
+        "final_score": 80.5,
+        "critical_flag": false
+      }
+    },
+    {
+      "conversation_id": "p1-kz-004",
+      "status": "ok",
+      "criteria": [
+        {
+          "criterion_id": "contact",
+          "value": true,
+          "rationale": "Оператор поздоровался на языке клиента и назвал своё имя.",
+          "evidence_turns": [
+            10
+          ]
+        },
+        {
+          "criterion_id": "discovery",
+          "value": null,
+          "rationale": "Для ответа на вопрос клиента исходных данных было достаточно.",
+          "evidence_turns": [
+            5,
+            10
+          ]
+        },
+        {
+          "criterion_id": "identification",
+          "value": null,
+          "rationale": "Запрос не требовал идентификации клиента.",
+          "evidence_turns": [
+            10,
+            12
+          ]
+        },
+        {
+          "criterion_id": "consultation",
+          "value": 20,
+          "rationale": "Оператор ответил на оба вопроса и обозначил корректный следующий шаг.",
+          "evidence_turns": [
+            10,
+            12
+          ]
+        },
+        {
+          "criterion_id": "empathy",
+          "value": true,
+          "rationale": "В репликах оператора нет невежливого тона, а выраженного недовольства клиента не было.",
+          "evidence_turns": [
+            10,
+            12,
+            14
+          ]
+        },
+        {
+          "criterion_id": "dialogue",
+          "value": 10,
+          "rationale": "Диалог шёл понятно, клиенту не пришлось повторять вопрос из-за ответа оператора.",
+          "evidence_turns": [
+            10,
+            12
+          ]
+        },
+        {
+          "criterion_id": "closure",
+          "value": false,
+          "rationale": "Одного прощания недостаточно для выполнения критерия завершения.",
+          "evidence_turns": [
+            14
+          ]
+        },
+        {
+          "criterion_id": "critical",
+          "value": false,
+          "rationale": "Грубых нарушений в репликах оператора не обнаружено.",
+          "evidence_turns": []
+        }
+      ],
+      "score": {
+        "final_score": 92.31,
+        "critical_flag": false
+      }
+    },
+    {
+      "conversation_id": "p1-kz-005",
+      "status": "ok",
+      "criteria": [
+        {
+          "criterion_id": "contact",
+          "value": true,
+          "rationale": "Оператор алғашқы жауабында клиенттің тілінде амандасып, өзін таныстырды.",
+          "evidence_turns": [
+            10
+          ]
+        },
+        {
+          "criterion_id": "discovery",
+          "value": null,
+          "rationale": "Сұрақтың өзінен қажетті ақпарат жеткілікті болды, нақтылау қажет емес еді.",
+          "evidence_turns": [
+            1,
+            12
+          ]
+        },
+        {
+          "criterion_id": "identification",
+          "value": null,
+          "rationale": "Жалпы мәзір жолын сұрау сәйкестендіруді талап етпейді.",
+          "evidence_turns": [
+            1,
+            10,
+            12
+          ]
+        },
+        {
+          "criterion_id": "consultation",
+          "value": 20,
+          "rationale": "Нақты мәзір жолы берілді, ал клиент оны тауып алғанын растады.",
+          "evidence_turns": [
+            12,
+            13
+          ]
+        },
+        {
+          "criterion_id": "empathy",
+          "value": true,
+          "rationale": "Оператор сыпайы жауап беріп, клиенттің қиындығына көмектесті.",
+          "evidence_turns": [
+            10,
+            12,
+            14
+          ]
+        },
+        {
+          "criterion_id": "dialogue",
+          "value": 7,
+          "rationale": "Бір елеулі түсініксіз нұсқаудан кейін оператор нақтылап, клиент жалғастыра алды.",
+          "evidence_turns": [
+            10,
+            11,
+            12
+          ]
+        },
+        {
+          "criterion_id": "closure",
+          "value": false,
+          "rationale": "«Жақсы» деген жауап талап етілген қорытынды мен қоштасуды қамтымайды.",
+          "evidence_turns": [
+            14
+          ]
+        },
+        {
+          "criterion_id": "critical",
+          "value": false,
+          "rationale": "Грубое нарушение в репликах оператора не выявлено.",
+          "evidence_turns": [
+            10,
+            12,
+            14
+          ]
+        }
+      ],
+      "score": {
+        "final_score": 85.38,
+        "critical_flag": false
+      }
+    },
+    {
+      "conversation_id": "p1-kz-006",
+      "status": "ok",
+      "criteria": [
+        {
+          "criterion_id": "contact",
+          "value": true,
+          "rationale": "Алғашқы жауабында сәлемдесіп, аты-жөнін айтты.",
+          "evidence_turns": [
+            10
+          ]
+        },
+        {
+          "criterion_id": "discovery",
+          "value": null,
+          "rationale": "Есептің кезеңі — өткен жыл — сұраудың басында белгілі болды.",
+          "evidence_turns": [
+            1,
+            5
+          ]
+        },
+        {
+          "criterion_id": "identification",
+          "value": null,
+          "rationale": "Бұл жалпы нұсқаулық сұрағы болғандықтан, сәйкестендіру талап етілмеді.",
+          "evidence_turns": [
+            1,
+            5
+          ]
+        },
+        {
+          "criterion_id": "consultation",
+          "value": 20,
+          "rationale": "Негізгі сұрақ шешілді, клиент есепті дайындағанын растады.",
+          "evidence_turns": [
+            10,
+            11
+          ]
+        },
+        {
+          "criterion_id": "empathy",
+          "value": true,
+          "rationale": "Оператордың үнінде әдепсіздік жоқ, ал арнайы эмпатиялық реакцияны қажет ететін жағдай болмаған.",
+          "evidence_turns": [
+            10,
+            12
+          ]
+        },
+        {
+          "criterion_id": "dialogue",
+          "value": 10,
+          "rationale": "Диалог ретімен өтті, жауап түсінікті болды.",
+          "evidence_turns": [
+            10,
+            11
+          ]
+        },
+        {
+          "criterion_id": "closure",
+          "value": false,
+          "rationale": "Оператор попрощался, но ограничился вежливой формулой без итога или предложения дальнейшей помощи. Подтверждение результата самим клиентом не засчитывается как подведение итога оператором.",
+          "evidence_turns": [
+            11,
+            12
+          ]
+        },
+        {
+          "criterion_id": "critical",
+          "value": false,
+          "rationale": "Грубых нарушений в репликах оператора не обнаружено.",
+          "evidence_turns": [
+            10,
+            12
+          ]
+        }
+      ],
+      "score": {
+        "final_score": 92.31,
+        "critical_flag": false
+      }
+    },
+    {
+      "conversation_id": "p1-kz-007",
+      "status": "ok",
+      "criteria": [
+        {
+          "criterion_id": "contact",
+          "value": true,
+          "rationale": "Оператор бірінші репликасында сәлемдесіп, атын айтты.",
+          "evidence_turns": [
+            10
+          ]
+        },
+        {
+          "criterion_id": "discovery",
+          "value": null,
+          "rationale": "Жауап беру үшін қажетті дерек бастапқы сұрақта жеткілікті болды.",
+          "evidence_turns": [
+            10
+          ]
+        },
+        {
+          "criterion_id": "identification",
+          "value": null,
+          "rationale": "Сұрау жалпы сипатта болды, сәйкестендіруді талап етпеді.",
+          "evidence_turns": [
+            10
+          ]
+        },
+        {
+          "criterion_id": "consultation",
+          "value": 20,
+          "rationale": "Клиенттің негізгі сұрағына толық жауап беріліп, дұрыс келесі қадам көрсетілді.",
+          "evidence_turns": [
+            10
+          ]
+        },
+        {
+          "criterion_id": "empathy",
+          "value": true,
+          "rationale": "Оператордың репликаларында дөрекілік жоқ, клиент те қолайсыздыққа шағымданбады.",
+          "evidence_turns": [
+            10,
+            12
+          ]
+        },
+        {
+          "criterion_id": "dialogue",
+          "value": 10,
+          "rationale": "Диалог түсінікті өтті; нақты күту туралы ескерту талап етілмеді.",
+          "evidence_turns": [
+            10
+          ]
+        },
+        {
+          "criterion_id": "closure",
+          "value": false,
+          "rationale": "Оператор завершил разговор только прощанием, без подведения итога или предложения дальнейшей помощи. Одного прощания недостаточно для выполнения критерия.",
+          "evidence_turns": [
+            11,
+            12
+          ]
+        },
+        {
+          "criterion_id": "critical",
+          "value": false,
+          "rationale": "Оператор тарапынан өрескел бұзушылық байқалмады.",
+          "evidence_turns": []
+        }
+      ],
+      "score": {
+        "final_score": 92.31,
+        "critical_flag": false
+      }
+    },
+    {
+      "conversation_id": "p1-kz-008",
+      "status": "ok",
+      "criteria": [
+        {
+          "criterion_id": "contact",
+          "value": false,
+          "rationale": "Оператор сәлемдесті, алайда аты-жөнін немесе кім екенін айтпады.",
+          "evidence_turns": [
+            10
+          ]
+        },
+        {
+          "criterion_id": "discovery",
+          "value": false,
+          "rationale": "Оператор клиент бұрын хабарлаған сайтты қайта сұрады. Бұл — бұрын айтылған ақпаратты қайталап сұрау.",
+          "evidence_turns": [
+            5,
+            10,
+            11
+          ]
+        },
+        {
+          "criterion_id": "identification",
+          "value": null,
+          "rationale": "Бұл сұрау жеке сәйкестендіруді қажет етпеді.",
+          "evidence_turns": [
+            1,
+            12
+          ]
+        },
+        {
+          "criterion_id": "consultation",
+          "value": 20,
+          "rationale": "Негізгі сұраққа тікелей жауап беріп, сауда шотына кірудің нақты келесі қадамдарын ұсынды.",
+          "evidence_turns": [
+            12
+          ]
+        },
+        {
+          "criterion_id": "empathy",
+          "value": false,
+          "rationale": "Оператор ответил по существу, но оставил без внимания явно выраженное недовольство клиента. Реакции на возникшее неудобство в его ответе нет.",
+          "evidence_turns": [
+            11,
+            12
+          ]
+        },
+        {
+          "criterion_id": "dialogue",
+          "value": 7,
+          "rationale": "Клиенттен бұрын айтқан мәліметін қайталау сұралды, бірақ диалог әрі қарай түсінікті жалғасты.",
+          "evidence_turns": [
+            5,
+            10,
+            11,
+            12
+          ]
+        },
+        {
+          "criterion_id": "closure",
+          "value": false,
+          "rationale": "Оператор жауабынан кейін клиент мәселе шешілгенін айтқанымен, оператор диалогты қорытындылап аяқтамады.",
+          "evidence_turns": [
+            12
+          ]
+        },
+        {
+          "criterion_id": "critical",
+          "value": false,
+          "rationale": "Диалогта өрескел бұзушылық белгілері байқалмайды.",
+          "evidence_turns": [
+            10,
+            12
+          ]
+        }
+      ],
+      "score": {
+        "final_score": 38.13,
+        "critical_flag": false
+      }
+    },
+    {
+      "conversation_id": "p1-kz-009",
+      "status": "ok",
+      "criteria": [
+        {
+          "criterion_id": "contact",
+          "value": true,
+          "rationale": "Оператор қазақ тілінде сәлемдесіп, есімін атады.",
+          "evidence_turns": [
+            11
+          ]
+        },
+        {
+          "criterion_id": "discovery",
+          "value": null,
+          "rationale": "Тикер туралы мәлімет кеңес беру үшін жеткілікті болды, сондықтан нақтылау қажет емес еді.",
+          "evidence_turns": [
+            10
+          ]
+        },
+        {
+          "criterion_id": "identification",
+          "value": null,
+          "rationale": "Бұл жалпы рәсім туралы сұрақ болды, клиентті сәйкестендіру талап етілмеді.",
+          "evidence_turns": [
+            12,
+            13
+          ]
+        },
+        {
+          "criterion_id": "consultation",
+          "value": 20,
+          "rationale": "Клиентке қағазды табу және сатып алу процесін жалғастыру үшін жеткілікті әрі дұрыс қадамдар берілді.",
+          "evidence_turns": [
+            11,
+            13,
+            16,
+            18
+          ]
+        },
+        {
+          "criterion_id": "empathy",
+          "value": true,
+          "rationale": "Оператордың жауаптары әдепті болды; ерекше эмпатияны қажет ететін жағдай болған жоқ.",
+          "evidence_turns": [
+            11,
+            13,
+            16,
+            18,
+            20
+          ]
+        },
+        {
+          "criterion_id": "dialogue",
+          "value": 10,
+          "rationale": "Диалог ретімен жүріп, оператордың нұсқаулары түсінікті болды.",
+          "evidence_turns": [
+            11,
+            13,
+            16,
+            18
+          ]
+        },
+        {
+          "criterion_id": "closure",
+          "value": false,
+          "rationale": "Қоштасу болды, бірақ талап етілетін қорытынды немесе қосымша көмек ұсыну болмады.",
+          "evidence_turns": [
+            20
+          ]
+        },
+        {
+          "criterion_id": "critical",
+          "value": false,
+          "rationale": "Грубое нарушение белгілері жоқ.",
+          "evidence_turns": []
+        }
+      ],
+      "score": {
+        "final_score": 92.31,
+        "critical_flag": false
+      }
+    },
+    {
+      "conversation_id": "p1-kz-010",
+      "status": "ok",
+      "criteria": [
+        {
+          "criterion_id": "contact",
+          "value": true,
+          "rationale": "Оператор поприветствовала клиента на его языке и назвала своё имя.",
+          "evidence_turns": [
+            10
+          ]
+        },
+        {
+          "criterion_id": "discovery",
+          "value": null,
+          "rationale": "Имеющихся сведений было достаточно, чтобы ответить без дополнительных вопросов.",
+          "evidence_turns": [
+            1,
+            10
+          ]
+        },
+        {
+          "criterion_id": "identification",
+          "value": null,
+          "rationale": "Запрос касался общей инструкции по настройке и не требовал доступа к данным клиента.",
+          "evidence_turns": [
+            1
+          ]
+        },
+        {
+          "criterion_id": "consultation",
+          "value": 20,
+          "rationale": "Оператор дала конкретный следующий шаг, после которого клиент отключил настройку.",
+          "evidence_turns": [
+            10,
+            11
+          ]
+        },
+        {
+          "criterion_id": "empathy",
+          "value": true,
+          "rationale": "В репликах оператора нет невежливости, а повода для отдельной реакции на недовольство не было.",
+          "evidence_turns": [
+            10,
+            12
+          ]
+        },
+        {
+          "criterion_id": "dialogue",
+          "value": 10,
+          "rationale": "Ответ оператора был ясным и связанным с вопросом клиента.",
+          "evidence_turns": [
+            10,
+            11
+          ]
+        },
+        {
+          "criterion_id": "closure",
+          "value": false,
+          "rationale": "Одного прощания недостаточно для выполнения критерия завершения.",
+          "evidence_turns": [
+            12
+          ]
+        },
+        {
+          "criterion_id": "critical",
+          "value": false,
+          "rationale": "Грубых нарушений в репликах оператора не обнаружено.",
+          "evidence_turns": [
+            10,
+            12
+          ]
+        }
+      ],
+      "score": {
+        "final_score": 92.31,
+        "critical_flag": false
+      }
+    },
+    {
+      "conversation_id": "p1-kz-011",
+      "status": "ok",
+      "criteria": [
+        {
+          "criterion_id": "contact",
+          "value": true,
+          "rationale": "Оператор қазақ тілінде сәлемдесіп, өзін Самат деп таныстырды.",
+          "evidence_turns": [
+            10
+          ]
+        },
+        {
+          "criterion_id": "discovery",
+          "value": null,
+          "rationale": "Сұраққа жауап беру үшін бастапқыда берілген ақпарат жеткілікті болды.",
+          "evidence_turns": [
+            5,
+            10
+          ]
+        },
+        {
+          "criterion_id": "identification",
+          "value": null,
+          "rationale": "Бұл жалпы ақпараттық сұрақ болғандықтан, сәйкестендіру талап етілмеді.",
+          "evidence_turns": [
+            1,
+            5
+          ]
+        },
+        {
+          "criterion_id": "consultation",
+          "value": 20,
+          "rationale": "Клиенттің екі сұрағына да тікелей әрі түсінікті жауап берілді.",
+          "evidence_turns": [
+            10,
+            12
+          ]
+        },
+        {
+          "criterion_id": "empathy",
+          "value": true,
+          "rationale": "Оператордың жауаптары сыпайы болды.",
+          "evidence_turns": [
+            10,
+            12
+          ]
+        },
+        {
+          "criterion_id": "dialogue",
+          "value": 10,
+          "rationale": "Диалог анық әрі жүйелі өтті, клиентке сұрағын қайталауға тура келмеді.",
+          "evidence_turns": [
+            10,
+            12
+          ]
+        },
+        {
+          "criterion_id": "closure",
+          "value": null,
+          "rationale": "Чат клиент кеткендіктен немесе байланыс үзілгендіктен аяқталды.",
+          "evidence_turns": [
+            14
+          ]
+        },
+        {
+          "criterion_id": "critical",
+          "value": false,
+          "rationale": "Грубое нарушение не обнаружено.",
+          "evidence_turns": [
+            10,
+            12
+          ]
+        }
+      ],
+      "score": {
+        "final_score": 100,
+        "critical_flag": false
+      }
+    },
+    {
+      "conversation_id": "p1-kz-012",
+      "status": "ok",
+      "criteria": [
+        {
+          "criterion_id": "contact",
+          "value": true,
+          "rationale": "Оператор алғашқы жауабында қазақша сәлемдесіп, өзін таныстырды.",
+          "evidence_turns": [
+            10
+          ]
+        },
+        {
+          "criterion_id": "discovery",
+          "value": true,
+          "rationale": "Оператор өтінімді нақты тексеруге қажетті тикерді сұрады және жетіспейтін мәліметтерді нақтылады.",
+          "evidence_turns": [
+            10,
+            12
+          ]
+        },
+        {
+          "criterion_id": "identification",
+          "value": null,
+          "rationale": "Бұл жалпы мәселені қарау үшін клиентті сәйкестендіру талап етілмеді.",
+          "evidence_turns": [
+            1
+          ]
+        },
+        {
+          "criterion_id": "consultation",
+          "value": 20,
+          "rationale": "Мәселе бірден шешілмегенімен, оператор тексеруге қажет мәліметтерді және келесі қадамды нақты көрсетті.",
+          "evidence_turns": [
+            12,
+            14
+          ]
+        },
+        {
+          "criterion_id": "empathy",
+          "value": true,
+          "rationale": "Оператордың қарым-қатынасы сыпайы әрі сабырлы болды.",
+          "evidence_turns": [
+            12,
+            14
+          ]
+        },
+        {
+          "criterion_id": "dialogue",
+          "value": 10,
+          "rationale": "Диалог анық және жүйелі өтті; ескерту қажет ететін күту болған жоқ.",
+          "evidence_turns": [
+            10,
+            12,
+            14
+          ]
+        },
+        {
+          "criterion_id": "closure",
+          "value": true,
+          "rationale": "Оператор келесі қадамды айтып, қоштасты.",
+          "evidence_turns": [
+            14
+          ]
+        },
+        {
+          "criterion_id": "critical",
+          "value": false,
+          "rationale": "Диалогта өрескел бұзушылық белгілері байқалмайды.",
+          "evidence_turns": []
+        }
+      ],
+      "score": {
+        "final_score": 100,
+        "critical_flag": false
+      }
+    },
+    {
+      "conversation_id": "p1-kz-013",
+      "status": "ok",
+      "criteria": [
+        {
+          "criterion_id": "contact",
+          "value": true,
+          "rationale": "Оператор қазақша амандасып, есімін атады.",
+          "evidence_turns": [
+            10
+          ]
+        },
+        {
+          "criterion_id": "discovery",
+          "value": null,
+          "rationale": "Сұраққа нақтылау сұрамай-ақ жауап беруге жеткілікті ақпарат болды.",
+          "evidence_turns": [
+            1,
+            10
+          ]
+        },
+        {
+          "criterion_id": "identification",
+          "value": null,
+          "rationale": "Бұл жалпы сұраққа жауап беру үшін клиентті сәйкестендіру қажет емес.",
+          "evidence_turns": [
+            1,
+            10
+          ]
+        },
+        {
+          "criterion_id": "consultation",
+          "value": 20,
+          "rationale": "Негізгі сұрақ шешілді: оператор қажетті бөлімді және іздеу тәсілін атады.",
+          "evidence_turns": [
+            10
+          ]
+        },
+        {
+          "criterion_id": "empathy",
+          "value": true,
+          "rationale": "Диалогта клиенттің наразылығына жауап беру қажет болатын жағдай байқалмайды, ал оператордың қарым-қатынас мәнері сыпайы болды.",
+          "evidence_turns": [
+            10,
+            13
+          ]
+        },
+        {
+          "criterion_id": "dialogue",
+          "value": 10,
+          "rationale": "Жауаптар түсінікті және жүйелі; клиент нұсқауды орындап, бөлімді тапқанын айтты.",
+          "evidence_turns": [
+            10,
+            11,
+            12
+          ]
+        },
+        {
+          "criterion_id": "closure",
+          "value": false,
+          "rationale": "Чат аяқталғанша оператор қорытынды не қоштасу сөзін айтпады.",
+          "evidence_turns": [
+            12,
+            14
+          ]
+        },
+        {
+          "criterion_id": "critical",
+          "value": true,
+          "rationale": "Оператор жеке нөмірге хабарласып, ақылы түрде кеңес беруді өзі ұсынды.",
+          "evidence_turns": [
+            12
+          ]
+        }
+      ],
+      "score": {
+        "final_score": 92.31,
+        "critical_flag": true
+      }
+    },
+    {
+      "conversation_id": "p1-kz-014",
+      "status": "ok",
+      "criteria": [
+        {
+          "criterion_id": "contact",
+          "value": true,
+          "rationale": "Оператор начал с приветствия и назвал своё имя.",
+          "evidence_turns": [
+            10
+          ]
+        },
+        {
+          "criterion_id": "discovery",
+          "value": null,
+          "rationale": "Данных в исходном вопросе было достаточно, уточнять запрос не требовалось.",
+          "evidence_turns": [
+            1,
+            10
+          ]
+        },
+        {
+          "criterion_id": "identification",
+          "value": null,
+          "rationale": "Для ответа на общий вопрос идентификация не требовалась.",
+          "evidence_turns": [
+            1
+          ]
+        },
+        {
+          "criterion_id": "consultation",
+          "value": 20,
+          "rationale": "Основной вопрос клиента полностью закрыт прямым ответом.",
+          "evidence_turns": [
+            10
+          ]
+        },
+        {
+          "criterion_id": "empathy",
+          "value": true,
+          "rationale": "В репликах оператора соблюдён вежливый тон, особая реакция на недовольство не требовалась.",
+          "evidence_turns": [
+            10,
+            11,
+            12
+          ]
+        },
+        {
+          "criterion_id": "dialogue",
+          "value": 10,
+          "rationale": "Диалог понятный и связный, клиенту не пришлось переспрашивать.",
+          "evidence_turns": [
+            10
+          ]
+        },
+        {
+          "criterion_id": "closure",
+          "value": false,
+          "rationale": "Одного прощания недостаточно для выполнения критерия завершения.",
+          "evidence_turns": [
+            12
+          ]
+        },
+        {
+          "criterion_id": "critical",
+          "value": false,
+          "rationale": "Грубых нарушений в репликах оператора не обнаружено.",
+          "evidence_turns": []
+        }
+      ],
+      "score": {
+        "final_score": 92.31,
+        "critical_flag": false
+      }
+    },
+    {
+      "conversation_id": "p1-kz-015",
+      "status": "ok",
+      "criteria": [
+        {
+          "criterion_id": "contact",
+          "value": true,
+          "rationale": "Оператор начал ответ с приветствия на языке клиента и назвал своё имя.",
+          "evidence_turns": [
+            10
+          ]
+        },
+        {
+          "criterion_id": "discovery",
+          "value": null,
+          "rationale": "Запрос был понятен с самого начала, недостающих деталей для выяснения потребности не было.",
+          "evidence_turns": [
+            1
+          ]
+        },
+        {
+          "criterion_id": "identification",
+          "value": false,
+          "rationale": "Оператор раскрыл сведения по счёту до идентификации клиента.",
+          "evidence_turns": [
+            10,
+            11
+          ]
+        },
+        {
+          "criterion_id": "consultation",
+          "value": 20,
+          "rationale": "Оператор обозначил следующий шаг — передачу вопроса на проверку. Нарушение идентификации оценивается отдельно и само по себе не снижает полноту консультации.",
+          "evidence_turns": [
+            10,
+            14
+          ]
+        },
+        {
+          "criterion_id": "empathy",
+          "value": true,
+          "rationale": "В репликах оператора нет невежливости, а конкретного недовольства клиента, требующего реакции, не было.",
+          "evidence_turns": [
+            10,
+            12,
+            14
+          ]
+        },
+        {
+          "criterion_id": "dialogue",
+          "value": 4,
+          "rationale": "Клиент был вынужден повторно спросить о причине ограничения, поскольку первый ответ оператора не отвечал на исходный вопрос.",
+          "evidence_turns": [
+            1,
+            10,
+            13,
+            14
+          ]
+        },
+        {
+          "criterion_id": "closure",
+          "value": true,
+          "rationale": "Оператор указал следующий шаг — направить вопрос на проверку — и попрощался.",
+          "evidence_turns": [
+            14
+          ]
+        },
+        {
+          "criterion_id": "critical",
+          "value": true,
+          "rationale": "Оператор раскрыл конфиденциальные сведения о состоянии конкретного счёта без подтверждённой идентификации. Это не только пропуск процедуры: информация об ограничении уже была сообщена.",
+          "evidence_turns": [
+            10,
+            11,
+            12
+          ]
+        }
+      ],
+      "score": {
+        "final_score": 65.88,
+        "critical_flag": true
+      }
+    },
+    {
+      "conversation_id": "p1-en-001",
+      "status": "ok",
+      "criteria": [
+        {
+          "criterion_id": "contact",
+          "value": true,
+          "rationale": "Оператор поздоровалась на языке клиента и назвала своё имя.",
+          "evidence_turns": [
+            10
+          ]
+        },
+        {
+          "criterion_id": "discovery",
+          "value": null,
+          "rationale": "Данных для ответа хватало с самого начала работы оператора: проблема и факт использования логина в закрытом аккаунте уже были известны. Поэтому применимо N/A, а не «да»: необходимости выяснять недостающие сведения не было.",
+          "evidence_turns": [
+            1,
+            5,
+            10
+          ]
+        },
+        {
+          "criterion_id": "identification",
+          "value": null,
+          "rationale": "Запрос не требовал идентификации клиента.",
+          "evidence_turns": [
+            1,
+            10
+          ]
+        },
+        {
+          "criterion_id": "consultation",
+          "value": 20,
+          "rationale": "Основной вопрос решён, клиенту понятно, как продолжить регистрацию.",
+          "evidence_turns": [
+            10
+          ]
+        },
+        {
+          "criterion_id": "empathy",
+          "value": true,
+          "rationale": "Оператор была вежлива; признаков неудовлетворённости клиента нет.",
+          "evidence_turns": [
+            10,
+            12
+          ]
+        },
+        {
+          "criterion_id": "dialogue",
+          "value": 10,
+          "rationale": "Диалог вёлся понятно, заметных сбоев не было.",
+          "evidence_turns": [
+            10,
+            12
+          ]
+        },
+        {
+          "criterion_id": "closure",
+          "value": false,
+          "rationale": "Одного «You're welcome. Take care!» недостаточно для выполнения критерия завершения.",
+          "evidence_turns": [
+            12
+          ]
+        },
+        {
+          "criterion_id": "critical",
+          "value": false,
+          "rationale": "Грубых нарушений в диалоге не выявлено.",
+          "evidence_turns": [
+            10,
+            12
+          ]
+        }
+      ],
+      "score": {
+        "final_score": 92.31,
+        "critical_flag": false
+      }
+    },
+    {
+      "conversation_id": "p1-en-002",
+      "status": "ok",
+      "criteria": [
+        {
+          "criterion_id": "contact",
+          "value": true,
+          "rationale": "Оператор поздоровался и назвал своё имя в первом ответе.",
+          "evidence_turns": [
+            10
+          ]
+        },
+        {
+          "criterion_id": "discovery",
+          "value": null,
+          "rationale": "Исходной информации хватало, чтобы сразу ответить по существу.",
+          "evidence_turns": [
+            1,
+            10
+          ]
+        },
+        {
+          "criterion_id": "identification",
+          "value": null,
+          "rationale": "Общий вопрос о расположении кнопки входа не требовал идентификации.",
+          "evidence_turns": [
+            1,
+            10
+          ]
+        },
+        {
+          "criterion_id": "consultation",
+          "value": 20,
+          "rationale": "Оператор дал понятный корректный следующий шаг, и клиент сообщил, что смог войти.",
+          "evidence_turns": [
+            10,
+            11
+          ]
+        },
+        {
+          "criterion_id": "empathy",
+          "value": true,
+          "rationale": "В репликах оператора нет невежливости; отдельная реакция на недовольство не требовалась.",
+          "evidence_turns": [
+            10,
+            12
+          ]
+        },
+        {
+          "criterion_id": "dialogue",
+          "value": 10,
+          "rationale": "Диалог вёлся понятно, клиенту не пришлось повторять вопрос.",
+          "evidence_turns": [
+            10,
+            12
+          ]
+        },
+        {
+          "criterion_id": "closure",
+          "value": true,
+          "rationale": "Фраза о том, что клиент вошёл, подводит итог, а пожелание хорошего дня завершает диалог.",
+          "evidence_turns": [
+            12
+          ]
+        },
+        {
+          "criterion_id": "critical",
+          "value": false,
+          "rationale": "Грубых нарушений в репликах оператора не обнаружено.",
+          "evidence_turns": [
+            10,
+            12
+          ]
+        }
+      ],
+      "score": {
+        "final_score": 100,
+        "critical_flag": false
+      }
+    },
+    {
+      "conversation_id": "p1-en-003",
+      "status": "ok",
+      "criteria": [
+        {
+          "criterion_id": "contact",
+          "value": true,
+          "rationale": "Оператор поздоровался на языке клиента и назвал своё имя.",
+          "evidence_turns": [
+            10
+          ]
+        },
+        {
+          "criterion_id": "discovery",
+          "value": null,
+          "rationale": "Исходных данных хватало для ответа по существу без уточняющих вопросов.",
+          "evidence_turns": [
+            1
+          ]
+        },
+        {
+          "criterion_id": "identification",
+          "value": null,
+          "rationale": "Общий вопрос о расположении информации не требовал идентификации.",
+          "evidence_turns": [
+            1,
+            10
+          ]
+        },
+        {
+          "criterion_id": "consultation",
+          "value": 20,
+          "rationale": "Основной вопрос решён: клиент нашёл план по инструкции оператора.",
+          "evidence_turns": [
+            10,
+            11
+          ]
+        },
+        {
+          "criterion_id": "empathy",
+          "value": true,
+          "rationale": "Оператор отреагировал на неудобство клиента практичной альтернативой и общался вежливо.",
+          "evidence_turns": [
+            5,
+            10,
+            12
+          ]
+        },
+        {
+          "criterion_id": "dialogue",
+          "value": 10,
+          "rationale": "Ответ был понятным, клиенту не пришлось переспрашивать.",
+          "evidence_turns": [
+            10,
+            11
+          ]
+        },
+        {
+          "criterion_id": "closure",
+          "value": false,
+          "rationale": "Прощание есть, но «Great. Thanks for reaching out» — только вежливая формула, а не подведение итога. Для выполнения критерия не хватает итога или предложения дальнейшей помощи.",
+          "evidence_turns": [
+            11,
+            12
+          ]
+        },
+        {
+          "criterion_id": "critical",
+          "value": false,
+          "rationale": "Грубых нарушений в репликах оператора не обнаружено.",
+          "evidence_turns": []
+        }
+      ],
+      "score": {
+        "final_score": 92.31,
+        "critical_flag": false
+      }
+    },
+    {
+      "conversation_id": "p1-en-004",
+      "status": "ok",
+      "criteria": [
+        {
+          "criterion_id": "contact",
+          "value": true,
+          "rationale": "Оператор поздоровался на языке клиента и назвал своё имя.",
+          "evidence_turns": [
+            10
+          ]
+        },
+        {
+          "criterion_id": "discovery",
+          "value": null,
+          "rationale": "Данных хватало с самого начала: оператор мог объяснить, где открыть отчёт и как выбрать период.",
+          "evidence_turns": [
+            1,
+            5,
+            10
+          ]
+        },
+        {
+          "criterion_id": "identification",
+          "value": null,
+          "rationale": "Для общей инструкции по навигации в приложении идентификация не требовалась.",
+          "evidence_turns": [
+            10,
+            12
+          ]
+        },
+        {
+          "criterion_id": "consultation",
+          "value": 20,
+          "rationale": "Запрос решён: оператор объяснил, как выбрать период и скачать отчёт.",
+          "evidence_turns": [
+            10,
+            12,
+            13
+          ]
+        },
+        {
+          "criterion_id": "empathy",
+          "value": true,
+          "rationale": "Оператор был вежлив на протяжении диалога.",
+          "evidence_turns": [
+            10,
+            12,
+            14
+          ]
+        },
+        {
+          "criterion_id": "dialogue",
+          "value": 10,
+          "rationale": "Диалог шёл последовательно, клиенту не пришлось повторять вопрос из-за непонятного или нерелевантного ответа.",
+          "evidence_turns": [
+            10,
+            12
+          ]
+        },
+        {
+          "criterion_id": "closure",
+          "value": false,
+          "rationale": "Оператор написал “You're welcome. Have a good day!”, но не подвёл итог и не предложил дальнейшую помощь.",
+          "evidence_turns": [
+            14
+          ]
+        },
+        {
+          "criterion_id": "critical",
+          "value": false,
+          "rationale": "Грубых нарушений в репликах оператора нет.",
+          "evidence_turns": [
+            10,
+            12,
+            14
+          ]
+        }
+      ],
+      "score": {
+        "final_score": 92.31,
+        "critical_flag": false
+      }
+    },
+    {
+      "conversation_id": "p1-en-005",
+      "status": "ok",
+      "criteria": [
+        {
+          "criterion_id": "contact",
+          "value": true,
+          "rationale": "Оператор поздоровалась на языке клиента и представилась.",
+          "evidence_turns": [
+            10
+          ]
+        },
+        {
+          "criterion_id": "discovery",
+          "value": null,
+          "rationale": "Условие N/A выполнено: исходный запрос был достаточно конкретным для ответа без уточнений.",
+          "evidence_turns": [
+            1
+          ]
+        },
+        {
+          "criterion_id": "identification",
+          "value": null,
+          "rationale": "Запрос касался общей навигации в приложении и не требовал идентификации.",
+          "evidence_turns": [
+            1,
+            10
+          ]
+        },
+        {
+          "criterion_id": "consultation",
+          "value": 20,
+          "rationale": "Основной вопрос и уточнение о переводе в евро получили полный и понятный ответ.",
+          "evidence_turns": [
+            10,
+            12
+          ]
+        },
+        {
+          "criterion_id": "empathy",
+          "value": true,
+          "rationale": "Оператор была вежлива на протяжении диалога.",
+          "evidence_turns": [
+            10,
+            12,
+            14
+          ]
+        },
+        {
+          "criterion_id": "dialogue",
+          "value": 10,
+          "rationale": "Диалог вёлся ясно и связно, предупреждать об ожидании не требовалось.",
+          "evidence_turns": [
+            10,
+            12
+          ]
+        },
+        {
+          "criterion_id": "closure",
+          "value": false,
+          "rationale": "Одного «You're welcome» и прощания недостаточно для выполнения критерия завершения.",
+          "evidence_turns": [
+            14
+          ]
+        },
+        {
+          "criterion_id": "critical",
+          "value": false,
+          "rationale": "Грубых нарушений в репликах оператора не обнаружено.",
+          "evidence_turns": [
+            10,
+            12,
+            14
+          ]
+        }
+      ],
+      "score": {
+        "final_score": 92.31,
+        "critical_flag": false
+      }
+    },
+    {
+      "conversation_id": "p1-en-006",
+      "status": "ok",
+      "criteria": [
+        {
+          "criterion_id": "contact",
+          "value": true,
+          "rationale": "Оператор поздоровался и представился в первой реплике.",
+          "evidence_turns": [
+            11
+          ]
+        },
+        {
+          "criterion_id": "discovery",
+          "value": false,
+          "rationale": "Недостающий для проверки срок перевода оператор уточнил уже после отправки кейса на рассмотрение.",
+          "evidence_turns": [
+            14,
+            16,
+            19
+          ]
+        },
+        {
+          "criterion_id": "identification",
+          "value": true,
+          "rationale": "Идентификация подтверждена до того, как оператор передал обращение на проверку.",
+          "evidence_turns": [
+            13,
+            16
+          ]
+        },
+        {
+          "criterion_id": "consultation",
+          "value": 20,
+          "rationale": "Основные вопросы закрыты: обращение по переводу направлено на проверку с обещанием обновления, а путь к брокерскому отчёту объяснён.",
+          "evidence_turns": [
+            16,
+            21,
+            26,
+            28
+          ]
+        },
+        {
+          "criterion_id": "empathy",
+          "value": true,
+          "rationale": "Оператор отреагировал на беспокойство клиента с пониманием.",
+          "evidence_turns": [
+            1,
+            11
+          ]
+        },
+        {
+          "criterion_id": "dialogue",
+          "value": 10,
+          "rationale": "Диалог понятный, оператор отвечает по существу; предупреждать об ожидании не требовалось.",
+          "evidence_turns": [
+            11,
+            14,
+            16,
+            19,
+            21,
+            23,
+            26,
+            28,
+            30
+          ]
+        },
+        {
+          "criterion_id": "closure",
+          "value": true,
+          "rationale": "Оператор обозначил дальнейший шаг и попрощался.",
+          "evidence_turns": [
+            30
+          ]
+        },
+        {
+          "criterion_id": "critical",
+          "value": false,
+          "rationale": "Грубых нарушений в репликах оператора не обнаружено.",
+          "evidence_turns": [
+            11,
+            14,
+            16,
+            19,
+            21,
+            23,
+            26,
+            28,
+            30
+          ]
+        }
+      ],
+      "score": {
+        "final_score": 85,
+        "critical_flag": false
+      }
+    },
+    {
+      "conversation_id": "p1-en-007",
+      "status": "ok",
+      "criteria": [
+        {
+          "criterion_id": "contact",
+          "value": true,
+          "rationale": "Оператор поприветствовал клиента на его языке и назвал своё имя.",
+          "evidence_turns": [
+            10
+          ]
+        },
+        {
+          "criterion_id": "discovery",
+          "value": null,
+          "rationale": "Запрос был сформулирован достаточно ясно, чтобы ответить без уточнений.",
+          "evidence_turns": [
+            5
+          ]
+        },
+        {
+          "criterion_id": "identification",
+          "value": null,
+          "rationale": "В этом диалоге запрос не требовал идентификации клиента.",
+          "evidence_turns": [
+            10
+          ]
+        },
+        {
+          "criterion_id": "consultation",
+          "value": 10,
+          "rationale": "Часть запроса закрыта, однако существенные вопросы о сроке повторной подачи вывода остались без ответа.",
+          "evidence_turns": [
+            10,
+            11,
+            12
+          ]
+        },
+        {
+          "criterion_id": "empathy",
+          "value": true,
+          "rationale": "В репликах оператора нет невежливости, а повода для специальной эмпатической реакции не было.",
+          "evidence_turns": [
+            10,
+            12
+          ]
+        },
+        {
+          "criterion_id": "dialogue",
+          "value": 7,
+          "rationale": "Есть один заметный сбой: оператор проигнорировал последующий вопрос, хотя остальная инструкция была понятной.",
+          "evidence_turns": [
+            11,
+            12
+          ]
+        },
+        {
+          "criterion_id": "closure",
+          "value": false,
+          "rationale": "Одного «Thanks for contacting us. Bye» недостаточно для выполнения требования о завершении.",
+          "evidence_turns": [
+            12
+          ]
+        },
+        {
+          "criterion_id": "critical",
+          "value": false,
+          "rationale": "Грубых нарушений в репликах оператора не обнаружено.",
+          "evidence_turns": [
+            10,
+            12
+          ]
+        }
+      ],
+      "score": {
+        "final_score": 70,
+        "critical_flag": false
+      }
+    },
+    {
+      "conversation_id": "p1-en-008",
+      "status": "ok",
+      "criteria": [
+        {
+          "criterion_id": "contact",
+          "value": true,
+          "rationale": "Оператор поздоровалась на языке клиента и назвала своё имя.",
+          "evidence_turns": [
+            11
+          ]
+        },
+        {
+          "criterion_id": "discovery",
+          "value": null,
+          "rationale": "Дополнительные уточнения не требовались: клиент уже сообщил, что у него есть тикер и приложение открыто.",
+          "evidence_turns": [
+            5,
+            10
+          ]
+        },
+        {
+          "criterion_id": "identification",
+          "value": null,
+          "rationale": "Запрос носил общий информационный характер и не требовал идентификации.",
+          "evidence_turns": [
+            11,
+            16
+          ]
+        },
+        {
+          "criterion_id": "consultation",
+          "value": 10,
+          "rationale": "Основная часть вопросов получила ответ, но влияние настройки на уже открытую позицию осталось неясным.",
+          "evidence_turns": [
+            11,
+            13,
+            16,
+            18
+          ]
+        },
+        {
+          "criterion_id": "empathy",
+          "value": true,
+          "rationale": "Тон оператора был вежливым; повода для реакции на недовольство клиента не было.",
+          "evidence_turns": [
+            11,
+            13,
+            16,
+            18,
+            20
+          ]
+        },
+        {
+          "criterion_id": "dialogue",
+          "value": 10,
+          "rationale": "Ответы ясные и связные, клиенту не пришлось повторять вопрос из-за непонятных формулировок или нарушения порядка ответов. Оснований снижать оценку за управление диалогом или предупреждение об ожидании нет.",
+          "evidence_turns": [
+            11,
+            12,
+            13,
+            15,
+            16,
+            17,
+            18,
+            19,
+            20
+          ]
+        },
+        {
+          "criterion_id": "closure",
+          "value": false,
+          "rationale": "Одного пожелания хорошего дня недостаточно для выполнения критерия завершения.",
+          "evidence_turns": [
+            20
+          ]
+        },
+        {
+          "criterion_id": "critical",
+          "value": false,
+          "rationale": "Грубых нарушений в проверенных репликах не выявлено.",
+          "evidence_turns": []
+        }
+      ],
+      "score": {
+        "final_score": 76.92,
+        "critical_flag": false
+      }
+    },
+    {
+      "conversation_id": "p1-en-009",
+      "status": "ok",
+      "criteria": [
+        {
+          "criterion_id": "contact",
+          "value": true,
+          "rationale": "Оператор поздоровался на языке клиента и представился.",
+          "evidence_turns": [
+            10
+          ]
+        },
+        {
+          "criterion_id": "discovery",
+          "value": null,
+          "rationale": "Исходных данных хватало, чтобы ответить по существу без уточняющих вопросов.",
+          "evidence_turns": [
+            1
+          ]
+        },
+        {
+          "criterion_id": "identification",
+          "value": null,
+          "rationale": "Запрос носил общий информационный характер и не требовал идентификации.",
+          "evidence_turns": [
+            10
+          ]
+        },
+        {
+          "criterion_id": "consultation",
+          "value": 20,
+          "rationale": "Основной вопрос решён: оператор дал конкретные шаги, и клиент нашёл настройку.",
+          "evidence_turns": [
+            10,
+            11
+          ]
+        },
+        {
+          "criterion_id": "empathy",
+          "value": true,
+          "rationale": "В ответе оператора нет невежливости, а повода для отдельной реакции на недовольство не было.",
+          "evidence_turns": [
+            10,
+            11
+          ]
+        },
+        {
+          "criterion_id": "dialogue",
+          "value": 10,
+          "rationale": "Оператор ясно описал действие и момент, когда его нужно выполнить; клиент подтвердил, что нашёл настройку.",
+          "evidence_turns": [
+            10,
+            11
+          ]
+        },
+        {
+          "criterion_id": "closure",
+          "value": null,
+          "rationale": "Чат оборвался, поэтому условие N/A выполнено.",
+          "evidence_turns": [
+            12
+          ]
+        },
+        {
+          "criterion_id": "critical",
+          "value": false,
+          "rationale": "Грубых нарушений в ответе оператора не обнаружено.",
+          "evidence_turns": [
+            10
+          ]
+        }
+      ],
+      "score": {
+        "final_score": 100,
+        "critical_flag": false
+      }
+    },
+    {
+      "conversation_id": "p1-en-010",
+      "status": "ok",
+      "criteria": [
+        {
+          "criterion_id": "contact",
+          "value": true,
+          "rationale": "Оператор поздоровалась на английском и назвала своё имя.",
+          "evidence_turns": [
+            10
+          ]
+        },
+        {
+          "criterion_id": "discovery",
+          "value": null,
+          "rationale": "Данных хватало с самого начала, оператор смогла ответить по существу без уточнений.",
+          "evidence_turns": [
+            1
+          ]
+        },
+        {
+          "criterion_id": "identification",
+          "value": null,
+          "rationale": "Для ответа на общий вопрос об использовании счёта идентификация не требовалась.",
+          "evidence_turns": [
+            10
+          ]
+        },
+        {
+          "criterion_id": "consultation",
+          "value": 20,
+          "rationale": "Основной вопрос клиента решён, дано понятное указание, какой счёт использовать для ордера.",
+          "evidence_turns": [
+            10
+          ]
+        },
+        {
+          "criterion_id": "empathy",
+          "value": true,
+          "rationale": "В репликах оператора нет невежливости, а особой реакции на недовольство не требовалось.",
+          "evidence_turns": [
+            10,
+            12
+          ]
+        },
+        {
+          "criterion_id": "dialogue",
+          "value": 10,
+          "rationale": "Диалог шёл понятно, клиенту не пришлось повторно задавать вопрос из-за ответа оператора.",
+          "evidence_turns": [
+            10,
+            11
+          ]
+        },
+        {
+          "criterion_id": "closure",
+          "value": false,
+          "rationale": "Одного «You're welcome. Bye!» недостаточно: по критерию нужно также подвести итог или предложить дальнейшую помощь.",
+          "evidence_turns": [
+            12
+          ]
+        },
+        {
+          "criterion_id": "critical",
+          "value": false,
+          "rationale": "Грубых нарушений в репликах оператора не обнаружено.",
+          "evidence_turns": [
+            10,
+            12
+          ]
+        }
+      ],
+      "score": {
+        "final_score": 92.31,
+        "critical_flag": false
+      }
+    },
+    {
+      "conversation_id": "p1-en-011",
+      "status": "ok",
+      "criteria": [
+        {
+          "criterion_id": "contact",
+          "value": true,
+          "rationale": "Оператор поздоровалась на языке клиента и назвала своё имя.",
+          "evidence_turns": [
+            10
+          ]
+        },
+        {
+          "criterion_id": "discovery",
+          "value": null,
+          "rationale": "Запрос был сформулирован достаточно конкретно, чтобы ответить без уточнений.",
+          "evidence_turns": [
+            1,
+            5
+          ]
+        },
+        {
+          "criterion_id": "identification",
+          "value": null,
+          "rationale": "Для ответа на общий вопрос идентификация не требовалась.",
+          "evidence_turns": [
+            1,
+            10
+          ]
+        },
+        {
+          "criterion_id": "consultation",
+          "value": 20,
+          "rationale": "Основной вопрос клиента закрыт прямым и понятным ответом.",
+          "evidence_turns": [
+            10
+          ]
+        },
+        {
+          "criterion_id": "empathy",
+          "value": true,
+          "rationale": "В репликах оператора нет невежливости.",
+          "evidence_turns": [
+            10,
+            12
+          ]
+        },
+        {
+          "criterion_id": "dialogue",
+          "value": 10,
+          "rationale": "Диалог прошёл понятно, клиенту не пришлось повторять вопрос.",
+          "evidence_turns": [
+            10,
+            11,
+            12
+          ]
+        },
+        {
+          "criterion_id": "closure",
+          "value": false,
+          "rationale": "Есть прощание, но нет итога или предложения дальнейшей помощи.",
+          "evidence_turns": [
+            12
+          ]
+        },
+        {
+          "criterion_id": "critical",
+          "value": false,
+          "rationale": "Грубых нарушений в диалоге не обнаружено.",
+          "evidence_turns": [
+            10,
+            12
+          ]
+        }
+      ],
+      "score": {
+        "final_score": 92.31,
+        "critical_flag": false
+      }
+    },
+    {
+      "conversation_id": "p1-en-012",
+      "status": "ok",
+      "criteria": [
+        {
+          "criterion_id": "contact",
+          "value": true,
+          "rationale": "Оператор поздоровался и представился.",
+          "evidence_turns": [
+            10
+          ]
+        },
+        {
+          "criterion_id": "discovery",
+          "value": null,
+          "rationale": "С самого начала было достаточно данных, чтобы ответить по существу.",
+          "evidence_turns": [
+            1
+          ]
+        },
+        {
+          "criterion_id": "identification",
+          "value": null,
+          "rationale": "Для ответа на общий вопрос об открытой информации идентификация не требовалась.",
+          "evidence_turns": [
+            10
+          ]
+        },
+        {
+          "criterion_id": "consultation",
+          "value": 20,
+          "rationale": "Запрос решён: оператор указал нужный раздел, и клиент подтвердил результат.",
+          "evidence_turns": [
+            10,
+            11
+          ]
+        },
+        {
+          "criterion_id": "empathy",
+          "value": true,
+          "rationale": "Оператор был вежлив.",
+          "evidence_turns": [
+            10,
+            12
+          ]
+        },
+        {
+          "criterion_id": "dialogue",
+          "value": 10,
+          "rationale": "Ответ понятен и последователен; предупреждать об ожидании не требовалось.",
+          "evidence_turns": [
+            10
+          ]
+        },
+        {
+          "criterion_id": "closure",
+          "value": false,
+          "rationale": "Одного прощания недостаточно для выполнения критерия завершения.",
+          "evidence_turns": [
+            12
+          ]
+        },
+        {
+          "criterion_id": "critical",
+          "value": false,
+          "rationale": "Грубых нарушений в репликах оператора нет.",
+          "evidence_turns": [
+            10,
+            12
+          ]
+        }
+      ],
+      "score": {
+        "final_score": 92.31,
+        "critical_flag": false
+      }
+    },
+    {
+      "conversation_id": "p1-en-013",
+      "status": "ok",
+      "criteria": [
+        {
+          "criterion_id": "contact",
+          "value": true,
+          "rationale": "Оператор поздоровался и представился.",
+          "evidence_turns": [
+            10
+          ]
+        },
+        {
+          "criterion_id": "discovery",
+          "value": null,
+          "rationale": "Исходных данных хватало, чтобы сразу объяснить, как искать облигации.",
+          "evidence_turns": [
+            1
+          ]
+        },
+        {
+          "criterion_id": "identification",
+          "value": null,
+          "rationale": "Для общего вопроса о навигации в приложении идентификация не требовалась.",
+          "evidence_turns": [
+            1,
+            10
+          ]
+        },
+        {
+          "criterion_id": "consultation",
+          "value": 20,
+          "rationale": "Основной вопрос о поиске облигаций в приложении решён корректным следующим шагом.",
+          "evidence_turns": [
+            10
+          ]
+        },
+        {
+          "criterion_id": "empathy",
+          "value": true,
+          "rationale": "Оператор общался вежливо и отреагировал на затруднение клиента с навигацией. Предложение частной платной консультации необходимо оценивать отдельно, не перенося нарушение автоматически на критерий эмпатии.",
+          "evidence_turns": [
+            5,
+            10,
+            12,
+            13
+          ]
+        },
+        {
+          "criterion_id": "dialogue",
+          "value": 7,
+          "rationale": "Основной ответ понятен, однако предложение личной платной консультации стало заметным сбоем.",
+          "evidence_turns": [
+            10,
+            12
+          ]
+        },
+        {
+          "criterion_id": "closure",
+          "value": false,
+          "rationale": "Вместо завершения разговора оператор предложил платную личную консультацию; итог и прощание отсутствуют.",
+          "evidence_turns": [
+            12
+          ]
+        },
+        {
+          "criterion_id": "critical",
+          "value": true,
+          "rationale": "Оператор предложил платную услугу в обход компании, что является грубым нарушением.",
+          "evidence_turns": [
+            12
+          ]
+        }
+      ],
+      "score": {
+        "final_score": 85.38,
+        "critical_flag": true
+      }
+    },
+    {
+      "conversation_id": "p1-en-014",
+      "status": "ok",
+      "criteria": [
+        {
+          "criterion_id": "contact",
+          "value": true,
+          "rationale": "Оператор поздоровался на английском языке и назвал своё имя.",
+          "evidence_turns": [
+            11
+          ]
+        },
+        {
+          "criterion_id": "discovery",
+          "value": null,
+          "rationale": "Запрос был понятен с самого начала, поэтому уточняющие вопросы для его выяснения не требовались.",
+          "evidence_turns": [
+            1,
+            13
+          ]
+        },
+        {
+          "criterion_id": "identification",
+          "value": false,
+          "rationale": "Оператор раскрыл сведения об ограничении аккаунта до подтверждения идентификации.",
+          "evidence_turns": [
+            11,
+            13
+          ]
+        },
+        {
+          "criterion_id": "consultation",
+          "value": 10,
+          "rationale": "Проверка причины предложена как следующий шаг, но существенная часть запроса — что именно вызвало блокировку — осталась открытой; также не дан ответ о канале обратной связи.",
+          "evidence_turns": [
+            11,
+            13,
+            14,
+            15
+          ]
+        },
+        {
+          "criterion_id": "empathy",
+          "value": false,
+          "rationale": "Оператор не отреагировал содержательно на беспокойство клиента о доступе к счёту без идентификации. Снижение связано с игнорированием опасения, а не с самим нарушением порядка идентификации.",
+          "evidence_turns": [
+            12,
+            13
+          ]
+        },
+        {
+          "criterion_id": "dialogue",
+          "value": 7,
+          "rationale": "Диалог понятен, однако оператор не ответил на вопрос о том, где клиент получит результат проверки.",
+          "evidence_turns": [
+            13,
+            14,
+            15
+          ]
+        },
+        {
+          "criterion_id": "closure",
+          "value": false,
+          "rationale": "Одного прощания недостаточно для выполнения критерия завершения.",
+          "evidence_turns": [
+            13,
+            15
+          ]
+        },
+        {
+          "criterion_id": "critical",
+          "value": false,
+          "rationale": "Грубых ошибок из перечня критерия в диалоге не обнаружено.",
+          "evidence_turns": [
+            11,
+            13,
+            15
+          ]
+        }
+      ],
+      "score": {
+        "final_score": 35.88,
+        "critical_flag": false
+      }
+    },
+    {
+      "conversation_id": "p1-en-015",
+      "status": "ok",
+      "criteria": [
+        {
+          "criterion_id": "contact",
+          "value": false,
+          "rationale": "Оператор не поздоровался и не представился в первом ответе.",
+          "evidence_turns": [
+            10
+          ]
+        },
+        {
+          "criterion_id": "discovery",
+          "value": false,
+          "rationale": "Чтобы дать точные инструкции по входу, требовалось уточнить, каким сайтом или приложением пользуется клиент.",
+          "evidence_turns": [
+            1,
+            10,
+            11,
+            12
+          ]
+        },
+        {
+          "criterion_id": "identification",
+          "value": null,
+          "rationale": "Запрос касался общих шагов для входа, а не доступа к данным или выполнения защищённого действия от имени клиента.",
+          "evidence_turns": [
+            10,
+            12
+          ]
+        },
+        {
+          "criterion_id": "consultation",
+          "value": 20,
+          "rationale": "Оператор дал корректный следующий шаг, который решил проблему клиента.",
+          "evidence_turns": [
+            12,
+            13
+          ]
+        },
+        {
+          "criterion_id": "empathy",
+          "value": true,
+          "rationale": "Оператор сохранил корректный тон и помог с конкретной проблемой входа. Отдельное извинение или выражение сочувствия правилом не требуется.",
+          "evidence_turns": [
+            12,
+            13
+          ]
+        },
+        {
+          "criterion_id": "dialogue",
+          "value": 4,
+          "rationale": "Первоначальная инструкция была непонятной и не соответствовала ситуации клиента, из-за чего потребовался переспрос. Это соответствует ступени 4, хотя затем оператор дал понятное решение.",
+          "evidence_turns": [
+            10,
+            11,
+            12
+          ]
+        },
+        {
+          "criterion_id": "closure",
+          "value": false,
+          "rationale": "Одного «Bye» недостаточно для выполнения требования к завершению.",
+          "evidence_turns": [
+            14
+          ]
+        },
+        {
+          "criterion_id": "critical",
+          "value": false,
+          "rationale": "Грубых нарушений в диалоге не обнаружено.",
+          "evidence_turns": [
+            10,
+            12,
+            14
+          ]
+        }
+      ],
+      "score": {
+        "final_score": 51.25,
+        "critical_flag": false
+      }
+    },
+    {
+      "conversation_id": "p4-ru-003",
+      "status": "ok",
+      "criteria": [
+        {
+          "criterion_id": "contact",
+          "value": true,
+          "rationale": "Оператор поздоровался и представился в первой реплике.",
+          "evidence_turns": [
+            13
+          ]
+        },
+        {
+          "criterion_id": "discovery",
+          "value": false,
+          "rationale": "Оператор ответил до того, как разобрался в статусе поручения, и клиенту пришлось уточнять, что именно происходит.",
+          "evidence_turns": [
+            15,
+            17,
+            27,
+            28,
+            33
+          ]
+        },
+        {
+          "criterion_id": "identification",
+          "value": true,
+          "rationale": "Идентификация проведена до сообщения конкретных сведений о торговом поручении. Защищённых действий или подтверждённого раскрытия конфиденциальных данных до её завершения в диалоге не установлено.",
+          "evidence_turns": [
+            40,
+            41,
+            42,
+            44,
+            49,
+            54,
+            58,
+            65,
+            66,
+            68
+          ]
+        },
+        {
+          "criterion_id": "consultation",
+          "value": 20,
+          "rationale": "Оператор обозначил статус поручения и дальнейшие действия, включая обратный звонок.",
+          "evidence_turns": [
+            66,
+            68,
+            71,
+            73,
+            76
+          ]
+        },
+        {
+          "criterion_id": "empathy",
+          "value": false,
+          "rationale": "На конкретное беспокойство клиента оператор не отреагировал эмпатично.",
+          "evidence_turns": [
+            69,
+            70,
+            71
+          ]
+        },
+        {
+          "criterion_id": "dialogue",
+          "value": 4,
+          "rationale": "Оператор первоначально ответил не на текущий вопрос, хотя клиент уже пояснил, что прежняя проблема решена. Клиенту пришлось повторно объяснять запрос о торговом поручении, что соответствует оценке 4.",
+          "evidence_turns": [
+            15,
+            16,
+            17,
+            23,
+            25,
+            26,
+            27,
+            28,
+            29,
+            30,
+            32,
+            33,
+            39
+          ]
+        },
+        {
+          "criterion_id": "closure",
+          "value": false,
+          "rationale": "Следующий шаг обозначен, однако прощания оператора нет.",
+          "evidence_turns": [
+            71,
+            76
+          ]
+        },
+        {
+          "criterion_id": "critical",
+          "value": false,
+          "rationale": "Грубых нарушений в репликах оператора не обнаружено.",
+          "evidence_turns": []
+        }
+      ],
+      "score": {
+        "final_score": 56,
+        "critical_flag": false
+      }
+    },
+    {
+      "conversation_id": "p4-ru-002",
+      "status": "ok",
+      "criteria": [
+        {
+          "criterion_id": "contact",
+          "value": false,
+          "rationale": "Оператор представился, однако приветствия в первой реплике нет.",
+          "evidence_turns": [
+            3
+          ]
+        },
+        {
+          "criterion_id": "discovery",
+          "value": null,
+          "rationale": "Запрос и необходимый контекст были известны из предыдущего обращения: клиент не мог совершить сделку по конкретной бумаге. Дополнительное выяснение потребности не требовалось; оператор проверил возможность сделки у коллег.",
+          "evidence_turns": [
+            3,
+            6,
+            8,
+            11,
+            12,
+            30,
+            65,
+            68
+          ]
+        },
+        {
+          "criterion_id": "identification",
+          "value": true,
+          "rationale": "Данные для идентификации были запрошены и подтверждены до предоставления информации по запросу.",
+          "evidence_turns": [
+            12,
+            13,
+            14,
+            15,
+            64
+          ]
+        },
+        {
+          "criterion_id": "consultation",
+          "value": 20,
+          "rationale": "Оператор закрыл основные вопросы клиента и дал понятное объяснение ограничений.",
+          "evidence_turns": [
+            64,
+            66,
+            67,
+            68,
+            69
+          ]
+        },
+        {
+          "criterion_id": "empathy",
+          "value": true,
+          "rationale": "Оператор был вежлив; клиент не высказывал недовольства.",
+          "evidence_turns": [
+            60,
+            71
+          ]
+        },
+        {
+          "criterion_id": "dialogue",
+          "value": 10,
+          "rationale": "Ожидание было обозначено заранее, а ответы по существу были связными и понятными.",
+          "evidence_turns": [
+            15,
+            64,
+            66,
+            67,
+            69
+          ]
+        },
+        {
+          "criterion_id": "closure",
+          "value": false,
+          "rationale": "Оператор попрощался, но не добавил итог или предложение дальнейшей помощи.",
+          "evidence_turns": [
+            71
+          ]
+        },
+        {
+          "criterion_id": "critical",
+          "value": false,
+          "rationale": "Грубых нарушений в диалоге не выявлено.",
+          "evidence_turns": []
+        }
+      ],
+      "score": {
+        "final_score": 82.35,
+        "critical_flag": false
+      }
+    },
+    {
+      "conversation_id": "p4-ru-001",
+      "status": "ok",
+      "criteria": [
+        {
+          "criterion_id": "contact",
+          "value": true,
+          "rationale": "Оператор поприветствовал клиента и представился в первой своей реплике.",
+          "evidence_turns": [
+            13,
+            15
+          ]
+        },
+        {
+          "criterion_id": "discovery",
+          "value": null,
+          "rationale": "Запрос был понятен с самого начала, и оператор смог ответить на него без уточнений.",
+          "evidence_turns": [
+            25
+          ]
+        },
+        {
+          "criterion_id": "identification",
+          "value": null,
+          "rationale": "Для ответа на общий вопрос об услугах поддержки идентификация не требовалась.",
+          "evidence_turns": [
+            25,
+            26
+          ]
+        },
+        {
+          "criterion_id": "consultation",
+          "value": 10,
+          "rationale": "Оператор обозначил границы технической поддержки, но не предложил решения ситуации с отсутствующим персональным менеджером.",
+          "evidence_turns": [
+            26,
+            27,
+            28,
+            30,
+            31,
+            36
+          ]
+        },
+        {
+          "criterion_id": "empathy",
+          "value": false,
+          "rationale": "На выраженное недовольство оператор не дал конкретной эмпатичной реакции, хотя формально сказал, что понимает клиента.",
+          "evidence_turns": [
+            32,
+            34,
+            41,
+            42,
+            43
+          ]
+        },
+        {
+          "criterion_id": "dialogue",
+          "value": 10,
+          "rationale": "Диалог в целом был связным, заметного сбоя, из-за которого клиенту пришлось бы переспрашивать, не возникло.",
+          "evidence_turns": [
+            26,
+            27,
+            28,
+            30,
+            31,
+            36,
+            38,
+            43
+          ]
+        },
+        {
+          "criterion_id": "closure",
+          "value": null,
+          "rationale": "Разговор завершил клиент, поэтому применяется предусмотренное критерием условие N/A.",
+          "evidence_turns": [
+            44
+          ]
+        },
+        {
+          "criterion_id": "critical",
+          "value": false,
+          "rationale": "Грубых нарушений в репликах оператора не обнаружено.",
+          "evidence_turns": []
+        }
+      ],
+      "score": {
+        "final_score": 58.33,
+        "critical_flag": false
+      }
+    },
+    {
+      "conversation_id": "p4-ru-005",
+      "status": "ok",
+      "criteria": [
+        {
+          "criterion_id": "contact",
+          "value": false,
+          "rationale": "Оператор поздоровался, однако не назвал своё имя.",
+          "evidence_turns": [
+            17
+          ]
+        },
+        {
+          "criterion_id": "discovery",
+          "value": true,
+          "rationale": "Оператор выяснил необходимые сведения и уточнил ситуацию с документами до окончательной рекомендации. Избыточного повторного выяснения уже известных данных не установлено.",
+          "evidence_turns": [
+            19,
+            20,
+            23,
+            24,
+            25,
+            58,
+            61,
+            62,
+            64,
+            67
+          ]
+        },
+        {
+          "criterion_id": "identification",
+          "value": false,
+          "rationale": "Оператор перешёл к обсуждению удаления счёта без подтверждённой идентификации клиента.",
+          "evidence_turns": [
+            20,
+            24,
+            29
+          ]
+        },
+        {
+          "criterion_id": "consultation",
+          "value": 20,
+          "rationale": "По основному запросу дан понятный следующий шаг, поскольку немедленное удаление пока недоступно. Дополнительный вопрос о выборе страны и документа также закрыт.",
+          "evidence_turns": [
+            29,
+            30,
+            35,
+            40,
+            44,
+            49,
+            51,
+            67,
+            69,
+            71,
+            73
+          ]
+        },
+        {
+          "criterion_id": "empathy",
+          "value": true,
+          "rationale": "Оператор общался вежливо; выраженной проблемы или недовольства клиента, на которые требовалось отдельно отреагировать, не было.",
+          "evidence_turns": [
+            17,
+            29,
+            44,
+            72
+          ]
+        },
+        {
+          "criterion_id": "dialogue",
+          "value": 10,
+          "rationale": "Диалог последователен, проверка информации предварительно обозначена, порядок дальнейших действий понятен клиенту. Искажения автоматического распознавания не учитываются как ошибки речи оператора.",
+          "evidence_turns": [
+            22,
+            30,
+            32,
+            33,
+            40,
+            44,
+            49,
+            50,
+            51,
+            53,
+            54,
+            55,
+            73
+          ]
+        },
+        {
+          "criterion_id": "closure",
+          "value": false,
+          "rationale": "Одной благодарности недостаточно для выполнения критерия; итог или дальнейшая помощь и прощание от оператора отсутствуют.",
+          "evidence_turns": [
+            72,
+            75
+          ]
+        },
+        {
+          "criterion_id": "critical",
+          "value": false,
+          "rationale": "Грубых нарушений в репликах оператора не обнаружено.",
+          "evidence_turns": [
+            17,
+            75
+          ]
+        }
+      ],
+      "score": {
+        "final_score": 65,
+        "critical_flag": false
+      }
+    },
+    {
+      "conversation_id": "p4-ru-004",
+      "status": "ok",
+      "criteria": [
+        {
+          "criterion_id": "contact",
+          "value": true,
+          "rationale": "Оператор поздоровался и представился в первой реплике.",
+          "evidence_turns": [
+            15
+          ]
+        },
+        {
+          "criterion_id": "discovery",
+          "value": true,
+          "rationale": "Оператор выяснил недостающую существенную деталь — какие именно облигации клиент пытался приобрести. Учёл предложение клиента посмотреть историю приказов и дал предметный ответ после проверки.",
+          "evidence_turns": [
+            19,
+            20,
+            30,
+            33,
+            36,
+            37,
+            38,
+            90
+          ]
+        },
+        {
+          "criterion_id": "identification",
+          "value": true,
+          "rationale": "Идентификация была проведена до раскрытия информации по брокерскому счёту.",
+          "evidence_turns": [
+            47,
+            49,
+            51,
+            54,
+            71,
+            79
+          ]
+        },
+        {
+          "criterion_id": "consultation",
+          "value": 20,
+          "rationale": "Оператор объяснил ограничение самостоятельной покупки и дал альтернативу звонкам — обращение к трейдерам по электронной почте. Существенные вопросы о способе покупки и дальнейших действиях закрыты; признаков ошибочности рекомендации в диалоге нет.",
+          "evidence_turns": [
+            90,
+            91,
+            92,
+            94,
+            95,
+            98,
+            101,
+            102,
+            103,
+            110,
+            111,
+            112
+          ]
+        },
+        {
+          "criterion_id": "empathy",
+          "value": false,
+          "rationale": "Оператор не отреагировал на конкретное неудобство клиента и ограничился повторением вариантов обращения.",
+          "evidence_turns": [
+            41,
+            84,
+            91,
+            98,
+            103
+          ]
+        },
+        {
+          "criterion_id": "dialogue",
+          "value": 4,
+          "rationale": "Клиенту пришлось несколько раз переспрашивать, поскольку ответы не сразу прояснили его вопрос.",
+          "evidence_turns": [
+            94,
+            97,
+            98,
+            101,
+            103,
+            104,
+            110,
+            111,
+            112
+          ]
+        },
+        {
+          "criterion_id": "closure",
+          "value": null,
+          "rationale": "Клиент завершил разговор, поэтому критерий завершения оператором неприменим.",
+          "evidence_turns": [
+            114
+          ]
+        },
+        {
+          "criterion_id": "critical",
+          "value": false,
+          "rationale": "Грубых нарушений по указанным в критерии признакам не выявлено.",
+          "evidence_turns": [
+            15,
+            90,
+            112
+          ]
+        }
+      ],
+      "score": {
+        "final_score": 74.74,
+        "critical_flag": false
+      }
+    }
+  ]
+}
