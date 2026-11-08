@@ -8,7 +8,8 @@
     "test": "node --test server/test/*.test.js",
     "eval": "node scripts/evaluate.js",
     "accuracy": "node scripts/accuracy.js",
-    "gt:review": "node scripts/gt-review.js"
+    "gt:review": "node scripts/gt-review.js",
+    "export": "node scripts/export-results.js"
   },
   "repository": {
     "type": "git",

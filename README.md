@@ -43,6 +43,19 @@ npm run eval -- --group DEV --limit 5
 npm run accuracy
 ```
 
+## Сдача результатов (формат организаторов JSON 1.0)
+Наборы уже лежат в `data/`: `FBroker.json` (10 контрольных чатов) и `Swap.json` (дополнительный, пока не оцениваем).
+Свежая копия из API: `GET /api/datasets/<group_id>?refresh=1` (нужен `CQA_API_URL` в `.env`).
+```bash
+npm run eval -- --group FBroker --runs 3
+npm run export -- --group FBroker --out results/prod/results.json --expect 10
+npm run eval -- --group DEV --runs 3
+npm run export -- --group DEV --out results/dev/results.json --expect 65
+```
+`export` берёт последнюю оценку каждого диалога, переводит ответы в коды формата (`scripts/results-map.json`),
+нумерует реплики с 1 и проверяет файл: одна запись на диалог, все 8 критериев, `critical_flag` = `critical`.
+Неоценённый диалог выгружается со `status: "error"` — оцените его и запустите `export` снова.
+
 ## Оценка в интерфейсе
 - **Диалоги** (`#/list`): ввести group_id → «Загрузить», отфильтровать по языку, каналу и статусу,
   отметить диалоги и нажать «Оценить выбранные» (или «Оценить все»). Прогресс виден над таблицей.
